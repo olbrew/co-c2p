@@ -3,7 +3,7 @@ grammar SmallC;
 /*
  * Parser Rules
  */
-smallc_program : include* (function_definition)*;
+smallc_program : include* (var_decl | function_definition)*;
 
 function_definition : EXTERN? type_specifier identifier '(' param_decl_list? ')' (compound_stmt | ';');
 
@@ -14,7 +14,7 @@ array_indexing : '[' expr ']';
 
 include : INCLUDE '<' FILENAME '>';
 
-type_specifier : CONST? (INT | CHAR | BOOL | VOID);
+type_specifier : CONST? (FLOAT | INT | CHAR | BOOL | VOID);
 
 param_decl_list : parameter_decl (',' parameter_decl )* (',' parameter_pack)?;
 parameter_pack : '...';
@@ -60,7 +60,7 @@ term : term ASTERISK factor | term SLASH factor | term PROCENT factor | factor;
 
 factor : EXCLAMATIONMARK factor | MINUS factor | primary;
 
-primary :  INTEGER | CHARCONST | BOOLEAN | identifier | '(' expr ')' | functioncall;
+primary :  INTEGER | REAL | CHARCONST | BOOLEAN | identifier | '(' expr ')' | functioncall;
 
 /*
  * Lexer Rules
@@ -80,10 +80,11 @@ EXTERN: 'extern';
 READINT : 'readint';
 WRITEINT : 'writeint';
 
-// modifier keywors
+// modifier keywords
 CONST : 'const';
 
 // datatypes
+FLOAT : 'float';
 INT : 'int';
 CHAR : 'char';
 BOOL : 'bool';
@@ -97,6 +98,7 @@ fragment SIGN : PLUS | MINUS;
 
 // elements
 INTEGER : NUMBER;
+REAL : NUMBER'.'NUMBER'f';
 CHARCONST : '"' (.)*? '"' | '\'' (.)*? '\'';
 BOOLEAN : 'true' | 'false';
 IDENTIFIER : (UNDERSCORE | CHARACTER) (UNDERSCORE | CHARACTER | DIGIT)*;
