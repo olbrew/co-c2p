@@ -1,3 +1,7 @@
-* BAT files voor scripts -> moet op Windows werken
-* creëer klassendiagram
+C2P: Compile SmallC -> P-machine code
+=====================================
 
+authors
+-------
+* Eduard Besjentsev
+* Olivier Brewaeys
