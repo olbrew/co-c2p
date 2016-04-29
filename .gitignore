@@ -1,4 +1,5 @@
 *.jar
-src/grammar/SmallC*
+src/grammar/SmallC*.tokens
+src/grammar/SmallC*.py
 __pycache__
 *.pyc
