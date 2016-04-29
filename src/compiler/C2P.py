@@ -1,4 +1,10 @@
 import sys
+
+# following 3 lines were necessary to import SmallCLexer and SmallCParser
+import os
+lib_path = os.path.abspath(os.path.join('..', 'grammar'))
+sys.path.append(lib_path)
+
 from antlr4 import *
 from SmallCLexer import SmallCLexer
 from SmallCParser import SmallCParser
@@ -11,7 +17,6 @@ def main(argv):
     lexer = SmallCLexer(input)
     stream = CommonTokenStream(lexer)
     parser = SmallCParser(stream)
-
     tree = parser.smallc_program()
     #printer = KeyPrinter()
     #walker = ParseTreeWalker()
