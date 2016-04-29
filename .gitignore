@@ -1,2 +1,4 @@
 *.jar
 src/grammar/SmallC*
+__pycache__
+*.pyc
