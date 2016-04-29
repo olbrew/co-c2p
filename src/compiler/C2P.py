@@ -1,16 +1,17 @@
 import sys
 from antlr4 import *
-from HelloLexer import HelloLexer
-from HelloParser import HelloParser
-#from KeyPrinter import KeyPrinter
+from SmallCLexer import SmallCLexer
+from SmallCParser import SmallCParser
+# from KeyPrinter import KeyPrinter
 from AST import AST
+
 
 def main(argv):
     input = FileStream(argv[1])
-    lexer = HelloLexer(input)
+    lexer = SmallCLexer(input)
     stream = CommonTokenStream(lexer)
-    parser = HelloParser(stream)    
-    
+    parser = SmallCParser(stream)
+
     tree = parser.smallc_program()
     #printer = KeyPrinter()
     #walker = ParseTreeWalker()
@@ -19,4 +20,6 @@ def main(argv):
     ast = AST()
 
 if __name__ == '__main__':
+    if len(sys.argv) < 3:
+        sys.exit('ERROR: 2 arguments needed: `input.c` and `output.p`')
     main(sys.argv)
