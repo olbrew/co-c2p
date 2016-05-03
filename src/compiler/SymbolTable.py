@@ -1,10 +1,10 @@
 from CallStack import CallStack
 
 class Symbol:
-    def __init__(self, typename, address, value, depth):
+    def __init__(self, typename, address, depth):
         self.type = typename
         self.address = address
-        self.value = value
+        #self.value = value
         self.depth = depth
 
     def getRelativeDepth(self, call_stack):
@@ -18,8 +18,8 @@ class SymbolTable:
     def __init__(self):
         self.stack = [{}]
         
-    def addSymbol(self, name, typename, address, value, depth):
-        self.stack[len(self.stack)-1][name] = Symbol(typename, address, value, depth)
+    def addSymbol(self, name, typename, address, depth):
+        self.stack[len(self.stack)-1][name] = Symbol(typename, address, depth)
         
     def getSymbol(self, name):
         for dictionary in reversed(self.stack):
