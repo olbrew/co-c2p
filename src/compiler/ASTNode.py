@@ -11,15 +11,17 @@ class ASTNode(ParserRuleContext):
     '''
     
     def __init__(self, ast):
+        ParserRuleContext.__init__(self)
         self.ast = ast
         
     
     def addChild(self, child):
-        super.addChild(child)
+        #super().addChild(child)
+        ParserRuleContext.addChild(self, child)
         child.parent = self
 
 
-    def writeInstruction(payload):
+    def writeInstruction(self, payload, out):
         '''
             TODO
             save instructions into p_prog file

@@ -20,7 +20,10 @@ def main(argv):
     
     ast_environment = AST()
     ast = ASTGenerator(ast_environment, tree)
-
+    program = ast.generate()
+    
+    program.generateCode(argv[2])
+    
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:

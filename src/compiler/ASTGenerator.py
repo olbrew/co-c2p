@@ -11,15 +11,24 @@ class ASTGenerator(SmallCVisitor):
     def __init__(self, ast, tree):
         self.ast = ast
         self.tree = tree
-    
+        
+        
+    def generate(self):
+        return self.visitSmallc_program(self.tree)
+            
     
     def visitSmallc_program(self, ctx):
         include_contexts = ctx.include()
+        #print(include_contexts)
         function_contexts = ctx.function_definition()
 
+        include_directives = []
         for inc_ctx in include_contexts:
+            #print("for loop:", inc_ctx.getText())
             include_directives.append(self.visit(inc_ctx))
-
+        print(include_directives)
+        
+        functions = []
         for func_ctx in function_contexts:
             functions.append(self.visit(func_ctx))
         
@@ -29,13 +38,13 @@ class ASTGenerator(SmallCVisitor):
     def visitFunction_definition(self, ctx):
         self.ast.symbol_table.incrementScope()
         self.ast.call_stack.incrementDepth()
-
-        type_spec = visit(ctx.type_specifier())
+        '''
+        type_spec = self.visit(ctx.type_specifier())
         type_name = type_spec.getType()
         
         identifier = ctx.id().IDENTIFIER().getText()
 
-        '''
+        
             TODO
 			ParameterDeclarationList parameter_list;
 			if (ctx.param_decl_list() == None)
@@ -44,7 +53,7 @@ class ASTGenerator(SmallCVisitor):
 			else
 				parameter_list = (ParameterDeclarationList) visit(ctx
 						.param_decl_list());
-        '''
+        
         
         if ctx.compound_stmt() == None:
             statement = None
@@ -52,7 +61,7 @@ class ASTGenerator(SmallCVisitor):
             statement = visitCompound_stmt(ctx.compound_stmt(), True)
         
         self.ast.call_stack.decrementDepth()
-
+        '''
         '''
             TODO
 			Function func = new Function(ast, type, identifier, parameter_list,
