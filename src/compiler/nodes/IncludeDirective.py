@@ -11,7 +11,7 @@ class IncludeDirective(ASTNode):
         self.included_ast = None
 
         try:
-            self.included_ast = C2P.main("include/" + self.filename)
+            self.included_ast = C2P.run("include/" + self.filename)
 
             for include in self.included_ast.includes:
                 self.addChild(include)
