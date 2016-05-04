@@ -8,19 +8,18 @@ from SmallCVisitor import SmallCVisitor
 from Program import Program
 
 class ASTGenerator(SmallCVisitor):
-    def __init__(self, ast, tree):
+    def __init__(self, ast, parsetree):
         self.ast = ast
-        self.tree = tree
+        self.parsetree = parsetree
         
         
     def generate(self):
-        return self.visitSmallc_program(self.tree)
+        return self.visit_smallc_program()
             
     
-    def visitSmallc_program(self, ctx):
-        include_contexts = ctx.include()
-        #print(include_contexts)
-        function_contexts = ctx.function_definition()
+    def visit_smallc_program(self):
+        include_contexts = self.parsetree.include()
+        function_contexts = self.parsetree.function_definition()
 
         include_directives = []
         for inc_ctx in include_contexts:
@@ -28,14 +27,19 @@ class ASTGenerator(SmallCVisitor):
             include_directives.append(self.visit(inc_ctx))
         print(include_directives)
         
+        '''
         functions = []
         for func_ctx in function_contexts:
+            # print(func_ctx.getText())
+            # print(self.visit(func_ctx))
             functions.append(self.visit(func_ctx))
+        print(functions)
+        '''
         
         return Program(self.ast, include_directives, functions)
 	
     
-    def visitFunction_definition(self, ctx):
+    def visit_function_definition(self, ctx):
         self.ast.symbol_table.incrementScope()
         self.ast.call_stack.incrementDepth()
         '''

@@ -17,7 +17,6 @@ class Program(ASTNode):
         print ("Found", len(self.function_declarations), "functions")
         
         for include in self.includes:
-            print (include)
             self.addChild(include)
         
         for func_decl in self.function_declarations:
