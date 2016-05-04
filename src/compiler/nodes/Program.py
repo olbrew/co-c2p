@@ -5,7 +5,7 @@ from ASTNode import ASTNode
 class Program(ASTNode):
 
     def __init__(self, ast, includes, function_declarations):
-        ASTNode.__init__(self, ast)
+        super().__init__(ast)
         self.includes = []
         self.function_declarations = []
 

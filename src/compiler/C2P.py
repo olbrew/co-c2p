@@ -20,11 +20,13 @@ def run(argv):
     tree = parser.smallc_program()
 
     ast_environment = AST()
-    ast = ASTGenerator(ast_environment, tree)
-    program = ast.generate()
+    program = ASTGenerator(ast_environment, tree).generate()
 
     # TODO how to write output of other includes to same .p file
     program.generateCode(argv[2])
+    
+    return program
+    
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
