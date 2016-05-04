@@ -11,21 +11,22 @@ from SmallCParser import SmallCParser
 from AST import AST
 from ASTGenerator import ASTGenerator
 
-def main(argv):
+
+def run(argv):
     input = FileStream(argv[1])
     lexer = SmallCLexer(input)
     stream = CommonTokenStream(lexer)
     parser = SmallCParser(stream)
     tree = parser.smallc_program()
-    
+
     ast_environment = AST()
     ast = ASTGenerator(ast_environment, tree)
     program = ast.generate()
-    
+
+    # TODO how to write output of other includes to same .p file
     program.generateCode(argv[2])
-    
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
         sys.exit('ERROR: 2 arguments needed: `input.c` and `output.p`')
-    main(sys.argv)
+    run(sys.argv)
