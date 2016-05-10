@@ -4,7 +4,7 @@ from Statement import Statement
 class Expression(Statement):
 
     def __init__(self, ast):
-        Statement.__init__(self, ast)
+        super().__init__(ast)
 
         self.operand_type = None
         self.result_type = None

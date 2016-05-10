@@ -1,5 +1,5 @@
-from .. import ASTNode
-from .. import run
+from ASTNode import ASTNode
+from C2P import run
 
 
 class IncludeDirective(ASTNode):
