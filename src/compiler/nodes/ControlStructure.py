@@ -1,20 +1,19 @@
 import abc
 
-class ControlStructure():
+
+class ControlStructure(abc.ABC):
+
     def __init__(self):
         pass
-    
-    
+
     @abc.abstractmethod
-    def	getReturnLabel(self):
+    def getReturnLabel(self):
         return
-        
-        
-    @abc.abstractmethod 
+
+    @abc.abstractmethod
     def getContinueLabel(self):
         return
-        
-        
-    @abc.abstractmethod 
+
+    @abc.abstractmethod
     def getBreakLabel(self):
         return

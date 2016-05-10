@@ -1,6 +1,5 @@
-from AST import AST
-from ASTNode import ASTNode
-from C2P import run
+from .. import ASTNode
+from .. import run
 
 
 class IncludeDirective(ASTNode):
@@ -11,11 +10,12 @@ class IncludeDirective(ASTNode):
         self.included_program = None
 
         try:
-            self.included_program = run(["", "../../include/" + self.filename, "output.p"])
+            self.included_program = run(
+                ["", "../../include/" + self.filename, "output.p"])
 
             for include in self.included_program.includes:
                 self.addChild(include)
-            
+
             for func_decl in self.included_program.function_declarations:
                 self.addChild(func_decl)
         except IOError:

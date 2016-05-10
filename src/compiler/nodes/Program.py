@@ -1,4 +1,3 @@
-from AST import AST
 from ASTNode import ASTNode
 
 
@@ -9,7 +8,7 @@ class Program(ASTNode):
         self.includes = []
         self.function_declarations = []
 
-        if ast.symbol_table == None:
+        if ast.symbol_table is None:
             print("ERROR: encountered None instead of AST")
 
         self.includes = includes

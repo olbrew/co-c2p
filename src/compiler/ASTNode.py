@@ -1,7 +1,6 @@
 import abc
-from antlr4 import *
-# from antlr4 import org.antlr.v4.runtime.ParserRuleContext
-# from antlr4 import org.antlr.v4.runtime.tree.ParseTree
+from antlr4 import ParserRuleContext
+
 
 class ASTNode(ParserRuleContext):
     '''
@@ -9,31 +8,26 @@ class ASTNode(ParserRuleContext):
         Make this object serializable
         readObject, writeObject, storeToDisk, loadFromDisk
     '''
-    
-    def __init__(self, ast):
-        ParserRuleContext.__init__(self)
-        self.ast = ast
-        
-    
-    def addChild(self, child):
-        #super().addChild(child)
-        ParserRuleContext.addChild(self, child)
-        child.parent = self
 
+    def __init__(self, ast):
+        # ParserRuleContext.__init__(self)
+        self.ast = ast
+
+    def addChild(self, child):
+        super().addChild(child)
+        child.parent = self
 
     def writeInstruction(self, payload, out):
         '''
             TODO
             save instructions into p_prog file
         '''
-        print (payload)
-        
-    
+        print(payload)
+
     @abc.abstractmethod
-    def	getDisplayableText(self):
+    def getDisplayableText(self):
         return
-        
-        
-    @abc.abstractmethod 
+
+    @abc.abstractmethod
     def generateCode(self, out):
         return
