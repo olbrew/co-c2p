@@ -7,7 +7,7 @@ sys.path.append(lib_path)
 from SmallCVisitor import SmallCVisitor
 from SmallCParser import SmallCParser
 from Program import Program
-from IncludeDirective import IncludeDirective
+import IncludeDirective
 
 class ASTGenerator(SmallCVisitor):
     def __init__(self, ast, parsetree):
@@ -25,9 +25,8 @@ class ASTGenerator(SmallCVisitor):
 
         include_directives = []
         for inc_ctx in include_contexts:
-            print("for loop:", inc_ctx.getText())
             include_directives.append(self.visit(inc_ctx))
-        print(include_directives)
+        print("Found include directives: ", include_directives)
         
         functions = []
         '''
@@ -42,7 +41,7 @@ class ASTGenerator(SmallCVisitor):
 	
 	
     def visitInclude(self, parsetree:SmallCParser.IncludeContext):
-        return IncludeDirective(self.ast, parsetree.FILENAME().getText())
+        return IncludeDirective.IncludeDirective(self.ast, parsetree.FILENAME().getText())
     
     
     def visitFunction_definition(self, parsetree:SmallCParser.Function_definitionContext):

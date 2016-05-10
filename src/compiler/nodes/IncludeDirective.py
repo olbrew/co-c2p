@@ -1,6 +1,6 @@
 from AST import AST
 from ASTNode import ASTNode
-# from C2P import C2P
+from C2P import run
 
 
 class IncludeDirective(ASTNode):
@@ -11,7 +11,7 @@ class IncludeDirective(ASTNode):
         self.included_program = None
 
         try:
-            self.included_program = C2P.run("include/" + self.filename)
+            self.included_program = run(["", "../../include/" + self.filename, "output.p"])
 
             for include in self.included_program.includes:
                 self.addChild(include)

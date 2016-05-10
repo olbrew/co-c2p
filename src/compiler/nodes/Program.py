@@ -15,8 +15,8 @@ class Program(ASTNode):
         self.includes = includes
         self.function_declarations = function_declarations
 
-        print("Found", len(self.includes), "includes")
-        print("Found", len(self.function_declarations), "functions")
+        print("Program.py found", len(self.includes), "includes")
+        print("Program.py found", len(self.function_declarations), "functions")
 
         for include in self.includes:
             print(include)

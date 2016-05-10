@@ -9,7 +9,7 @@ from antlr4 import *
 from SmallCLexer import SmallCLexer
 from SmallCParser import SmallCParser
 from AST import AST
-from ASTGenerator import ASTGenerator
+import ASTGenerator
 
 
 def run(argv):
@@ -20,7 +20,7 @@ def run(argv):
     tree = parser.smallc_program()
 
     ast_environment = AST()
-    program = ASTGenerator(ast_environment, tree).generate()
+    program = ASTGenerator.ASTGenerator(ast_environment, tree).generate()
 
     # TODO how to write output of other includes to same .p file
     program.generateCode(argv[2])
