@@ -1,7 +1,5 @@
 import abc
-from antlr4 import *
-# from antlr4 import org.antlr.v4.runtime.ParserRuleContext
-# from antlr4 import org.antlr.v4.runtime.tree.ParseTree
+from antlr4 import ParserRuleContext
 
 class ASTNode(ParserRuleContext):
     '''
@@ -16,7 +14,6 @@ class ASTNode(ParserRuleContext):
         
     
     def addChild(self, child):
-        #super().addChild(child)
         ParserRuleContext.addChild(self, child)
         child.parent = self
 
@@ -26,7 +23,7 @@ class ASTNode(ParserRuleContext):
             TODO
             save instructions into p_prog file
         '''
-        print (payload)
+        print(payload)
         
     
     @abc.abstractmethod

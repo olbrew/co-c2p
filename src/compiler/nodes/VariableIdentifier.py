@@ -2,7 +2,7 @@ from AST import AST
 from Expression import Expression
 from ASTNode import ASTNode
 
-class VariableIdentifier(ASTNode):    
+class VariableIdentifier(ASTNode):
     def __init__(self, ast, identifier, expression, is_pointer, array_size):
         ASTNode.__init__(self, ast)
         
@@ -57,8 +57,8 @@ class VariableIdentifier(ASTNode):
         else:
             self.writeInstruction("ldc " + p_type + " 0", out)
         
-		writeInstruction("str " + p_type + " " + 0 + " " + self.address, out);
-
+        self.writeInstruction("str " + p_type + " " + 0 + " " + self.address, out);
+        
         for i in range(1, getSize()):
-			writeInstruction("ldc " + p_type + " 0", out)
-			writeInstruction("str " + p_type + " " + 0 + " " + (self.address + i), out)
+            self.writeInstruction("ldc " + p_type + " 0", out)
+            self.writeInstruction("str " + p_type + " " + 0 + " " + (self.address + i), out)

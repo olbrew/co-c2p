@@ -1,4 +1,3 @@
-from AST import AST
 from ASTNode import ASTNode
 from C2P import run
 

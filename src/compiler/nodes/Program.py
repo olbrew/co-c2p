@@ -1,6 +1,4 @@
-from AST import AST
 from ASTNode import ASTNode
-
 
 class Program(ASTNode):
 

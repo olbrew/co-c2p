@@ -2,6 +2,7 @@ from AST import AST
 from Statement import Statement
 from ControlStructure import ControlStructure
 from VariableDeclaration import VariableDeclaration
+import Function
 
 class CompoundStatement(Statement, ControlStructure):    
 
@@ -20,8 +21,8 @@ class CompoundStatement(Statement, ControlStructure):
         for stmt in self.statements:
             self.addChild(stmt)
         
-        self.label_id = str(label_counter)
-        label_counter += 1
+        self.label_id = str(CompoundStatement.label_counter)
+        CompoundStatement.label_counter += 1
         
         
     def getVarsSize(self):
@@ -32,7 +33,9 @@ class CompoundStatement(Statement, ControlStructure):
     
     
     def getReturnLabel(self):
-        # TODO: check if parent is instance of Function
+        # TODO: self.parent or self.getParent() ? check at run time which one works
+        if isinstance(self.parent, Function):
+            return self.parent.getReturnLabel()
         return "compound_" + self.label_id + "_return"
     
     
