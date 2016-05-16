@@ -1,4 +1,5 @@
 import abc
+# TODO convert to proper ABC
 
 
 class ControlStructure(abc.ABC):

@@ -1,6 +1,7 @@
 from Statement import Statement
 from ControlStructure import ControlStructure
 from VariableDeclaration import VariableDeclaration
+import Function
 
 
 class CompoundStatement(Statement, ControlStructure):
@@ -30,7 +31,10 @@ class CompoundStatement(Statement, ControlStructure):
         return space
 
     def getReturnLabel(self):
-        # TODO: check if parent is instance of Function
+        # TODO: self.parent or self.getParent() ? check at run time which one
+        # works
+        if isinstance(self.parent, Function):
+            return self.parent.getReturnLabel()
         return "compound_" + self.label_id + "_return"
 
     def getBreakLabel(self):

@@ -4,6 +4,9 @@ from compiler.ASTNode import ASTNode
 
 class VariableIdentifier(ASTNode):
 
+
+class VariableIdentifier(ASTNode):
+
     def __init__(self, ast, identifier, expression, is_pointer, array_size):
         ASTNode.__init__(self, ast)
 
@@ -53,10 +56,11 @@ class VariableIdentifier(ASTNode):
             self.expression.generateCode(out)
         else:
             self.writeInstruction("ldc " + p_type + " 0", out)
-            self.writeInstruction("str " + p_type + " " +
-                                  0 + " " + self.address, out)
 
-        for i in range(1, self.getSize()):
+        self.writeInstruction("str " + p_type + " " +
+                              0 + " " + self.address, out)
+
+        for i in range(1, getSize()):
             self.writeInstruction("ldc " + p_type + " 0", out)
-            self.writeInstruction("str " + p_type + " " + 0 +
-                                  " " + (self.address + i), out)
+            self.writeInstruction("str " + p_type + " " +
+                                  0 + " " + (self.address + i), out)
