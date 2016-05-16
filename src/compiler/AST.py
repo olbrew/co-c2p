@@ -1,5 +1,5 @@
-from CallStack import CallStack
-from SymbolTable import SymbolTable
+from compiler.CallStack import CallStack
+from compiler.SymbolTable import SymbolTable
 
 
 class AST:

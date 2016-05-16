@@ -1,9 +1,9 @@
 import sys
 from antlr4 import FileStream, CommonTokenStream
-from ..grammar import SmallCLexer
-from ..grammar import SmallCParser
-from AST import AST
-from ASTGenerator import ASTGenerator
+from grammar.SmallCLexer import SmallCLexer
+from grammar.SmallCParser import SmallCParser
+from compiler.AST import AST
+from compiler.ASTGenerator import ASTGenerator
 
 
 def run(argv):

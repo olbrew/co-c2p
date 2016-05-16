@@ -1,4 +1,4 @@
-from nodes.CallStack import CallStack
+from compiler.CallStack import CallStack
 
 
 class Symbol:

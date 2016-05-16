@@ -1,4 +1,4 @@
-from ASTNode import ASTNode
+from compiler.ASTNode import ASTNode
 from VariableIdentifier import VariableIdentifier
 
 

@@ -1,7 +1,7 @@
-from SmallCVisitor import SmallCVisitor
-from SmallCParser import SmallCParser
-from nodes.Program import Program
-from nodes.IncludeDirective import IncludeDirective
+from grammar.SmallCVisitor import SmallCVisitor
+from grammar.SmallCParser import SmallCParser
+from compiler.nodes.Program import Program
+from compiler.nodes.IncludeDirective import IncludeDirective
 
 
 class ASTGenerator(SmallCVisitor):
