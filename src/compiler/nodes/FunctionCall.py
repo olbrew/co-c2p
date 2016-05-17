@@ -1,6 +1,6 @@
 from .Expression import Expression
 #from .ParameterList import ParameterList
-#from types.IntegerType import IntegerType
+from compiler.types.IntegerType import IntegerType
 
 
 class FunctionCall(Expression):
