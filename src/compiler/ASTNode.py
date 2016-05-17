@@ -14,7 +14,7 @@ class ASTNode(ABC, ParserRuleContext):
         self.ast = ast
 
     def addChild(self, child):
-        ParserRuleContext.addChild(self, child)
+        super().addChild(child)
         child.parent = self
 
     def writeInstruction(self, payload, out):

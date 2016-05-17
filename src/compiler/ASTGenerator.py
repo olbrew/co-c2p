@@ -28,7 +28,7 @@ from compiler.nodes.Comparison import Comparison
 from compiler.nodes.Relation import Relation
 from compiler.nodes.Equation import Equation
 from compiler.nodes.Term import Term
-# rom compiler.nodes.Factor import Factor
+#from compiler.nodes.Factor import Factor
 from compiler.nodes.Primary import Primary
 
 
@@ -57,11 +57,11 @@ class ASTGenerator(SmallCVisitor):
             functions.append(self.visit(func_ctx))
         print("Found functions in ASTGenerator: ", functions)
 
-        return Program.Program(self.ast, include_directives, functions)
+        return Program(self.ast, include_directives, functions)
 
     # Visit a parse tree produced by SmallCParser#include.
     def visitInclude(self, parsetree: SmallCParser.IncludeContext):
-        return IncludeDirective.IncludeDirective(self.ast, parsetree.FILENAME().getText())
+        return IncludeDirective(self.ast, parsetree.FILENAME().getText())
 
     # Visit a parse tree produced by SmallCParser#function_definition.
     def visitFunction_definition(self, parsetree: SmallCParser.Function_definitionContext):
@@ -102,7 +102,7 @@ class ASTGenerator(SmallCVisitor):
         typename = Type.Type().getTypeFromC(parsetree.getChild(int(is_const)).getText())
         if is_const:
             typename.is_const = True
-        return TypeSpecifier.TypeSpecifier(self.ast, typename)
+        return TypeSpecifier(self.ast, typename)
 
     # Visit a parse tree produced by SmallCParser#compound_stmt.
     def visitCompound_stmt(self, parsetree: SmallCParser.Compound_stmtContext):
@@ -210,9 +210,9 @@ class ASTGenerator(SmallCVisitor):
 
         if parsetree.identifier() is not None:
             identifier = parsetree.identifier().IDENTIFIER().getText()
-            return ParameterDeclaration.ParameterDeclaration(self.ast, type_object, identifier)
+            return ParameterDeclaration(self.ast, type_object, identifier)
 
-        return ParameterDeclaration.ParameterDeclaration(self.ast, type_object)
+        return ParameterDeclaration(self.ast, type_object)
 
     # Visit a parse tree produced by SmallCParser#param_list.
     def visitParam_list(self, parsetree: SmallCParser.Param_listContext):
@@ -220,7 +220,7 @@ class ASTGenerator(SmallCVisitor):
         for expr in parsetree.expr():
             arguments.append(self.visit(expr))
 
-        return ParameterList.ParameterList(self.ast, arguments)
+        return ParameterList(self.ast, arguments)
 
     # Visit a parse tree produced by SmallCParser#variable_id.
     def visitVariable_id(self, parsetree: SmallCParser.Variable_idContext):
@@ -243,7 +243,7 @@ class ASTGenerator(SmallCVisitor):
         else:
             expression = self.visit(parsetree.expr())
 
-        return VariableIdentifier.VariableIdentifier(self.ast, identifier, expression, is_pointer, is_reference)
+        return VariableIdentifier(self.ast, identifier, expression, is_pointer, is_reference)
 
     # Visit a parse tree produced by SmallCParser#cond_stmt.
     def visitCond_stmt(self, parsetree: SmallCParser.Cond_stmtContext):
@@ -252,15 +252,15 @@ class ASTGenerator(SmallCVisitor):
 
         if len(parsetree.stmt()) == 2:
             else_stmt = self.visit(parsetree.stmt(1))
-            return IfElseStatement.IfElseStatement(self.ast, expression, statement, else_stmt)
+            return IfElseStatement(self.ast, expression, statement, else_stmt)
 
-        return IfStatement.IfStatement(self.ast, expression, statement)
+        return IfStatement(self.ast, expression, statement)
 
     # Visit a parse tree produced by SmallCParser#while_stmt.
     def visitWhile_stmt(self, parsetree: SmallCParser.While_stmtContext):
         expression = self.visit(parsetree.expr())
         statement = self.visit(parsetree.stmt())
-        return WhileStatement.WhileStatement(self.ast, expression, statement)
+        return WhileStatement(self.ast, expression, statement)
 
     # Visit a parse tree produced by SmallCParser#for_stmt.
     def visitFor_stmt(self, parsetree: SmallCParser.For_stmtContext):
@@ -316,7 +316,7 @@ class ASTGenerator(SmallCVisitor):
         else:
             parameter_list = self.visit(parsetree.param_list())
 
-        return FunctionCall.FunctionCall(self.ast, identifier, parameter_list)
+        return FunctionCall(self.ast, identifier, parameter_list)
 
     # Visit a parse tree produced by SmallCParser#condition.
     def visitCondition(self, parsetree: SmallCParser.ConditionContext):
@@ -324,7 +324,7 @@ class ASTGenerator(SmallCVisitor):
             disjunction = self.visit(parsetree.disjunction())
             expression = self.visit(parsetree.expr())
             condition = self.visit(parsetree.condition())
-            return Condition.Condition(self.ast, disjunction, expression, condition)
+            return Condition(self.ast, disjunction, expression, condition)
 
         return self.visit(parsetree.disjunction())
 
@@ -333,7 +333,7 @@ class ASTGenerator(SmallCVisitor):
         if parsetree.disjunction() is not None:
             disjunction = self.visit(parsetree.disjunction())
             conjunction = self.visit(parsetree.conjunction())
-            return Disjunction.Disjunction(self.ast, disjunction, conjunction)
+            return Disjunction(self.ast, disjunction, conjunction)
 
         return self.visit(parsetree.conjunction())
 
@@ -342,7 +342,7 @@ class ASTGenerator(SmallCVisitor):
         if parsetree.conjunction is not None:
             conjunction = self.visit(parsetree.conjunction())
             comparison = self.visit(parsetree.comparison())
-            return Conjunction.Conjunction(self.ast, conjunction, comparison)
+            return Conjunction(self.ast, conjunction, comparison)
 
         return self.visit(parsetree.comparison())
 
@@ -368,7 +368,7 @@ class ASTGenerator(SmallCVisitor):
                 operator = "<"
             else:
                 operator = ">"
-            return Relation.Relation(self.ast, equation1, equation2, operator)
+            return Relation(self.ast, equation1, equation2, operator)
 
         return self.visit(parsetree.equation(0))
 
@@ -407,7 +407,7 @@ class ASTGenerator(SmallCVisitor):
                 operator = "-"
             else:
                 operator = "!"
-            return Factor.Factor(self.ast, factor, operator)
+            return Factor(self.ast, factor, operator)
 
         return self.visit(parsetree.primary())
 
