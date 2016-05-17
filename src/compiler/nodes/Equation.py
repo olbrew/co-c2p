@@ -5,7 +5,7 @@ from .Expression import Expression
 class Equation(Expression):
 
     def __init__(self, ast, expression_equation, expression_term, operator):
-        super().__init__(self, ast)
+        super().__init__(ast)
         self.equation = expression_equation
         self.term = expression_term
         self.operator = operator

@@ -6,7 +6,7 @@ from compiler.types.IntegerType import IntegerType
 class FunctionCall(Expression):
 
     def __init__(self, ast, identifier, parameters):
-        super().__init__(self, ast)
+        super().__init__(ast)
         self.identifier = identifier
         self.parameters = parameters
         self.addChild(self.parameters)

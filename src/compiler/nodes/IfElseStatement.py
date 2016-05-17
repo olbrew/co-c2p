@@ -4,7 +4,7 @@ from .IfStatement import IfStatement
 class IfElseStatement(IfStatement):
 
     def __init__(self, ast, expression, if_statement, else_statement):
-        IfStatement.__init__(self, ast, expression, if_statement)
+        super().__init__(ast, expression, if_statement)
         self.else_statement = else_statement
         self.addChild(self.else_statement)
 

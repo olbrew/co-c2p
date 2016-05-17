@@ -4,7 +4,7 @@ from compiler.ASTNode import ASTNode
 class ParameterDeclaration(ASTNode):
 
     def __init__(self, ast, typename, identifier=None):
-        ASTNode.__init__(self, ast)
+        super().__init__(ast)
 
         self.typename = typename
         self.identifier = identifier

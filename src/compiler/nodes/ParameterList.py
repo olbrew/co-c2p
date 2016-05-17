@@ -4,7 +4,7 @@ from compiler.ASTNode import ASTNode
 class ParameterList(ASTNode):
 
     def __init__(self, ast, arguments):
-        ASTNode.__init__(self, ast)
+        super().__init__(ast)
         self.arguments = arguments
         for expression in self.arguments:
             self.addChild(expression)

@@ -4,7 +4,6 @@ from compiler.nodes.Program import Program
 from compiler.nodes.IncludeDirective import IncludeDirective
 from compiler.nodes.Function import Function
 from compiler.nodes.ParameterDeclarationList import ParameterDeclarationList
-from compiler.types.Type import Type
 from compiler.nodes.TypeSpecifier import TypeSpecifier
 from compiler.nodes.CompoundStatement import CompoundStatement
 from compiler.nodes.BreakStatement import BreakStatement
@@ -30,7 +29,7 @@ from compiler.nodes.Equation import Equation
 from compiler.nodes.Term import Term
 from compiler.nodes.Factor import Factor
 from compiler.nodes.Primary import Primary
-
+from compiler.types.Type import Type
 
 class ASTGenerator(SmallCVisitor):
 

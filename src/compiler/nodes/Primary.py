@@ -9,7 +9,7 @@ from compiler.types.CharacterType import CharacterType
 class Primary(Expression):
 
     def __init__(self, ast, value):
-        super().__init__(self, ast)
+        super().__init__(ast)
 
         if isinstance(value, int):
             self.value = value

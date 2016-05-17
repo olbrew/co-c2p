@@ -5,7 +5,7 @@ from .Expression import Expression
 class Identifier(Expression):
 
     def __init__(self, ast, name, indirection, address_of, array_index):
-        Expression.__init__(self, ast)
+        super().__init__(ast)
         symbol = ast.symbol_table.getSymbol(name)
 
         self.name = name

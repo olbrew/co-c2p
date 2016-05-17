@@ -1,20 +1,19 @@
-import abc
-# TODO convert to proper ABC
+from abc import ABC, abstractmethod
 
 
-class ControlStructure(abc.ABC):
+class ControlStructure(ABC):
 
     def __init__(self):
         pass
 
-    @abc.abstractmethod
+    @abstractmethod
     def getReturnLabel(self):
-        return
+        pass
 
-    @abc.abstractmethod
+    @abstractmethod
     def getContinueLabel(self):
-        return
+        pass
 
-    @abc.abstractmethod
+    @abstractmethod
     def getBreakLabel(self):
-        return
+        pass

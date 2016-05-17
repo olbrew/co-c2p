@@ -1,4 +1,4 @@
-from compiler.CallStack import CallStack
+#from compiler.CallStack import CallStack
 
 
 class Symbol:
@@ -27,7 +27,7 @@ class SymbolTable:
 
     def getSymbol(self, name):
         for dictionary in reversed(self.stack):
-            if dictionary.has_key(name):
+            if name in dictionary:
                 return dictionary[name]
 
     def incrementScope(self):

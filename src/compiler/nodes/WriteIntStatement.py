@@ -5,7 +5,7 @@ from compiler.ASTNode import ASTNode
 class WriteIntStatement(ASTNode):
 
     def __init__(self, ast, expression):
-        ASTNode.__init__(self, ast)
+        super().__init__(ast)
         self.expression = expression
         self.addChild(expression)
 

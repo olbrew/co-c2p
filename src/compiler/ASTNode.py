@@ -10,7 +10,7 @@ class ASTNode(ABC, ParserRuleContext):
     '''
 
     def __init__(self, ast):
-        super().__init__(self)
+        super().__init__()
         self.ast = ast
 
     def addChild(self, child):

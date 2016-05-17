@@ -5,10 +5,8 @@ from .ControlStructure import ControlStructure
 
 class Function(ASTNode, ControlStructure):
 
-    def __init__(self, ast, return_type, identifier, parameters, content,
-                 extern):
-        ASTNode.__init__(self, ast)
-        ControlStructure.__init__(self)
+    def __init__(self, ast, return_type, identifier, parameters, content, extern):
+        super().__init__(ast)
 
         self.return_type = return_type
         self.identifier = identifier

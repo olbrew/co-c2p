@@ -5,7 +5,7 @@ class IfStatement(Statement):
     label_counter = 0
 
     def __init__(self, ast, expression, if_statement):
-        Statement.__init__(self, ast)
+        super().__init__(ast)
         self.expression = expression
         self.if_statement = if_statement
         self.addChild(self.expression)

@@ -5,7 +5,7 @@ from compiler.ASTNode import ASTNode
 class TypeSpecifier(ASTNode):
 
     def __init__(self, ast, type_object):
-        ASTNode.__init__(self, ast)
+        super().__init__(ast)
         self.type_object = type_object
 
     def getDisplayableText(self):

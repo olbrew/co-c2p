@@ -5,7 +5,7 @@ from .Expression import Expression
 class Term(Expression):
 
     def __init__(self, ast, expression_term, expression_factor, operator):
-        super().__init__(self, ast)
+        super().__init__(ast)
         self.term = expression_term
         self.factor = expression_factor
         self.operator = operator

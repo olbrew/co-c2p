@@ -7,8 +7,8 @@ from compiler.ASTGenerator import ASTGenerator
 
 
 def run(argv):
-    input = FileStream(argv[1])
-    lexer = SmallCLexer(input)
+    inputfile = FileStream(argv[1])
+    lexer = SmallCLexer(inputfile)
     stream = CommonTokenStream(lexer)
     parser = SmallCParser(stream)
     tree = parser.smallc_program()

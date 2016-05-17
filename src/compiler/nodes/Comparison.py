@@ -6,7 +6,7 @@ from compiler.types.BooleanType import BooleanType
 class Comparison(Expression):
 
     def __init__(self, ast, expr_relation1, expr_relation2, operator):
-        Expression.__init__(self, ast)
+        super().__init__(ast)
         self.relation1 = expr_relation1
         self.relation2 = expr_relation2
         self.operator = operator

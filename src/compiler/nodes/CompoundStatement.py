@@ -9,8 +9,8 @@ class CompoundStatement(Statement, ControlStructure):
     label_counter = 0
 
     def __init__(self, ast, var_decls, statements):
-        Statement.__init__(self, ast)
-        ControlStructure.__init__(self)
+        super().__init__(ast)
+        # ControlStructure.__init__(self)
 
         self.var_decls = var_decls
         self.statements = statements

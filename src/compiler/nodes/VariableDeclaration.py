@@ -1,11 +1,11 @@
 from compiler.ASTNode import ASTNode
-from VariableIdentifier import VariableIdentifier
+#from VariableIdentifier import VariableIdentifier
 
 
 class VariableDeclaration(ASTNode):
 
     def __init__(self, ast, typename, variable_identifiers):
-        ASTNode.__init__(self, ast)
+        super().__init__(ast)
 
         # TODO: throw error if variable or field ‘x’ declared void
 

@@ -6,7 +6,7 @@ from compiler.types.BooleanType import BooleanType
 class Relation(Expression):
 
     def __init__(self, ast, equation1, equation2, operator):
-        Expression.__init__(self, ast)
+        super().__init__(ast)
         self.equation1 = equation1
         self.equation2 = equation2
         self.operator = operator

@@ -4,7 +4,7 @@ from .Type import Type
 class IntegerType(Type):
 
     def __init__(self):
-        Type.__init__(self)
+        super().__init__()
 
     def getName(self):
         return "integer"

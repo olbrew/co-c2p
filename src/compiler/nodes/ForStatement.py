@@ -6,7 +6,7 @@ class ForStatement(Loop):
     label_counter = 0
 
     def __init__(self, ast, var_decl, expr_condition, expr_update, statement):
-        Loop.__init__(self, ast)
+        super().__init__(ast)
         self.var_decl = var_decl
         self.condition = expr_condition
         self.update = expr_update

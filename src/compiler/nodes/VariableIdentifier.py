@@ -5,7 +5,7 @@ from compiler.ASTNode import ASTNode
 class VariableIdentifier(ASTNode):
 
     def __init__(self, ast, identifier, expression, is_pointer, array_size):
-        ASTNode.__init__(self, ast)
+        super().__init__(ast)
 
         self.typename = None
         self.identifier = identifier

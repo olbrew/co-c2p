@@ -1,13 +1,13 @@
 from .Statement import Statement
 from .Function import Function
 from .ControlStructure import ControlStructure
-#from types.VoidType import VoidType
+from compiler.types.VoidType import VoidType
 
 
 class ReturnStatement(Statement):
 
     def __init__(self, ast, expression):
-        Statement.__init__(self, ast)
+        super().__init__(ast)
         self.expression = expression
         self.addChild(self.expression)
 

@@ -6,7 +6,7 @@ class WhileStatement(Loop):
     label_counter = 0
 
     def __init__(self, ast, expression, statement):
-        Loop.__init__(self, ast)
+        super().__init__(ast)
         self.expression = expression
         self.statement = statement
         self.addChild(expression)

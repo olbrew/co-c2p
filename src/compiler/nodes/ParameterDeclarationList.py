@@ -4,7 +4,7 @@ from compiler.ASTNode import ASTNode
 class ParameterDeclarationList(ASTNode):
 
     def __init__(self, ast, params, parameter_pack):
-        ASTNode.__init__(self, ast)
+        super().__init__(ast)
 
         self.parameters = params
         self.parameter_pack = parameter_pack
