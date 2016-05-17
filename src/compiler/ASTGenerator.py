@@ -7,8 +7,8 @@ from compiler.nodes.ParameterDeclarationList import ParameterDeclarationList
 from compiler.types.Type import Type
 from compiler.nodes.TypeSpecifier import TypeSpecifier
 from compiler.nodes.CompoundStatement import CompoundStatement
-#from compiler.nodes.BreakStatement import BreakStatement
-#from compiler.nodes.ContinueStatement import ContinueStatement
+from compiler.nodes.BreakStatement import BreakStatement
+from compiler.nodes.ContinueStatement import ContinueStatement
 from compiler.nodes.ReturnStatement import ReturnStatement
 from compiler.nodes.WriteIntStatement import WriteIntStatement
 from compiler.nodes.Identifier import Identifier
@@ -21,14 +21,14 @@ from compiler.nodes.WhileStatement import WhileStatement
 from compiler.nodes.ForStatement import ForStatement
 from compiler.nodes.Assignment import Assignment
 from compiler.nodes.FunctionCall import FunctionCall
-#from compiler.nodes.Condition import Condition
-#from compiler.nodes.Disjunction import Disjunction
-#from compiler.nodes.Conjunction import Conjunction
+from compiler.nodes.Condition import Condition
+from compiler.nodes.Disjunction import Disjunction
+from compiler.nodes.Conjunction import Conjunction
 from compiler.nodes.Comparison import Comparison
 from compiler.nodes.Relation import Relation
 from compiler.nodes.Equation import Equation
 from compiler.nodes.Term import Term
-# rom compiler.nodes.Factor import Factor
+from compiler.nodes.Factor import Factor
 from compiler.nodes.Primary import Primary
 
 
