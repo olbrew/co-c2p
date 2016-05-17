@@ -1,8 +1,8 @@
-import abc
+from abc import ABC, abstractmethod
 from antlr4 import ParserRuleContext
 
 
-class ASTNode(ParserRuleContext):
+class ASTNode(ABC, ParserRuleContext):
     '''
         TODO
         Make this object serializable
@@ -10,7 +10,7 @@ class ASTNode(ParserRuleContext):
     '''
 
     def __init__(self, ast):
-        # ParserRuleContext.__init__(self)
+        super().__init__(self)
         self.ast = ast
 
     def addChild(self, child):
@@ -24,10 +24,10 @@ class ASTNode(ParserRuleContext):
         '''
         print(payload)
 
-    @abc.abstractmethod
+    @abstractmethod
     def getDisplayableText(self):
-        return
+        pass
 
-    @abc.abstractmethod
+    @abstractmethod
     def generateCode(self, out):
-        return
+        pass

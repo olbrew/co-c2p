@@ -1,17 +1,18 @@
-import abc
-import Statement
-import ControlStructure
+from abc import ABC, abstractmethod
+# from .Statement import Statement
+# from .ControlStructure import ControlStructure
 
-# TODO convert to proper ABC
-class Loop(Statement, ControlStructure):
+
+# class Loop(ABC, ControlStructure, Statement):
+class Loop(ABC):
+
     def __init__(self, ast):
-        Statement.__init__(self, ast)
-        
+        super().__init__()
+
     @abstractmethod
     def getBreakLabel(self):
-        return
-    
-    @abstractmethod    
-    def getContinueLabel(self):
-        return
+        pass
 
+    @abstractmethod
+    def getContinueLabel(self):
+        pass

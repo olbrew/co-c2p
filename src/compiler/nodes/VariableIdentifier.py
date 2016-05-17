@@ -1,8 +1,5 @@
-#from Expression import Expression
+#from .Expression import Expression
 from compiler.ASTNode import ASTNode
-
-
-class VariableIdentifier(ASTNode):
 
 
 class VariableIdentifier(ASTNode):

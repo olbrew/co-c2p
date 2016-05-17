@@ -1,7 +1,7 @@
-from Statement import Statement
-from ControlStructure import ControlStructure
-from VariableDeclaration import VariableDeclaration
-import Function
+from .Statement import Statement
+from .ControlStructure import ControlStructure
+# from .VariableDeclaration import VariableDeclaration
+from .Function import Function
 
 
 class CompoundStatement(Statement, ControlStructure):

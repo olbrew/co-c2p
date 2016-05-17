@@ -1,4 +1,4 @@
-from Statement import Statement
+from .Statement import Statement
 
 
 class Expression(Statement):

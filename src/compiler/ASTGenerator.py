@@ -4,11 +4,11 @@ from compiler.nodes.Program import Program
 from compiler.nodes.IncludeDirective import IncludeDirective
 from compiler.nodes.Function import Function
 from compiler.nodes.ParameterDeclarationList import ParameterDeclarationList
-from compiler.nodes.Type import Type
+from compiler.types.Type import Type
 from compiler.nodes.TypeSpecifier import TypeSpecifier
 from compiler.nodes.CompoundStatement import CompoundStatement
-from compiler.nodes.BreakStatement import BreakStatement
-from compiler.nodes.ContinueStatement import ContinueStatement
+# from compiler.nodes.BreakStatement import BreakStatement
+# from compiler.nodes.ContinueStatement import ContinueStatement
 from compiler.nodes.ReturnStatement import ReturnStatement
 from compiler.nodes.WriteIntStatement import WriteIntStatement
 from compiler.nodes.Identifier import Identifier
