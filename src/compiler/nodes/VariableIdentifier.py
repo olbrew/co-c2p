@@ -22,7 +22,7 @@ class VariableIdentifier(ASTNode):
         space = self.getSize()
         self.address = self.ast.call_stack.getAddress(space)
         self.depth = self.ast.call_stack.getNestingDepth()
-        self.ast.symbol_table().addSymbol(
+        self.ast.symbol_table.addSymbol(
             self.identifier, self.typename, self.address, self.depth)
 
     def setType(self, typename):

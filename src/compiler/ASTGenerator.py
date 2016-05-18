@@ -14,6 +14,7 @@ from compiler.nodes.Identifier import Identifier
 from compiler.nodes.ParameterDeclaration import ParameterDeclaration
 from compiler.nodes.ParameterList import ParameterList
 from compiler.nodes.VariableIdentifier import VariableIdentifier
+from compiler.nodes.VariableDeclaration import VariableDeclaration
 from compiler.nodes.IfElseStatement import IfElseStatement
 from compiler.nodes.IfStatement import IfStatement
 from compiler.nodes.WhileStatement import WhileStatement
@@ -102,10 +103,10 @@ class ASTGenerator(SmallCVisitor):
         return TypeSpecifier(self.ast, typename)
 
     # Visit a parse tree produced by SmallCParser#compound_stmt.
-    def visitCompound_stmt(self, parsetree: SmallCParser.Compound_stmtContext):
-        return visitCompound_stmt(parsetree, False)
+    #def visitCompound_stmt(self, parsetree: SmallCParser.Compound_stmtContext):
+    #    return visitCompound_stmt(parsetree, False)
 
-    def visitCompound_stmt(self, parsetree: SmallCParser.Compound_stmtContext, isFunctionBody):
+    def visitCompound_stmt(self, parsetree: SmallCParser.Compound_stmtContext, isFunctionBody=False):
         self.ast.symbol_table.incrementScope()
         if not isFunctionBody:
             self.ast.call_stack.incrementDepth()
@@ -334,7 +335,7 @@ class ASTGenerator(SmallCVisitor):
 
     # Visit a parse tree produced by SmallCParser#conjunction.
     def visitConjunction(self, parsetree: SmallCParser.ConjunctionContext):
-        if parsetree.conjunction is not None:
+        if parsetree.conjunction() is not None:
             conjunction = self.visit(parsetree.conjunction())
             comparison = self.visit(parsetree.comparison())
             return Conjunction(self.ast, conjunction, comparison)
