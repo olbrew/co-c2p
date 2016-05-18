@@ -39,8 +39,8 @@ class ASTGenerator(SmallCVisitor):
 
     def generate(self):
         return self.visitSmallc_program(self.parsetree)
+        
     # Visit a parse tree produced by SmallCParser#smallc_program.
-
     def visitSmallc_program(self, parsetree: SmallCParser.Smallc_programContext):
         include_contexts = parsetree.include()
         function_contexts = parsetree.function_definition()
@@ -52,7 +52,6 @@ class ASTGenerator(SmallCVisitor):
 
         functions = []
         for func_ctx in function_contexts:
-            print(func_ctx.getText())
             functions.append(self.visit(func_ctx))
         print("Found functions in ASTGenerator: ", functions)
 
@@ -75,12 +74,11 @@ class ASTGenerator(SmallCVisitor):
         identifier = parsetree.identifier().IDENTIFIER().getText()
 
         if parsetree.param_decl_list() is None:
-            parameter_list = ParameterDeclarationList.ParameterDeclarationList(self.ast, [
+            parameter_list = ParameterDeclarationList(self.ast, [
             ], False)
         else:
             parameter_list = self.visit(parsetree.param_decl_list())
 
-        print(parsetree.compound_stmt().getText())
         if parsetree.compound_stmt() is None:
             statement = None
         else:
@@ -88,7 +86,7 @@ class ASTGenerator(SmallCVisitor):
 
         self.ast.call_stack.decrementDepth()
 
-        func = Function.Function(self.ast, type_object, identifier, parameter_list,
+        func = Function(self.ast, type_object, identifier, parameter_list,
                                  statement, parsetree.EXTERN() is not None)
 
         self.ast.symbol_table.decrementScope()
@@ -98,7 +96,7 @@ class ASTGenerator(SmallCVisitor):
     # Visit a parse tree produced by SmallCParser#type_specifier.
     def visitType_specifier(self, parsetree: SmallCParser.Type_specifierContext):
         is_const = parsetree.CONST() is not None
-        typename = Type.Type().getTypeFromC(parsetree.getChild(int(is_const)).getText())
+        typename = Type.getTypeFromC(parsetree.getChild(int(is_const)).getText())
         if is_const:
             typename.is_const = True
         return TypeSpecifier(self.ast, typename)
@@ -107,9 +105,9 @@ class ASTGenerator(SmallCVisitor):
     def visitCompound_stmt(self, parsetree: SmallCParser.Compound_stmtContext):
         return visitCompound_stmt(parsetree, False)
 
-    def visitCompound_stmt(self, parsetree: SmallCParser.Compound_stmtContext, functionBody):
+    def visitCompound_stmt(self, parsetree: SmallCParser.Compound_stmtContext, isFunctionBody):
         self.ast.symbol_table.incrementScope()
-        if functionBody != True:
+        if not isFunctionBody:
             self.ast.call_stack.incrementDepth()
 
         var_decls = []
@@ -120,10 +118,9 @@ class ASTGenerator(SmallCVisitor):
         for stmt in parsetree.stmt():
             statements.append(self.visit(stmt))
 
-        stmt = CompoundStatement.CompoundStatement(
-            self.ast, var_decls, statements)
+        stmt = CompoundStatement(self.ast, var_decls, statements)
 
-        if functionBody != True:
+        if not isFunctionBody:
             self.ast.call_stack.decrementDepth()
         self.ast.symbol_table.decrementScope()
 
@@ -138,7 +135,7 @@ class ASTGenerator(SmallCVisitor):
         for decl in parsetree.var_decl_list().variable_id():
             var_decl_list.append(self.visit(decl))
 
-        return VariableDeclaration.VariableDeclaration(self.ast, type_object, var_decl_list)
+        return VariableDeclaration(self.ast, type_object, var_decl_list)
 
     # Visit a parse tree produced by SmallCParser#var_decl_list.
     def visitVar_decl_list(self, parsetree: SmallCParser.Var_decl_listContext):
@@ -156,12 +153,12 @@ class ASTGenerator(SmallCVisitor):
         elif parsetree.for_stmt() is not None:
             return self.visit(parsetree.for_stmt())
         elif parsetree.BREAK() is not None:
-            return BreakStatement.BreakStatement(self.ast)
+            return BreakStatement(self.ast)
         elif parsetree.CONTINUE() is not None:
-            return ContinueStatement.ContinueStatement(self.ast)
+            return ContinueStatement(self.ast)
         elif parsetree.RETURN() is not None:
             expression = self.visit(parsetree.expr())
-            return ReturnStatement.ReturnStatement(self.ast, expression)
+            return ReturnStatement(self.ast, expression)
         elif parsetree.WRITEINT() is not None:
             expression = self.visit(parsetree.expr())
             return WriteIntStatement(self.ast, expression)
@@ -249,7 +246,7 @@ class ASTGenerator(SmallCVisitor):
         expression = self.visit(parsetree.expr())
         statement = self.visit(parsetree.stmt(0))
 
-        if len(parsetree.stmt()) == 2:
+        if len(parsetree.stmt()) is 2:
             else_stmt = self.visit(parsetree.stmt(1))
             return IfElseStatement(self.ast, expression, statement, else_stmt)
 
@@ -273,8 +270,7 @@ class ASTGenerator(SmallCVisitor):
         condition = self.visit(parsetree.expr(0))
         update = self.visit(parsetree.expr(1))
         statement = self.visit(parsetree.stmt())
-        for_stmt = ForStatement.ForStatement(
-            self.ast, var_decl, condition, update, statement)
+        for_stmt = ForStatement(self.ast, var_decl, condition, update, statement)
 
         self.ast.call_stack.decrementDepth()
         self.ast.symbol_table.decrementScope()
@@ -304,14 +300,14 @@ class ASTGenerator(SmallCVisitor):
             index = int(parsetree.identifier(
             ).array_definition().INTEGER().getText())
 
-        return Assignment.Assignment(self.ast, identifier, expression, index)
+        return Assignment(self.ast, identifier, expression, index)
 
     # Visit a parse tree produced by SmallCParser#functioncall.
     def visitFunctioncall(self, parsetree: SmallCParser.FunctioncallContext):
         identifier = parsetree.identifier().IDENTIFIER().getText()
 
         if parsetree.param_list() is None:
-            parameter_list = ParameterList.ParameterList(self.ast, [])
+            parameter_list = ParameterList(self.ast, [])
         else:
             parameter_list = self.visit(parsetree.param_list())
 
@@ -347,7 +343,7 @@ class ASTGenerator(SmallCVisitor):
 
     # Visit a parse tree produced by SmallCParser#comparison.
     def visitComparison(self, parsetree: SmallCParser.ComparisonContext):
-        if len(parsetree.relation()) == 2:
+        if len(parsetree.relation()) is 2:
             relation1 = self.visit(parsetree.relation(0))
             relation2 = self.visit(parsetree.relation(1))
             if parsetree.EQUALITY() is not None:
@@ -360,7 +356,7 @@ class ASTGenerator(SmallCVisitor):
 
     # Visit a parse tree produced by SmallCParser#relation.
     def visitRelation(self, parsetree: SmallCParser.RelationContext):
-        if len(parsetree.equation()) == 2:
+        if len(parsetree.equation()) is 2:
             equation1 = self.visit(parsetree.equation(0))
             equation2 = self.visit(parsetree.equation(1))
             if parsetree.LEFTANGLE() is not None:
@@ -380,7 +376,7 @@ class ASTGenerator(SmallCVisitor):
                 operator = parsetree.PLUS().getText()
             else:
                 operator = parsetree.MINUS().getText()
-            return Equation.Equation(self.ast, equation, term, operator)
+            return Equation(self.ast, equation, term, operator)
 
         return self.visit(parsetree.term())
 
@@ -394,7 +390,7 @@ class ASTGenerator(SmallCVisitor):
                 operator = "/"
             elif parsetree.PROCENT() is not None:
                 operator = "%"
-            return Term.Term(self.ast, term, factor, operator)
+            return Term(self.ast, term, factor, operator)
 
         return self.visit(parsetree.factor())
 
@@ -414,16 +410,16 @@ class ASTGenerator(SmallCVisitor):
     def visitPrimary(self, parsetree: SmallCParser.PrimaryContext):
         if parsetree.INTEGER() is not None:
             value = int(parsetree.INTEGER().getText())
-            return Primary.Primary(self.ast, value)
+            return Primary(self.ast, value)
         elif parsetree.REAL() is not None:
             value = float(parsetree.REAL().getText())
         elif parsetree.CHARCONST() is not None:
             # TODO: use chars correctly
             value = parsetree.CHARCONST().getText()
-            return Primary.Primary(self.ast, value[0])
+            return Primary(self.ast, value[0])
         elif parsetree.BOOLEAN() is not None:
             value = parsetree.BOOLEAN().getText() is "True"
-            return Primary.Primary(self.ast, value)
+            return Primary(self.ast, value)
         elif parsetree.identifier() is not None:
             return self.visit(parsetree.identifier())
         elif parsetree.expr() is not None:
