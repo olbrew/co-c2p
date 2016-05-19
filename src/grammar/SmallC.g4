@@ -12,7 +12,8 @@ identifier : (AMPERSAND | ASTERISK)? IDENTIFIER (array_definition | array_indexi
 array_definition : '[' INTEGER ']';
 array_indexing : '[' expr ']';
 
-include : INCLUDE '<' FILENAME '>';
+//include : INCLUDE '<' FILENAME '>';
+include : INCLUDE '<' STDIO '>';
 
 type_specifier : CONST? (FLOAT | INT | CHAR | BOOL | VOID);
 
@@ -102,7 +103,8 @@ REAL : NUMBER'.'NUMBER'f';
 CHARCONST : '"' (.)*? '"' | '\'' (.)*? '\'';
 BOOLEAN : 'true' | 'false';
 IDENTIFIER : (UNDERSCORE | CHARACTER) (UNDERSCORE | CHARACTER | DIGIT)*;
-FILENAME : (UNDERSCORE | CHARACTER | DIGIT | DOT)+;
+//FILENAME : (UNDERSCORE | CHARACTER | DIGIT | DOT)+;
+STDIO: 'stdio.h';
 
 // special characters
 PLUS : '+';
