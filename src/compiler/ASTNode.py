@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from antlr4 import ParserRuleContext
 
 
-class ASTNode(ABC, ParserRuleContext):
+class ASTNode(ParserRuleContext, ABC):
     '''
         TODO
         Make this object serializable
