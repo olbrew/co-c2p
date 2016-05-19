@@ -5,19 +5,23 @@ We will build a compiler capable of translating programs written in a subset of 
 towards instructions for the [P machine](http://ansymore.uantwerpen.be/sites/ansymo.ua.ac.be/files/uploads/courses/Compilers/pMachine/index.html).
 The compiler will be written in Python with the help of the [ANTLR tool](http://www.antlr.org/).
 
-## building and running
+## Building
 Make sure you have `python3` and `pip3` installed.
 
 If you have you you can run the `build` command. Use `build.sh` on UNIX or
 `build.bat` on Windows.
 
 This will automatically install the antlr4 python3 bindings if you don't have
-them yet, generate the parsers with antlr from our grammar and finally run the
-test files.
+them yet and generate the parsers with antlr from our grammar.
 
+## Running
+
+Run the `test` command. Use `test.sh` on UNIX or `test.bat` on Windows.
+
+This runs the compiler against our test files.
 You can examine the `test.c` files contents in the `test` directory.
 
-## features
+## Features
 The grammar is almost fully complete.
 You can test out some intentional errors in the `bad.c` files as described above.
 You can also test the `good.c` file and see that the parser doesn't give
@@ -33,6 +37,6 @@ Finally you can also already see a basis for the AST (Abstract Syntax Tree)
 generation. We are using a Visitor pattern to visit the tree nodes.
 Currently only the start rule is finished though.
 
-## authors
+## Authors
 * Eduard Besjentsev
 * Olivier Brewaeys
