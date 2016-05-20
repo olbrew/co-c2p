@@ -31,6 +31,12 @@ from compiler.nodes.Term import Term
 from compiler.nodes.Factor import Factor
 from compiler.nodes.Primary import Primary
 from compiler.types.Type import Type
+from compiler.types.IntegerType import IntegerType
+from compiler.types.FloatType import FloatType
+from compiler.types.CharacterType import CharacterType
+from compiler.types.BooleanType import BooleanType
+from compiler.types.VoidType import VoidType
+
 
 class ASTGenerator(SmallCVisitor):
 
@@ -40,7 +46,7 @@ class ASTGenerator(SmallCVisitor):
 
     def generate(self):
         return self.visitSmallc_program(self.parsetree)
-        
+
     # Visit a parse tree produced by SmallCParser#smallc_program.
     def visitSmallc_program(self, parsetree: SmallCParser.Smallc_programContext):
         include_contexts = parsetree.include()
@@ -92,7 +98,7 @@ class ASTGenerator(SmallCVisitor):
         self.ast.call_stack.decrementDepth()
 
         func = Function(self.ast, type_object, identifier, parameter_list,
-                                 statement, parsetree.EXTERN() is not None)
+                        statement, parsetree.EXTERN() is not None)
 
         self.ast.symbol_table.decrementScope()
 
@@ -101,7 +107,22 @@ class ASTGenerator(SmallCVisitor):
     # Visit a parse tree produced by SmallCParser#type_specifier.
     def visitType_specifier(self, parsetree: SmallCParser.Type_specifierContext):
         is_const = parsetree.CONST() is not None
-        typename = Type.getTypeFromC(parsetree.getChild(int(is_const)).getText())
+
+        typetext = parsetree.getChild(int(is_const)).getText()
+        if typetext == "bool":
+            typename = BooleanType()
+        elif typetext == "char":
+            typename = CharacterType()
+        elif typetext == "int":
+            typename = IntegerType()
+        elif typetext == "void":
+            typename = VoidType()
+        elif typetext == "float":
+            typename = FloatType()
+        else:
+            # TODO throw exception
+            print("Type not recognzized")
+
         if is_const:
             typename.is_const = True
         return TypeSpecifier(self.ast, typename)
@@ -275,7 +296,8 @@ class ASTGenerator(SmallCVisitor):
         condition = self.visit(parsetree.expr(0))
         update = self.visit(parsetree.expr(1))
         statement = self.visit(parsetree.stmt())
-        for_stmt = ForStatement(self.ast, var_decl, condition, update, statement)
+        for_stmt = ForStatement(
+            self.ast, var_decl, condition, update, statement)
 
         self.ast.call_stack.decrementDepth()
         self.ast.symbol_table.decrementScope()
@@ -417,7 +439,10 @@ class ASTGenerator(SmallCVisitor):
             value = int(parsetree.INTEGER().getText())
             return Primary(self.ast, value)
         elif parsetree.REAL() is not None:
-            value = float(parsetree.REAL().getText())
+            real = parsetree.REAL().getText()
+            if real[-1] is 'f':
+                real = real[:-1]
+            value = float(real)
         elif parsetree.CHARCONST() is not None:
             # TODO: use chars correctly
             value = parsetree.CHARCONST().getText()

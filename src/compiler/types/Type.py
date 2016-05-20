@@ -1,6 +1,4 @@
 from abc import ABC, abstractmethod
-# TODO circular import errors! Why needed?
-#from .BooleanType import BooleanType
 
 
 class Type(ABC):
@@ -12,13 +10,6 @@ class Type(ABC):
 
     def isArray(self):
         return self.array_size > 0
-
-    def getTypeFromC(self, c_type):
-        switcher = {
-            "bool": BooleanType
-        }
-
-        return switcher.get(c_type, lambda: "nothing")
 
     @abstractmethod
     def getName(self):

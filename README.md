@@ -5,30 +5,19 @@ We will build a compiler capable of translating programs written in a subset of 
 towards instructions for the [P machine](http://ansymore.uantwerpen.be/sites/ansymo.ua.ac.be/files/uploads/courses/Compilers/pMachine/index.html).
 The compiler will be written in Python with the help of the [ANTLR tool](http://www.antlr.org/).
 
-## building
-Make sure you have the python3 runtime installed. If you don't have it yet you
-can install it with `pip`:
+## building and running
+Make sure you have `python3` and `pip3` installed.
 
-    pip3 install antlr4-python-runtime
-
-or alternatively download it [here](https://pypi.python.org/pypi/antlr4-python3-runtime/).
-
-After setting this up you can run the `build` command. Use `build.sh` on UNIX or
+If you have you you can run the `build` command. Use `build.sh` on UNIX or
 `build.bat` on Windows.
 
-## running
+This will automatically install the antlr4 python3 bindings if you don't have
+them yet, generate the parsers with antlr from our grammar and finally run the
+test files.
 
-To run our test files go into the compiler source folder.
-You can now run the intentionally bad C files to see the error checking in
-action.
-
-    cd src/compiler/
-    python3 C2P.py ../../test/bad1.c output.p
-    python3 C2P.py ../../test/bad2.c output.p
-    python3 C2P.py ../../test/bad3.c output.p
+You can examine the `test.c` files contents in the `test` directory.
 
 ## features
-
 The grammar is almost fully complete.
 You can test out some intentional errors in the `bad.c` files as described above.
 You can also test the `good.c` file and see that the parser doesn't give
