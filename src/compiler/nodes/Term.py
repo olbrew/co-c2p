@@ -28,15 +28,15 @@ class Term(Expression):
 
         # Execute the relevant operation on the operands ('*' and '/' load
         # the factor in the condition to permit '%' to execute it later)
-        if self.operator is "*":
+        if self.operator == "*":
             self.factor.generateCode(out)
             self.cast(self.factor, out)
             self.writeInstruction("mul " + p_type, out)
-        elif self.operator is "/":
+        elif self.operator == "/":
             self.factor.generateCode(out)
             self.cast(self.factor, out)
             self.writeInstruction("div " + p_type, out)
-        elif self.operator is "%":
+        elif self.operator == "%":
             # Duplicate the result of the term first, instead of recomputing it
             # This way we effectively cut the cost of the second computation
             # TODO: try to find a way to duplicate the factor as well, instead of

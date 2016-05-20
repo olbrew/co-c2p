@@ -1,13 +1,15 @@
-from abc import ABC, abstractmethod
-# from .Statement import Statement
+from abc import abstractmethod
+from .Statement import Statement
 # from .ControlStructure import ControlStructure
 
 
 # class Loop(ABC, ControlStructure, Statement):
-class Loop(ABC):
+# Statement inherits from ASTNode which inherits from ABC
+# so we leave out ABC to prevent (MRO) order TypeError
+class Loop(Statement):
 
     def __init__(self, ast):
-        super().__init__()
+        super().__init__(ast)
 
     @abstractmethod
     def getBreakLabel(self):

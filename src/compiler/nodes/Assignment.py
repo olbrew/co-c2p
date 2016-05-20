@@ -27,11 +27,11 @@ class Assignment(Expression):
         return "assignment"
 
     def generateCode(self, out):
-        self.expression(out)
+        self.expression.generateCode(out)
         self.cast(self.expression, out)
 
         # implicitly cast if necessary
         self.cast(self.expression, out)
 
         self.writeInstruction("str " + self.result_type.getPSymbol() + " " +
-                              self.depth + " " + str(self.address + self.array_index), out)
+                              str(self.depth) + " " + str(self.address + self.array_index), out)

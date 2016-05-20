@@ -55,7 +55,6 @@ class ASTGenerator(SmallCVisitor):
         include_directives = []
         for inc_ctx in include_contexts:
             include_directives.append(self.visit(inc_ctx))
-        print("Found include directives in ASTGenerator: ", include_directives)
 
         var_decls = []
         for var_decl in parsetree.var_decl():
@@ -64,7 +63,6 @@ class ASTGenerator(SmallCVisitor):
         functions = []
         for func_ctx in function_contexts:
             functions.append(self.visit(func_ctx))
-        print("Found functions in ASTGenerator: ", functions)
 
         return Program(self.ast, include_directives, var_decls, functions)
 
@@ -78,9 +76,7 @@ class ASTGenerator(SmallCVisitor):
         self.ast.call_stack.incrementDepth()
 
         type_spec = self.visit(parsetree.type_specifier())
-        print("Type Specificier", type_spec)
         type_object = type_spec.type_object
-        print("Type Object", type_object)
 
         identifier = parsetree.identifier().IDENTIFIER().getText()
 
@@ -125,6 +121,7 @@ class ASTGenerator(SmallCVisitor):
 
         if is_const:
             typename.is_const = True
+        
         return TypeSpecifier(self.ast, typename)
 
     # Visit a parse tree produced by SmallCParser#compound_stmt.
@@ -209,7 +206,7 @@ class ASTGenerator(SmallCVisitor):
             name = parsetree.getChild(1).getText()
         else:
             name = parsetree.getChild(0).getText()
-
+        
         return Identifier(self.ast, name, indirection, address_of, index)
 
     # Visit a parse tree produced by SmallCParser#param_decl_list.
@@ -289,10 +286,13 @@ class ASTGenerator(SmallCVisitor):
         self.ast.symbol_table.incrementScope()
         self.ast.call_stack.incrementDepth()
 
-        var_decl = self.visit(parsetree.var_decl())
-        # TODO check whether we need to use var_decl() or var_decl_list()
-        # ForStatement might become more complex if we allow multiple variable initializations in for body
-        # var_decl_list = self.visit(parsetree.var_decl_list())
+        if parsetree.var_decl_list() is not None:
+            # TODO
+            # ForStatement might become more complex if we allow multiple variable initializations in for body
+            var_decl = self.visit(parsetree.var_decl_list())
+        else:
+            var_decl = self.visit(parsetree.var_decl())
+        
         condition = self.visit(parsetree.expr(0))
         update = self.visit(parsetree.expr(1))
         statement = self.visit(parsetree.stmt())

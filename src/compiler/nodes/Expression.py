@@ -12,6 +12,7 @@ class Expression(Statement):
 
     def cast(self, expression, out):
         expr_type = expression.result_type
+        # TODO: fix both operand_type and expr_type (NoneType at runtime)
         if self.operand_type.getName() != expr_type.getName():
             self.writeInstruction("conv " + expr_type.getPSymbol() +
                                   " " + self.operand_type.getPSymbol(), out)

@@ -26,11 +26,11 @@ class VariableIdentifier(ASTNode):
             self.identifier, self.typename, self.address, self.depth)
 
     def setType(self, typename):
-        self.type = typename
+        self.typename = typename
         if self.is_pointer:
-            self.type.is_pointer = True
+            self.typename.is_pointer = True
 
-        self.type.array_size = self.array_size
+        self.typename.array_size = self.array_size
         self.allocate()
 
     def getSize(self):
@@ -51,9 +51,9 @@ class VariableIdentifier(ASTNode):
             self.writeInstruction("ldc " + p_type + " 0", out)
 
         self.writeInstruction("str " + p_type + " " +
-                              0 + " " + str(self.address), out)
+                              str(0) + " " + str(self.address), out)
 
-        for i in range(1, getSize()):
+        for i in range(1, self.getSize()):
             self.writeInstruction("ldc " + p_type + " 0", out)
             self.writeInstruction("str " + p_type + " " +
-                                  0 + " " + str(self.address + i), out)
+                                  str(0) + " " + str(self.address + i), out)

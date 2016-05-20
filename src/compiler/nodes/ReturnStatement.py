@@ -19,7 +19,7 @@ class ReturnStatement(Statement):
         node = self
         controlStructure = None
         while not isinstance(node, Function):
-            node = node.getParent()
+            node = node.parent
             if (controlStructure is None) and isinstance(node, ControlStructure):
                 controlStructure = node
         function = node
@@ -35,5 +35,5 @@ class ReturnStatement(Statement):
                     "conv " + expr_type.getPSymbol() + " " + return_type.getPSymbol(), out)
 
         self.writeInstruction("str " + return_type.getPSymbol() + str(
-            self.ast.call_stack.getNestingDepth() - function.getDepth()) + " 0", out)
+            self.ast.call_stack.getNestingDepth() - function.depth) + " 0", out)
         self.writeInstruction("ujp " + controlStructure.getReturnLabel(), out)

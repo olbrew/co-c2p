@@ -22,8 +22,8 @@ int main(void)
             printf("Something went wrong!\n");
         }
     } else {
-        int i;
-        for (i = 0; i < 10; i = i + 1) {
+        //int i;
+        for (int i = 0; i < 10; i = i + 1) {
             someArray[i] = i;
             if (i == 5 + 1)
                 continue;

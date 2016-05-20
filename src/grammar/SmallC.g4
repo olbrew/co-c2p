@@ -36,7 +36,7 @@ cond_stmt :  IF '('  expr ')' stmt (ELSE stmt)?;
 
 while_stmt : WHILE '(' expr ')' stmt;
 
-for_stmt : FOR '(' (var_decl | var_decl_list ';') expr? ';' expr? ')' stmt;
+for_stmt : FOR '(' (var_decl | var_decl_list) ';' expr? ';' expr? ')' stmt;
 
 expr : assignment | condition | functioncall;
 
@@ -50,7 +50,7 @@ disjunction :  conjunction | disjunction '||' conjunction;
 
 conjunction : comparison | conjunction '&&' comparison;
 
-comparison : relation | relation '==' relation | relation '!=' relation;
+comparison : relation | relation EQUALITY relation | relation NEQUALITY relation;
 
 relation : equation | equation (LEFTANGLE | RIGHTANGLE) equation;
 
@@ -128,6 +128,7 @@ RIGHTCURLY : '}';
 OR : '||';
 AND : '&&';
 EQUALITY : '==';
+NEQUALITY : '!=';
 
 // text formatting
 COMMENT : ('/*' (.)*? '*/' | '//' (.)*? '\n') -> skip;
