@@ -43,11 +43,7 @@ class VariableIdentifier(ASTNode):
         return "var identifier"
 
     def generateCode(self, out):
-        p_type = ""
-        if self.is_pointer:
-            p_type = "a"
-        else:
-            p_type = self.typename.getPSymbol()
+        p_type = "a" if self.is_pointer else self.typename.getPSymbol()
 
         if self.expression is not None:
             self.expression.generateCode(out)
@@ -55,9 +51,9 @@ class VariableIdentifier(ASTNode):
             self.writeInstruction("ldc " + p_type + " 0", out)
 
         self.writeInstruction("str " + p_type + " " +
-                              0 + " " + self.address, out)
+                              0 + " " + str(self.address), out)
 
         for i in range(1, getSize()):
             self.writeInstruction("ldc " + p_type + " 0", out)
             self.writeInstruction("str " + p_type + " " +
-                                  0 + " " + (self.address + i), out)
+                                  0 + " " + str(self.address + i), out)

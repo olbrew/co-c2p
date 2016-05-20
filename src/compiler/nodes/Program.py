@@ -3,23 +3,24 @@ from compiler.ASTNode import ASTNode
 
 class Program(ASTNode):
 
-    def __init__(self, ast, includes, function_declarations):
+    def __init__(self, ast, includes, var_declarations, function_declarations):
         super().__init__(ast)
-        self.includes = []
-        self.function_declarations = []
 
         if ast.symbol_table is None:
             print("ERROR: encountered None instead of AST")
 
         self.includes = includes
+        self.var_declarations = var_declarations
         self.function_declarations = function_declarations
 
         print("Program.py found", len(self.includes), "includes")
         print("Program.py found", len(self.function_declarations), "functions")
 
         for include in self.includes:
-            print(include)
             self.addChild(include)
+
+        for var_decl in self.var_declarations:
+            self.addChild(var_decl)
 
         for func_decl in self.function_declarations:
             self.addChild(func_decl)

@@ -51,12 +51,16 @@ class ASTGenerator(SmallCVisitor):
             include_directives.append(self.visit(inc_ctx))
         print("Found include directives in ASTGenerator: ", include_directives)
 
+        var_decls = []
+        for var_decl in parsetree.var_decl():
+            var_decls.append(self.visit(var_decl))
+
         functions = []
         for func_ctx in function_contexts:
             functions.append(self.visit(func_ctx))
         print("Found functions in ASTGenerator: ", functions)
 
-        return Program(self.ast, include_directives, functions)
+        return Program(self.ast, include_directives, var_decls, functions)
 
     # Visit a parse tree produced by SmallCParser#include.
     def visitInclude(self, parsetree: SmallCParser.IncludeContext):
