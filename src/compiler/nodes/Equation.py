@@ -27,10 +27,9 @@ class Equation(Expression):
         self.cast(self.equation, out)
 
         # Execute the relevant operation on the operands
-        if self.operator is "+":
+        if self.operator == "+":
             self.writeInstruction("add " + p_type, out)
-        elif self.operator is "-":
-            self.factor.generateCode(out)
+        elif self.operator == "-":
             self.writeInstruction("sub " + p_type, out)
         else:
             print("Error:", self.operator, " is not implemented.")

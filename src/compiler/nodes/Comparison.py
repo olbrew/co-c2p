@@ -30,9 +30,9 @@ class Comparison(Expression):
         self.cast(self.relation2, out)
 
         # Execute the operation on the operands
-        if self.operator is "==":
+        if self.operator == "==":
             self.writeInstruction("equ " + p_type, out)
-        elif self.operator is "!=":
+        elif self.operator == "!=":
             self.writeInstruction("neq " + p_type, out)
         else:
             print("Error:", self.operator, " is not implemented.")

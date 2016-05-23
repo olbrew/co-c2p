@@ -11,6 +11,7 @@ class ASTNode(ParserRuleContext, ABC):
 
     def __init__(self, ast):
         super().__init__()
+        ParserRuleContext.__init__(self)
         self.ast = ast
 
     def addChild(self, child):

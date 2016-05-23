@@ -38,5 +38,10 @@ class Function(ASTNode, ControlStructure):
         return "definition of function '" + self.identifier + "'"
 
     def generateCode(self, out):
-        # TODO
-        pass
+        if self.isForwardDeclaration():
+            return
+        
+        self.writeInstruction("function_" + self.identifier + ":", out)
+        self.writeInstruction("ssp " + str(5 + len(self.parameters.parameters) + self.content.getVarsSize()), out)
+        
+        self.content.generateCode(out)
