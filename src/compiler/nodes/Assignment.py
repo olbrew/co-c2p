@@ -14,12 +14,12 @@ class Assignment(Expression):
         self.array_index = array_index
 
         symbol = ast.symbol_table.getSymbol(self.identifier)
-        self.result_type = symbol.type
+        self.expression.result_type = symbol.type
         self.address = symbol.address
         self.depth = symbol.getRelativeDepth(ast.call_stack)
-        operand_type = expression.result_type
+        self.expression.operand_type = self.expression.result_type
 
-        if self.result_type.is_const:
+        if self.expression.result_type.is_const:
             # TODO: handle this properly with a semantic exception
             raise Exception("Variable '" + self.identifier + "' is const!")
 
@@ -33,5 +33,5 @@ class Assignment(Expression):
         # implicitly cast if necessary
         self.cast(self.expression, out)
 
-        self.writeInstruction("str " + self.result_type.getPSymbol() + " " +
+        self.writeInstruction("str " + self.expression.result_type.getPSymbol() + " " +
                               str(self.depth) + " " + str(self.address + self.array_index), out)
