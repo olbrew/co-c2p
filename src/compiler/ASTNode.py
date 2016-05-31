@@ -1,14 +1,9 @@
+import pickle
 from abc import ABC, abstractmethod
 from antlr4 import ParserRuleContext
 
 
 class ASTNode(ParserRuleContext, ABC):
-    '''
-        TODO
-        Make this object serializable
-        readObject, writeObject, storeToDisk, loadFromDisk
-    '''
-
     def __init__(self, ast):
         super().__init__()
         self.ast = ast
@@ -18,12 +13,19 @@ class ASTNode(ParserRuleContext, ABC):
         child.parent = self
 
     def writeInstruction(self, payload, out):
-        '''
-            TODO
-            save instructions into p_prog file
-        '''
-        print(payload)
+        f = open(out, 'a')
+        f.write(payload+'\n')
+        f.close()
 
+    def storeASTToDisk(self):
+        with open('ast.pickle', 'wb') as f:
+            pickle.dump(self.ast, f, pickle.HIGHEST_PROTOCOL)
+
+    def loadASTFromDisk(self):
+        with open('ast.pickle', 'rb') as f:
+            ast = pickle.load(f)
+        return ast
+    
     @abstractmethod
     def getDisplayableText(self):
         pass
