@@ -121,11 +121,11 @@ class ASTGenerator(SmallCVisitor):
 
         if is_const:
             typename.is_const = True
-        
+
         return TypeSpecifier(self.ast, typename)
 
     # Visit a parse tree produced by SmallCParser#compound_stmt.
-    #def visitCompound_stmt(self, parsetree: SmallCParser.Compound_stmtContext):
+    # def visitCompound_stmt(self, parsetree: SmallCParser.Compound_stmtContext):
     #    return visitCompound_stmt(parsetree, False)
 
     def visitCompound_stmt(self, parsetree: SmallCParser.Compound_stmtContext, isFunctionBody=False):
@@ -206,7 +206,7 @@ class ASTGenerator(SmallCVisitor):
             name = parsetree.getChild(1).getText()
         else:
             name = parsetree.getChild(0).getText()
-        
+
         return Identifier(self.ast, name, indirection, address_of, index)
 
     # Visit a parse tree produced by SmallCParser#param_decl_list.
@@ -288,11 +288,12 @@ class ASTGenerator(SmallCVisitor):
 
         if parsetree.var_decl_list() is not None:
             # TODO
-            # ForStatement might become more complex if we allow multiple variable initializations in for body
+            # ForStatement might become more complex if we allow multiple
+            # variable initializations in for body
             var_decl = self.visit(parsetree.var_decl_list())
         else:
             var_decl = self.visit(parsetree.var_decl())
-        
+
         condition = self.visit(parsetree.expr(0))
         update = self.visit(parsetree.expr(1))
         statement = self.visit(parsetree.stmt())
