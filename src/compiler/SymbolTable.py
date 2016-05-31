@@ -13,7 +13,7 @@ class Symbol:
         stack_depth = call_stack.getNestingDepth()
         if (stack_depth < self.depth):
             # TODO: generate error
-            pass
+            print("ERROR: scope of symbol is larger than stack's depth.")
         return stack_depth - self.depth
 
 

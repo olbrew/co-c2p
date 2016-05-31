@@ -11,7 +11,6 @@ class CompoundStatement(Statement, ControlStructure):
 
     def __init__(self, ast, var_decls, statements):
         super().__init__(ast)
-        # ControlStructure.__init__(self)
 
         self.var_decls = var_decls
         self.statements = statements

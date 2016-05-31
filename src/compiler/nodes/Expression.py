@@ -15,5 +15,4 @@ class Expression(Statement):
         if expr_operand_type.getName() != expr_result_type.getName():
             self.writeInstruction("conv " + expr_result_type.getPSymbol() +
                                   " " + expr_operand_type.getPSymbol(), out)
-            # TODO: warn that this is an implicit cast and information could be
-            # lost
+            print("WARNING: implicit cast from '" + expr_operand_type.getName() + "' to '" + expr_result_type.getName() + "'. Information could be lost.")

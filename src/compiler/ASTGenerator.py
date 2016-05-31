@@ -191,6 +191,7 @@ class ASTGenerator(SmallCVisitor):
             return self.visit(parsetree.functioncall())
 
         # TODO: throw compiler error
+        print("ERROR: unrecognized statement.")
         return None
 
     # Visit a parse tree produced by SmallCParser#identifier.
@@ -315,6 +316,7 @@ class ASTGenerator(SmallCVisitor):
             return self.visit(parsetree.functioncall())
 
         # TODO throw compiler error
+        print("ERROR: unrecognized expression.")
         return None
 
     # Visit a parse tree produced by SmallCParser#assignment.
@@ -444,6 +446,7 @@ class ASTGenerator(SmallCVisitor):
             if real[-1] is 'f':
                 real = real[:-1]
             value = float(real)
+            return Primary(self.ast, value)
         elif parsetree.CHARCONST() is not None:
             # TODO: use chars correctly
             value = parsetree.CHARCONST().getText()
@@ -459,4 +462,5 @@ class ASTGenerator(SmallCVisitor):
             return self.visit(parsetree.functioncall())
 
         # TODO throw compiler error
+        print("ERROR: unrecognized primary.")
         return None

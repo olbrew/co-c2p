@@ -21,7 +21,7 @@ class Assignment(Expression):
 
         if self.expression.result_type.is_const:
             # TODO: handle this properly with a semantic exception
-            raise Exception("Variable '" + self.identifier + "' is const!")
+            raise Exception("Can't assign to const variable '" + self.identifier + "'!")
 
     def getDisplayableText(self):
         return "assignment"

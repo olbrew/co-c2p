@@ -30,10 +30,11 @@ class ReturnStatement(Statement):
         return_type = function.return_type
         if not isinstance(expr_type, VoidType):
             # TODO warning for implicit cast
-            if expr_type.getName() is return_type.getName():
+            if expr_type.getName() is not return_type.getName():
                 self.writeInstruction(
                     "conv " + expr_type.getPSymbol() + " " + return_type.getPSymbol(), out)
-
+                print("WARNING: implicit cast from '" + expr_type.getName() + "' to '" + return_type.getName() + "'. Information could be lost.")
+            
         self.writeInstruction("str " + return_type.getPSymbol() + str(
             self.ast.call_stack.getNestingDepth() - function.depth) + " 0", out)
         self.writeInstruction("ujp " + controlStructure.getReturnLabel(), out)
