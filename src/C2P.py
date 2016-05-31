@@ -16,7 +16,6 @@ def run(argv):
     ast_environment = AST()
     program = ASTGenerator(ast_environment, tree).generate()
 
-    # TODO how to write output of other includes to same .p file
     program.generateCode(argv[2])
 
     return program
