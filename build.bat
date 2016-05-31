@@ -4,4 +4,5 @@ ECHO.
 
 :: Build Grammar Lexers and Parsers with antlr4
 ECHO "Building `smallC` grammar lexers and parsers"
-java -jar lib/antlr-4.5.3-complete.jar -visitor -Dlanguage=Python3 src/grammar/SmallC.g4
+CD src\grammar\
+java -jar ../../lib/antlr-4.5.3-complete.jar -visitor -Dlanguage=Python3 SmallC.g4
