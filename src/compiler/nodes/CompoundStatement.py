@@ -45,11 +45,10 @@ class CompoundStatement(Statement, ControlStructure):
         return "compound statement"
 
     def generateCode(self, out):
-        # TODO: even function bodies don't seem to enter this clause, look into this!
         if isinstance(self.parent, Function):
             function = self.parent
             function_id = function.identifier
-		    
+            
             # TODO: Let's assume that this compound stmt is the main function's body for now
             for var_decl in self.var_decls:
                 var_decl.generateCode(out)

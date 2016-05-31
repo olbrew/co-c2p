@@ -9,8 +9,8 @@ class FunctionCall(Expression):
         super().__init__(ast)
         self.identifier = identifier
         self.parameter_list = parameters
+        print("function", self.identifier, "has", ast.symbol_table.getSymbol(self.identifier).type.getName(), "as return type.")
         self.addChild(self.parameter_list)
-        # TODO determine correct return type of the function
         self.result_type = IntegerType()
 
     def getDisplayableText(self):

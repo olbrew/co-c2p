@@ -98,6 +98,10 @@ class ASTGenerator(SmallCVisitor):
 
         self.ast.symbol_table.decrementScope()
 
+        # TODO: determine address for this function in the symboltable
+        depth = len(self.ast.symbol_table.stack) - 1
+        self.ast.symbol_table.addSymbol(identifier, type_object, "", depth)
+
         return func
 
     # Visit a parse tree produced by SmallCParser#type_specifier.
