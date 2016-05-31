@@ -25,9 +25,9 @@ param_list : expr (',' expr )*;
 
 compound_stmt : '{' (var_decl* stmt*)? '}';
 
-var_decl : type_specifier var_decl_list ';';
+var_decl : type_specifier var_decl_list;
 
-var_decl_list :  variable_id ( ',' variable_id)*;
+var_decl_list :  variable_id ( ',' variable_id)* ';';
 
 variable_id  : identifier ( '=' expr )?;
 
@@ -37,7 +37,7 @@ cond_stmt :  IF '('  expr ')' stmt (ELSE stmt)?;
 
 while_stmt : WHILE '(' expr ')' stmt;
 
-for_stmt : FOR '(' (var_decl | var_decl_list) ';' expr? ';' expr? ')' stmt;
+for_stmt : FOR '(' (var_decl | var_decl_list) expr? ';' expr? ')' stmt;
 
 expr : assignment | condition | functioncall;
 
