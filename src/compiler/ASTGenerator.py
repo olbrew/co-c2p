@@ -68,7 +68,7 @@ class ASTGenerator(SmallCVisitor):
 
     # Visit a parse tree produced by SmallCParser#include.
     def visitInclude(self, parsetree: SmallCParser.IncludeContext):
-        return IncludeDirective(self.ast, parsetree.FILENAME().getText())
+        return IncludeDirective(self.ast, parsetree.STDIO().getText())
 
     # Visit a parse tree produced by SmallCParser#function_definition.
     def visitFunction_definition(self, parsetree: SmallCParser.Function_definitionContext):
