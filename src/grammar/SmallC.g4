@@ -23,7 +23,7 @@ parameter_decl : type_specifier identifier?;
 
 param_list : expr (',' expr )*;
 
-compound_stmt : '{' (var_decl* stmt*)? '}';
+compound_stmt : '{' (var_decl | stmt)* '}';
 
 var_decl : type_specifier var_decl_list;
 
