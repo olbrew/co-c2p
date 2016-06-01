@@ -6,3 +6,5 @@ ECHO.
 ECHO "Building `smallC` grammar lexers and parsers"
 CD src\grammar\
 java -jar ../../lib/antlr-4.5.3-complete.jar -visitor -Dlanguage=Python3 SmallC.g4
+
+PAUSE
