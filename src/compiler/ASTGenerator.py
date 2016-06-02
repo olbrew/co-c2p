@@ -87,21 +87,24 @@ class ASTGenerator(SmallCVisitor):
             parameter_list = self.visit(parsetree.param_decl_list())
 
         if parsetree.compound_stmt() is None:
+            # forward declaration
             statement = None
         else:
+            # function definition
             statement = self.visitCompound_stmt(parsetree.compound_stmt(), True)
 
         self.ast.call_stack.decrementDepth()
-
+        
         func = Function(self.ast, type_object, identifier, parameter_list,
                         statement, parsetree.EXTERN() is not None)
 
         self.ast.symbol_table.decrementScope()
 
-        # TODO: determine address for this function in the symboltable
-        depth = len(self.ast.symbol_table.stack) - 1
-        self.ast.symbol_table.addSymbol(identifier, type_object, "", depth)
-
+        if self.ast.symbol_table.getSymbol(identifier) is None:
+            address = self.ast.call_stack.getAddress()
+            depth = self.ast.call_stack.getNestingDepth()
+            self.ast.symbol_table.addSymbol(identifier, type_object, address, depth)
+        
         return func
 
     # Visit a parse tree produced by SmallCParser#type_specifier.

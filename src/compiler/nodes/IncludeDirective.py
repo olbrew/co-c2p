@@ -9,9 +9,10 @@ class IncludeDirective(ASTNode):
         self.filename = filename
         
         if self.filename == "stdio.h":
-            # TODO: determine address for following two symbols
-            ast.symbol_table.addSymbol("printf", IntegerType(), "", 0)
-            ast.symbol_table.addSymbol("scanf", IntegerType(), "", 0)
+            address = ast.call_stack.getAddress()
+            depth = ast.call_stack.getNestingDepth()
+            ast.symbol_table.addSymbol("printf", IntegerType(), address, depth)
+            ast.symbol_table.addSymbol("scanf", IntegerType(), address, depth)
 
     def getDisplayableText(self):
         return "include '" + self.filename + "'"
