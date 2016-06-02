@@ -179,6 +179,8 @@ class ASTGenerator(SmallCVisitor):
             return self.visit(parsetree.while_stmt())
         elif parsetree.for_stmt() is not None:
             return self.visit(parsetree.for_stmt())
+        elif parsetree.expr() is not None:
+            return self.visit(parsetree.expr())
         elif parsetree.BREAK() is not None:
             return BreakStatement(self.ast)
         elif parsetree.CONTINUE() is not None:

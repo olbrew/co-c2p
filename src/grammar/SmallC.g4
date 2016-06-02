@@ -31,7 +31,7 @@ var_decl_list :  variable_id ( ',' variable_id)* ';';
 
 variable_id  : identifier ( '=' expr )?;
 
-stmt : compound_stmt | cond_stmt | while_stmt | for_stmt | BREAK ';' | CONTINUE ';' | RETURN expr ';' | READINT '(' identifier ')' ';' | WRITEINT '(' expr ')' ';' | assignment ';' | functioncall ';'; //
+stmt : compound_stmt | cond_stmt | while_stmt | for_stmt | expr ';' | BREAK ';' | CONTINUE ';' | RETURN expr ';' | READINT '(' identifier ')' ';' | WRITEINT '(' expr ')' ';' | assignment ';' | functioncall ';'; //
 
 cond_stmt :  IF '('  expr ')' stmt (ELSE stmt)?;
 
