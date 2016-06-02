@@ -11,9 +11,12 @@ class Identifier(Expression):
         self.name = name
         self.indirection = indirection
         self.address_of = address_of
-        self.operand_type = symbol.type
-        self.result_type = self.operand_type
-
+        if symbol is not None:
+            self.operand_type = symbol.type
+            self.result_type = self.operand_type
+        else:
+            raise Exception("Syntax error: variable", self.name, "is not declared yet.")
+        
         if self.operand_type.isArray():
             self.array_index = array_index
         else:
