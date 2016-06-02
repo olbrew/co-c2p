@@ -1,7 +1,5 @@
 from .Expression import Expression
 #from .ParameterList import ParameterList
-from compiler.types.IntegerType import IntegerType
-
 
 class FunctionCall(Expression):
 
@@ -9,9 +7,8 @@ class FunctionCall(Expression):
         super().__init__(ast)
         self.identifier = identifier
         self.parameter_list = parameters
-        print("function", self.identifier, "has", ast.symbol_table.getSymbol(self.identifier).type.getName(), "as return type.")
         self.addChild(self.parameter_list)
-        self.result_type = IntegerType()
+        self.result_type = ast.symbol_table.getSymbol(self.identifier).type
 
     def getDisplayableText(self):
         return "call '" + self.identifier + "'"
