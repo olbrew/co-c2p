@@ -78,7 +78,7 @@ class ASTGenerator(SmallCVisitor):
 
         type_spec = self.visit(parsetree.type_specifier())
         type_object = type_spec.type_object
-
+        
         identifier = parsetree.identifier().IDENTIFIER().getText()
 
         if parsetree.param_decl_list() is None:
@@ -89,15 +89,19 @@ class ASTGenerator(SmallCVisitor):
 
         if parsetree.compound_stmt() is None:
             # forward declaration
-            statement = None
+            statements = None
         else:
             # function definition
-            statement = self.visitCompound_stmt(parsetree.compound_stmt(), True)
-
+            statements = self.visitCompound_stmt(parsetree.compound_stmt(), True)
+        
         self.ast.call_stack.decrementDepth()
         
+        # check consistency of function signature
+        if type_object.getName() == "void":
+            print(statements.statements)
+        
         func = Function(self.ast, type_object, identifier, parameter_list,
-                        statement, parsetree.EXTERN() is not None)
+                        statements, parsetree.EXTERN() is not None)
 
         self.ast.symbol_table.decrementScope()
 
@@ -155,7 +159,7 @@ class ASTGenerator(SmallCVisitor):
         if not isFunctionBody:
             self.ast.call_stack.decrementDepth()
         self.ast.symbol_table.decrementScope()
-
+        
         return stmt
 
     # Visit a parse tree produced by SmallCParser#var_decl.
@@ -237,12 +241,7 @@ class ASTGenerator(SmallCVisitor):
         for param_decl in parsetree.parameter_decl():
             parameter_decl_list.append(self.visit(param_decl))
 
-        return ParameterDeclarationList(self.ast, parameter_decl_list, parsetree.parameter_pack() is not None)
-
-    # Visit a parse tree produced by SmallCParser#parameter_pack.
-    def visitParameter_pack(self, parsetree: SmallCParser.Parameter_packContext):
-        # TODO
-        pass
+        return ParameterDeclarationList(self.ast, parameter_decl_list)
 
     # Visit a parse tree produced by SmallCParser#parameter_decl.
     def visitParameter_decl(self, parsetree: SmallCParser.Parameter_declContext):

@@ -17,8 +17,7 @@ include : INCLUDE '<' STDIO '>';
 
 type_specifier : CONST? (FLOAT | INT | CHAR | BOOL | VOID);
 
-param_decl_list : parameter_decl (',' parameter_decl )* (',' parameter_pack)?;
-parameter_pack : '...';
+param_decl_list : parameter_decl (',' parameter_decl )*;
 parameter_decl : type_specifier identifier?;
 
 param_list : expr (',' expr )*;

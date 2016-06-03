@@ -3,11 +3,10 @@ from compiler.ASTNode import ASTNode
 
 class ParameterDeclarationList(ASTNode):
 
-    def __init__(self, ast, params, parameter_pack):
+    def __init__(self, ast, params):
         super().__init__(ast)
 
         self.parameters = params
-        self.parameter_pack = parameter_pack
 
         for param in self.parameters:
             self.addChild(param)

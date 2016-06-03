@@ -2,7 +2,6 @@ from compiler.ASTNode import ASTNode
 from compiler.types.IntegerType import IntegerType
 
 class IncludeDirective(ASTNode):
-    # TODO only support include stio, put them directly in symbol table
 
     def __init__(self, ast, filename):
         super().__init__(ast)
