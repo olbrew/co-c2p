@@ -1,6 +1,6 @@
 from compiler.ASTNode import ASTNode
 from compiler.types.VoidType import VoidType
-#from VariableIdentifier import VariableIdentifier
+from compiler.MyErrorListener import C2PException
 
 
 class VariableDeclaration(ASTNode):
@@ -9,7 +9,7 @@ class VariableDeclaration(ASTNode):
         super().__init__(ast)
     
         if isinstance(typename, VoidType):
-            raise Exception("Syntax error: cannot declare a variable with void type.")
+            raise C2PException("variable has incomplete type 'void'")
         
         self.typename = typename
         self.variable_identifiers = variable_identifiers
@@ -19,7 +19,7 @@ class VariableDeclaration(ASTNode):
                 var.setType(typename)
                 self.addChild(var)
             else:
-                raise Exception("Syntax error: duplicate declaration of variable", var.identifier)
+                raise C2PException("redifinition of '" + var.identifier + "'")
 
     def getDeclarationSize(self):
         space = 0

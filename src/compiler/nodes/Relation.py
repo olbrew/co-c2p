@@ -1,7 +1,6 @@
-import sys
 from .Expression import Expression
 from compiler.types.BooleanType import BooleanType
-
+from compiler.MyErrorListener import C2PException
 
 class Relation(Expression):
 
@@ -35,5 +34,4 @@ class Relation(Expression):
         elif self.operator is ">":
             self.writeInstruction("grt " + p_type, out)
         else:
-            print("Error:", self.operator, " is not implemented.")
-            sys.exit(1)
+            raise C2PException(self.operator + " is not supported.")

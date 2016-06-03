@@ -36,6 +36,7 @@ from compiler.types.FloatType import FloatType
 from compiler.types.CharacterType import CharacterType
 from compiler.types.BooleanType import BooleanType
 from compiler.types.VoidType import VoidType
+from compiler.MyErrorListener import MyErrorListener, C2PException
 
 
 class ASTGenerator(SmallCVisitor):
@@ -123,9 +124,11 @@ class ASTGenerator(SmallCVisitor):
         elif typetext == "float":
             typename = FloatType()
         else:
-            # TODO throw exception
-            print("Type not recognzized")
-
+            line = parsetree.start.line
+            column = parsetree.start.column
+            msg = "'" + typename + "' is not a recognzized type"
+            MyErrorListener().semanticError(line, column, msg)
+            
         if is_const:
             typename.is_const = True
 
@@ -164,8 +167,13 @@ class ASTGenerator(SmallCVisitor):
         var_decl_list = []
         for decl in parsetree.var_decl_list().variable_id():
             var_decl_list.append(self.visit(decl))
-
-        return VariableDeclaration(self.ast, type_object, var_decl_list)
+        
+        try:
+            return VariableDeclaration(self.ast, type_object, var_decl_list)
+        except C2PException as e:
+            line = parsetree.start.line
+            column = parsetree.start.column
+            MyErrorListener().semanticError(line, column, e.msg)
 
     # Visit a parse tree produced by SmallCParser#var_decl_list.
     def visitVar_decl_list(self, parsetree: SmallCParser.Var_decl_listContext):
@@ -173,7 +181,6 @@ class ASTGenerator(SmallCVisitor):
 
     # Visit a parse tree produced by SmallCParser#stmt.
     def visitStmt(self, parsetree: SmallCParser.StmtContext):
-        # TODO: differentiate between more statements!
         if parsetree.compound_stmt() is not None:
             return self.visit(parsetree.compound_stmt())
         elif parsetree.cond_stmt() is not None:
@@ -198,10 +205,11 @@ class ASTGenerator(SmallCVisitor):
             return self.visit(parsetree.assignment())
         elif parsetree.functioncall() is not None:
             return self.visit(parsetree.functioncall())
-
-        # TODO: throw compiler error
-        print("ERROR: unrecognized statement.")
-        return None
+        else:
+            line = parsetree.start.line
+            column = parsetree.start.column
+            msg = "unrecognized statement"
+            MyErrorListener().semanticError(line, column, msg)
 
     # Visit a parse tree produced by SmallCParser#identifier.
     def visitIdentifier(self, parsetree: SmallCParser.IdentifierContext):
@@ -216,8 +224,13 @@ class ASTGenerator(SmallCVisitor):
             name = parsetree.getChild(1).getText()
         else:
             name = parsetree.getChild(0).getText()
-
-        return Identifier(self.ast, name, indirection, address_of, index)
+        
+        try:
+            return Identifier(self.ast, name, indirection, address_of, index)
+        except C2PException as e:
+            line = parsetree.start.line
+            column = parsetree.start.column
+            MyErrorListener().semanticError(line, column, e.msg)
 
     # Visit a parse tree produced by SmallCParser#param_decl_list.
     def visitParam_decl_list(self, parsetree: SmallCParser.Param_decl_listContext):
@@ -323,10 +336,11 @@ class ASTGenerator(SmallCVisitor):
             return self.visit(parsetree.condition())
         elif parsetree.functioncall() is not None:
             return self.visit(parsetree.functioncall())
-
-        # TODO throw compiler error
-        print("ERROR: unrecognized expression.")
-        return None
+        else:
+            line = parsetree.start.line
+            column = parsetree.start.column
+            msg = "unrecognized expression"
+            MyErrorListener().semanticError(line, column, msg)
 
     # Visit a parse tree produced by SmallCParser#assignment.
     def visitAssignment(self, parsetree: SmallCParser.AssignmentContext):
@@ -339,7 +353,12 @@ class ASTGenerator(SmallCVisitor):
             index = int(parsetree.identifier(
             ).array_definition().INTEGER().getText())
 
-        return Assignment(self.ast, identifier, expression, index)
+        try:
+            return Assignment(self.ast, identifier, expression, index)
+        except C2PException as e:
+            line = parsetree.start.line
+            column = parsetree.start.column
+            MyErrorListener().semanticError(line, column, e.msg)
 
     # Visit a parse tree produced by SmallCParser#functioncall.
     def visitFunctioncall(self, parsetree: SmallCParser.FunctioncallContext):
@@ -350,7 +369,12 @@ class ASTGenerator(SmallCVisitor):
         else:
             parameter_list = self.visit(parsetree.param_list())
 
-        return FunctionCall(self.ast, identifier, parameter_list)
+        try:
+            return FunctionCall(self.ast, identifier, parameter_list)
+        except C2PException as e:
+            line = parsetree.start.line
+            column = parsetree.start.column
+            MyErrorListener().semanticError(line, column, e.msg)
 
     # Visit a parse tree produced by SmallCParser#condition.
     def visitCondition(self, parsetree: SmallCParser.ConditionContext):
@@ -389,7 +413,12 @@ class ASTGenerator(SmallCVisitor):
                 operator = "=="
             else:
                 operator = "!="
-            return Comparison(self.ast, relation1, relation2, operator)
+            try:
+                return Comparison(self.ast, relation1, relation2, operator)
+            except C2PException as e:
+                line = parsetree.start.line
+                column = parsetree.start.column
+                MyErrorListener().semanticError(line, column, e.msg)
 
         return self.visit(parsetree.relation(0))
 
@@ -402,7 +431,12 @@ class ASTGenerator(SmallCVisitor):
                 operator = "<"
             else:
                 operator = ">"
-            return Relation(self.ast, equation1, equation2, operator)
+            try:
+                return Relation(self.ast, equation1, equation2, operator)
+            except C2PException as e:
+                line = parsetree.start.line
+                column = parsetree.start.column
+                MyErrorListener().semanticError(line, column, e.msg)
 
         return self.visit(parsetree.equation(0))
 
@@ -415,7 +449,12 @@ class ASTGenerator(SmallCVisitor):
                 operator = parsetree.PLUS().getText()
             else:
                 operator = parsetree.MINUS().getText()
-            return Equation(self.ast, equation, term, operator)
+            try:
+                return Equation(self.ast, equation, term, operator)
+            except C2PException as e:
+                line = parsetree.start.line
+                column = parsetree.start.column
+                MyErrorListener().semanticError(line, column, e.msg)
 
         return self.visit(parsetree.term())
 
@@ -429,7 +468,12 @@ class ASTGenerator(SmallCVisitor):
                 operator = "/"
             elif parsetree.PROCENT() is not None:
                 operator = "%"
-            return Term(self.ast, term, factor, operator)
+            try:
+                return Term(self.ast, term, factor, operator)
+            except C2PException as e:
+                line = parsetree.start.line
+                column = parsetree.start.column
+                MyErrorListener().semanticError(line, column, e.msg)
 
         return self.visit(parsetree.factor())
 
@@ -441,35 +485,45 @@ class ASTGenerator(SmallCVisitor):
                 operator = "-"
             else:
                 operator = "!"
-            return Factor(self.ast, factor, operator)
+            try:
+                return Factor(self.ast, factor, operator)
+            except C2PException as e:
+                line = parsetree.start.line
+                column = parsetree.start.column
+                MyErrorListener().semanticError(line, column, e.msg)
 
         return self.visit(parsetree.primary())
 
     # Visit a parse tree produced by SmallCParser#primary.
     def visitPrimary(self, parsetree: SmallCParser.PrimaryContext):
-        if parsetree.INTEGER() is not None:
-            value = int(parsetree.INTEGER().getText())
-            return Primary(self.ast, value)
-        elif parsetree.REAL() is not None:
-            real = parsetree.REAL().getText()
-            if real[-1] is 'f':
-                real = real[:-1]
-            value = float(real)
-            return Primary(self.ast, value)
-        elif parsetree.CHARCONST() is not None:
-            # TODO: use chars correctly
-            value = parsetree.CHARCONST().getText()
-            return Primary(self.ast, value[0])
-        elif parsetree.BOOLEAN() is not None:
-            value = parsetree.BOOLEAN().getText() is "True"
-            return Primary(self.ast, value)
-        elif parsetree.identifier() is not None:
-            return self.visit(parsetree.identifier())
-        elif parsetree.expr() is not None:
-            return self.visit(parsetree.expr())
-        elif parsetree.functioncall() is not None:
-            return self.visit(parsetree.functioncall())
-
-        # TODO throw compiler error
-        print("ERROR: unrecognized primary.")
-        return None
+        try:
+            if parsetree.INTEGER() is not None:
+                value = int(parsetree.INTEGER().getText())
+                return Primary(self.ast, value)
+            elif parsetree.REAL() is not None:
+                real = parsetree.REAL().getText()
+                if real[-1] is 'f':
+                    real = real[:-1]
+                value = float(real)
+                return Primary(self.ast, value)
+            elif parsetree.CHARCONST() is not None:
+                # TODO: use chars correctly
+                value = parsetree.CHARCONST().getText()
+                return Primary(self.ast, value[0])
+            elif parsetree.BOOLEAN() is not None:
+                value = parsetree.BOOLEAN().getText() is "True"
+                return Primary(self.ast, value)
+            elif parsetree.identifier() is not None:
+                return self.visit(parsetree.identifier())
+            elif parsetree.expr() is not None:
+                return self.visit(parsetree.expr())
+            elif parsetree.functioncall() is not None:
+                return self.visit(parsetree.functioncall())
+        except C2PException as e:
+            line = parsetree.start.line
+            column = parsetree.start.column
+            MyErrorListener().semanticError(line, column, e.msg)
+        line = parsetree.start.line
+        column = parsetree.start.column
+        msg = "unrecognized primary"
+        MyErrorListener().semanticError(line, column, msg)

@@ -1,9 +1,9 @@
-import sys
 from .Expression import Expression
 from compiler.types.IntegerType import IntegerType
 from compiler.types.FloatType import FloatType
 from compiler.types.BooleanType import BooleanType
 from compiler.types.CharacterType import CharacterType
+from compiler.MyErrorListener import C2PException
 
 
 class Primary(Expression):
@@ -32,8 +32,7 @@ class Primary(Expression):
             self.operand_type = CharacterType()
             self.result_type = self.operand_type
         else:
-            print("Error:", self.operator, " is not implemented.")
-            sys.exit(1)
+            raise C2PException(self.operator + " is not supported")
 
     def getDisplayableText(self):
         return self.result_type.literalToPCode(self.value)

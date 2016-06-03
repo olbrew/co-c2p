@@ -1,21 +1,17 @@
 from antlr4.error.ErrorListener import ErrorListener
 
+class C2PException(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
 class MyErrorListener(ErrorListener):
     def __init__(self):
         super().__init__()
 
     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
         exception = str(line) + ":" + str(column) + " " + msg
-        raise Exception("Syntax Error: " + exception)
-
-    def reportAmbiguity(self, recognizer, dfa, startIndex, stopIndex, exact, ambigAlts, configs):
+        raise C2PException("Syntax Error: " + exception)
+    
+    def semanticError(self, line, column, msg):
         exception = str(line) + ":" + str(column) + " " + msg
-        raise Exception("Ambiguity: " + exception)
-
-    def reportAttemptingFullContext(self, recognizer, dfa, startIndex, stopIndex, conflictingAlts, configs):
-        exception = str(line) + ":" + str(column) + " " + msg
-        raise Exception("Attempting Full Context: " + exception)
-
-    def reportContextSensitivity(self, recognizer, dfa, startIndex, stopIndex, prediction, configs):
-        exception = str(line) + ":" + str(column) + " " + msg
-        raise Exception("Context Sensitivity: " + exception)
+        raise C2PException("Semantic Error: " + exception)

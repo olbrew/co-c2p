@@ -1,5 +1,6 @@
 from .Expression import Expression
-#from .ParameterList import ParameterList
+from compiler.MyErrorListener import C2PException
+
 
 class FunctionCall(Expression):
 
@@ -12,7 +13,7 @@ class FunctionCall(Expression):
             if self.identifier in scope:
                 found_identifier = True
         if not found_identifier:
-            raise Exception("Syntax error: function", self.identifier, "is called before declaration / definition.")
+            raise C2PException("function '" + self.identifier + "' is called before declaration / definition")
         
         self.parameter_list = parameters
         self.addChild(self.parameter_list)
