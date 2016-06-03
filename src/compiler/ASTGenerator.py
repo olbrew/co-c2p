@@ -111,7 +111,7 @@ class ASTGenerator(SmallCVisitor):
     # Visit a parse tree produced by SmallCParser#type_specifier.
     def visitType_specifier(self, parsetree: SmallCParser.Type_specifierContext):
         is_const = parsetree.CONST() is not None
-
+        
         typetext = parsetree.getChild(int(is_const)).getText()
         if typetext == "bool":
             typename = BooleanType()
@@ -128,10 +128,9 @@ class ASTGenerator(SmallCVisitor):
             column = parsetree.start.column
             msg = "'" + typename + "' is not a recognzized type"
             MyErrorListener().semanticError(line, column, msg)
-            
-        if is_const:
-            typename.is_const = True
-
+        
+        typename.is_const = is_const
+        
         return TypeSpecifier(self.ast, typename)
 
     # Visit a parse tree produced by SmallCParser#compound_stmt.
@@ -213,7 +212,7 @@ class ASTGenerator(SmallCVisitor):
 
     # Visit a parse tree produced by SmallCParser#identifier.
     def visitIdentifier(self, parsetree: SmallCParser.IdentifierContext):
-        indirection = parsetree.ASTERISK() is not None
+        indirection = parsetree.ASTERIKS() is not None
         address_of = parsetree.AMPERSAND() is not None
         if parsetree.array_definition() is None:
             index = 0
@@ -251,6 +250,8 @@ class ASTGenerator(SmallCVisitor):
         type_object = type_specifier.type_object
 
         if parsetree.identifier() is not None:
+            type_object.is_pointer = parsetree.identifier().ASTERIKS() is not None
+            type_object.is_reference = parsetree.identifier().AMPERSAND() is not None
             identifier = parsetree.identifier().IDENTIFIER().getText()
             return ParameterDeclaration(self.ast, type_object, identifier)
 
@@ -266,7 +267,7 @@ class ASTGenerator(SmallCVisitor):
 
     # Visit a parse tree produced by SmallCParser#variable_id.
     def visitVariable_id(self, parsetree: SmallCParser.Variable_idContext):
-        is_pointer = parsetree.identifier().ASTERISK() is not None
+        is_pointer = parsetree.identifier().ASTERIKS() is not None
         is_reference = parsetree.identifier().AMPERSAND() is not None
 
         if parsetree.identifier().array_definition() is None:

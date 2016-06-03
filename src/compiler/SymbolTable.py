@@ -1,4 +1,4 @@
-#from compiler.CallStack import CallStack
+from compiler.MyErrorListener import C2PException
 
 
 class Symbol:
@@ -11,9 +11,8 @@ class Symbol:
 
     def getRelativeDepth(self, call_stack):
         stack_depth = call_stack.getNestingDepth()
-        if (stack_depth < self.depth):
-            # TODO: generate error
-            print("ERROR: scope of symbol is larger than stack's depth.")
+        if stack_depth < self.depth:
+            raise C2PException("scope of symbol is larger than stack's depth")
         return stack_depth - self.depth
 
 

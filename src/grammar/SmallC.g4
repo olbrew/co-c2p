@@ -7,7 +7,7 @@ smallc_program : include* (var_decl | function_definition)*;
 
 function_definition : EXTERN? type_specifier identifier '(' param_decl_list? ')' (compound_stmt | ';');
 
-identifier : (AMPERSAND | ASTERISK)? IDENTIFIER (array_definition | array_indexing)?;
+identifier : (AMPERSAND | ASTERIKS)? IDENTIFIER (array_definition | array_indexing)?;
 
 array_definition : '[' INTEGER ']';
 array_indexing : '[' expr ']';
@@ -57,7 +57,7 @@ relation : equation | equation (LEFTANGLE | RIGHTANGLE) equation;
 
 equation : equation PLUS term | equation MINUS term | term;
 
-term : term ASTERISK factor | term SLASH factor | term PROCENT factor | factor;
+term : term ASTERIKS factor | term SLASH factor | term PROCENT factor | factor;
 
 factor : EXCLAMATIONMARK factor | MINUS factor | primary;
 
@@ -109,7 +109,7 @@ STDIO: 'stdio.h';
 // special characters
 PLUS : '+';
 MINUS : '-';
-ASTERISK : '*';
+ASTERIKS : '*';
 SLASH : '/';
 AMPERSAND : '&';
 PROCENT : '%';

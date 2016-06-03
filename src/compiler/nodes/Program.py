@@ -1,4 +1,5 @@
 from compiler.ASTNode import ASTNode
+from compiler.SymbolTable import SymbolTable
 
 
 class Program(ASTNode):
@@ -7,14 +8,11 @@ class Program(ASTNode):
         super().__init__(ast)
 
         if ast.symbol_table is None:
-            print("ERROR: encountered None instead of AST")
+            ast.symbol_table = SymbolTable()
 
         self.includes = includes
         self.var_declarations = var_declarations
         self.function_declarations = function_declarations
-
-        print("Program.py found", len(self.includes), "includes")
-        print("Program.py found", len(self.function_declarations), "functions")
 
         for include in self.includes:
             self.addChild(include)
@@ -29,7 +27,6 @@ class Program(ASTNode):
         return "program"
 
     def generateCode(self, out):
-        print("\nGenerating Program code\n")
         self.writeInstruction("ssp 5", out)
 
         self.writeInstruction("ujp program", out)
