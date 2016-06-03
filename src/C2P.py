@@ -6,6 +6,8 @@ from grammar.SmallCParser import SmallCParser
 from compiler.Environment import Environment
 from compiler.ASTGenerator import ASTGenerator
 from compiler.MyErrorListener import MyErrorListener, C2PException
+from util.DrawAST import draw
+
 
 def run(input, output, saveast):
     lexer = SmallCLexer(FileStream(input))
@@ -17,7 +19,7 @@ def run(input, output, saveast):
 
     environment = Environment()
     ast = ASTGenerator(environment, parsetree).generate()
-    
+
     if os.path.isfile(output):
         # empty the file so only new code is saved
         open(output, 'w').close()
@@ -25,6 +27,8 @@ def run(input, output, saveast):
 
     if saveast:
         ast.storeASTToDisk()
+
+    draw(ast)
 
 if __name__ == '__main__':
     try:
