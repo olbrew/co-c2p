@@ -27,8 +27,7 @@ def run(input, output, saveast):
 
     if saveast:
         ast.storeASTToDisk()
-
-    draw(ast)
+        draw(ast)
 
 if __name__ == '__main__':
     try:
