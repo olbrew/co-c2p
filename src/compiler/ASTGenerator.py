@@ -82,8 +82,7 @@ class ASTGenerator(SmallCVisitor):
         identifier = parsetree.identifier().IDENTIFIER().getText()
 
         if parsetree.param_decl_list() is None:
-            parameter_list = ParameterDeclarationList(self.ast, [
-            ], False)
+            parameter_list = ParameterDeclarationList(self.ast, [])
         else:
             parameter_list = self.visit(parsetree.param_decl_list())
 
