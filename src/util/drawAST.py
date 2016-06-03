@@ -18,6 +18,6 @@ def visit(parentNode, parentName, graph, labels):
                 labels[child.getDisplayableText()] = 1
             childName = child.getDisplayableText()+"_("+str(labels[child.getDisplayableText()])+")"
             
-            graph.node(childName)
+            graph.node(childName, child.getDisplayableText())
             graph.edge(parentName, childName)
             visit(child, childName, graph, labels)
