@@ -7,10 +7,8 @@ from compiler.AST import AST
 from compiler.ASTGenerator import ASTGenerator
 from compiler.MyErrorListener import MyErrorListener, C2PException
 
-def run(argv):
-    inputfile = FileStream(argv[1])
-    outputfile = argv[2]
-    lexer = SmallCLexer(inputfile)
+def run(input, output, saveast):
+    lexer = SmallCLexer(FileStream(input))
     stream = CommonTokenStream(lexer)
     parser = SmallCParser(stream)
     parser.removeErrorListeners()
@@ -20,20 +18,23 @@ def run(argv):
     environment = AST()
     ast = ASTGenerator(environment, parsetree).generate()
     
-    if os.path.isfile(outputfile):
+    if os.path.isfile(output):
         # empty the file so only new code is saved
-        open(outputfile, 'w').close()
-    ast.generateCode(outputfile)
+        open(output, 'w').close()
+    ast.generateCode(output)
 
-    # test (de)serialization of AST
-    ast.storeASTToDisk()
+    if saveast:
+        ast.storeASTToDisk()
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 3:
-        sys.exit('ERROR: 2 arguments needed: `input.c` and `output.p`')
-    
     try:
-        run(sys.argv)
+        if len(sys.argv) == 3:
+            run(sys.argv[1], sys.argv[2], False)
+        elif len(sys.argv) == 4 and sys.argv[3] == "-saveast":
+            run(sys.argv[1], sys.argv[2], True)
+        else:
+            raise C2PException("ERROR: minimum 2 arguments needed: `input.c` \
+                            and `output.p`, with an optional -saveast as last argument")
     except C2PException as error:
         print(error)
