@@ -1,16 +1,23 @@
 import graphviz as gv
 
 def draw(AST):
-    graph = gv.Graph(format='svg')
+    graph = gv.Digraph(format='png')
 
-    visit(AST, graph)
+    labels = {}
+    visit(AST, AST.getDisplayableText(), graph, labels)
 
     filename = graph.render(filename='ast')
     
     
-def visit(parent, graph):
-    if parent.getChildCount() != 0:
-        for child in parent.children:
-            graph.node(child.getDisplayableText())
-            graph.edge(child.getDisplayableText(), parent.getDisplayableText())
-            visit(child, graph)
+def visit(parentNode, parentName, graph, labels):
+    if parentNode.getChildCount() != 0:
+        for child in parentNode.children:
+            if child.getDisplayableText() in labels.keys():
+                labels[child.getDisplayableText()] += 1
+            else:
+                labels[child.getDisplayableText()] = 1
+            childName = child.getDisplayableText()+"_("+str(labels[child.getDisplayableText()])+")"
+            
+            graph.node(childName)
+            graph.edge(parentName, childName)
+            visit(child, childName, graph, labels)
