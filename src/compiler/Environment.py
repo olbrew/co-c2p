@@ -2,7 +2,7 @@ from compiler.CallStack import CallStack
 from compiler.SymbolTable import SymbolTable
 
 
-class AST:
+class Environment:
 
     def __init__(self):
         self.call_stack = CallStack()

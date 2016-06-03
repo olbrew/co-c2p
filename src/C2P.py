@@ -3,7 +3,7 @@ import os.path
 from antlr4 import FileStream, CommonTokenStream
 from grammar.SmallCLexer import SmallCLexer
 from grammar.SmallCParser import SmallCParser
-from compiler.AST import AST
+from compiler.Environment import Environment
 from compiler.ASTGenerator import ASTGenerator
 from compiler.MyErrorListener import MyErrorListener, C2PException
 
@@ -15,7 +15,7 @@ def run(input, output, saveast):
     parser.addErrorListener(MyErrorListener())
     parsetree = parser.smallc_program()
 
-    environment = AST()
+    environment = Environment()
     ast = ASTGenerator(environment, parsetree).generate()
     
     if os.path.isfile(output):
@@ -25,7 +25,6 @@ def run(input, output, saveast):
 
     if saveast:
         ast.storeASTToDisk()
-
 
 if __name__ == '__main__':
     try:
