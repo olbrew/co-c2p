@@ -1,6 +1,5 @@
 from .Expression import Expression
-# from SymbolTable import Symbol
-
+from compiler.MyErrorListener import C2PException
 
 class Identifier(Expression):
 
@@ -15,7 +14,7 @@ class Identifier(Expression):
             self.operand_type = symbol.type
             self.result_type = self.operand_type
         else:
-            raise Exception("Syntax error: variable", self.name, "is not declared yet.")
+            raise C2PException("use of undeclared identifier '" + self.name + "'")
         
         if self.operand_type.isArray():
             self.array_index = array_index
@@ -26,8 +25,8 @@ class Identifier(Expression):
         self.depth = symbol.getRelativeDepth(ast.call_stack)
 
         if self.indirection and not self.operand_type.is_pointer:
-            raise Exception(
-                "'" + self.name + "' is not a pointer and therefor can not be dereferenced!")
+            raise C2PException(
+                "'" + self.name + "' is not a pointer and therefore can not be dereferenced")
 
     def getDisplayableText(self):
         return self.name

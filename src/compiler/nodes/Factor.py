@@ -1,6 +1,6 @@
-import sys
 from compiler.types.BooleanType import BooleanType
 from .Expression import Expression
+from compiler.MyErrorListener import C2PException
 
 
 class Factor(Expression):
@@ -31,5 +31,4 @@ class Factor(Expression):
         elif self.operator == "!":
             self.writeInstruction("not ", out)
         else:
-            print("Error:", self.operator, " is not implemented.")
-            sys.exit(1)
+            raise C2PException(self.operator + " is not supported")
