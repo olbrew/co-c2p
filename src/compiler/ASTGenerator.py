@@ -95,9 +95,9 @@ class ASTGenerator(SmallCVisitor):
         
         self.ast.call_stack.decrementDepth()
         
-        # check consistency of function signature
-        if type_object.getName() == "void":
-            print(statements.statements)
+        # TODO check consistency of function signature
+        #if type_object.getName() == "void":
+        #    print(statements.statements)
         
         func = Function(self.ast, type_object, identifier, parameter_list,
                         statements, parsetree.EXTERN() is not None)
@@ -129,7 +129,7 @@ class ASTGenerator(SmallCVisitor):
         else:
             line = parsetree.start.line
             column = parsetree.start.column
-            msg = "'" + typename + "' is not a recognzized type"
+            msg = "'" + typename + "' is not a recognized type"
             MyErrorListener().semanticError(line, column, msg)
         
         typename.is_const = is_const

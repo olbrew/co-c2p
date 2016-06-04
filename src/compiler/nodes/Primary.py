@@ -32,7 +32,7 @@ class Primary(Expression):
             self.operand_type = CharacterType()
             self.result_type = self.operand_type
         else:
-            raise C2PException(self.operator + " is not supported")
+            raise C2PException("use of unrecognized primary value " + str(value))
 
     def getDisplayableText(self):
         return self.result_type.literalToPCode(self.value)
