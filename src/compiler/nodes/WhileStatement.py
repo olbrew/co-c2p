@@ -21,9 +21,9 @@ class WhileStatement(Loop):
         return "while_" + str(self.label_id) + "_begin"
 
     def getReturnLabel(self):
-        node = self.getParent()
+        node = self.parent
         while not isinstance(node, ControlStructure):
-            node = node.getParent()
+            node = node.parent
         return node.getReturnLabel()
 
     def getDisplayableText(self):

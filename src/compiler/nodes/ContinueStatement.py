@@ -15,7 +15,7 @@ class ContinueStatement(Statement):
         ast_node = self
 
         while not isinstance(ast_node, ControlStructure):
-            ast_node = ast_node.getParent()
+            ast_node = ast_node.parent
         parent_block = ast_node
 
         # jump to the beginning of the loop and evaluate the condition

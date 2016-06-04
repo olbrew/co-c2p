@@ -15,7 +15,7 @@ class BreakStatement(Statement):
         ast_node = self
 
         while not isinstance(ast_node, ControlStructure):
-            ast_node = ast_node.getParent()
+            ast_node = ast_node.parent
         parent_block = ast_node
 
         self.writeInstruction("ujp " + parent_block.getBreakLabel(), out)
