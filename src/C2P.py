@@ -9,8 +9,8 @@ from compiler.MyErrorListener import MyErrorListener, C2PException
 from util.DrawAST import draw
 
 
-def run(input, output, saveast):
-    lexer = SmallCLexer(FileStream(input))
+def run(input_file, output, saveast):
+    lexer = SmallCLexer(FileStream(input_file))
     stream = CommonTokenStream(lexer)
     parser = SmallCParser(stream)
     parser.removeErrorListeners()

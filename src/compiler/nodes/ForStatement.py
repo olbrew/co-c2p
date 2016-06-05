@@ -1,5 +1,4 @@
 from .Loop import Loop
-# from .VariableDeclaration import VariableDeclaration
 
 
 class ForStatement(Loop):

@@ -30,7 +30,6 @@ from compiler.nodes.Equation import Equation
 from compiler.nodes.Term import Term
 from compiler.nodes.Factor import Factor
 from compiler.nodes.Primary import Primary
-from compiler.types.Type import Type
 from compiler.types.IntegerType import IntegerType
 from compiler.types.FloatType import FloatType
 from compiler.types.CharacterType import CharacterType
@@ -78,7 +77,7 @@ class ASTGenerator(SmallCVisitor):
 
         type_spec = self.visit(parsetree.type_specifier())
         type_object = type_spec.type_object
-        
+
         identifier = parsetree.identifier().IDENTIFIER().getText()
 
         if parsetree.param_decl_list() is None:
@@ -91,14 +90,15 @@ class ASTGenerator(SmallCVisitor):
             statements = None
         else:
             # function definition
-            statements = self.visitCompound_stmt(parsetree.compound_stmt(), True)
-        
+            statements = self.visitCompound_stmt(
+                parsetree.compound_stmt(), True)
+
         self.ast.call_stack.decrementDepth()
-        
+
         # check consistency of function signature
         if type_object.getName() == "void":
             print(statements.statements)
-        
+
         func = Function(self.ast, type_object, identifier, parameter_list,
                         statements, parsetree.EXTERN() is not None)
 
@@ -107,14 +107,15 @@ class ASTGenerator(SmallCVisitor):
         if self.ast.symbol_table.getSymbol(identifier) is None:
             address = self.ast.call_stack.getAddress()
             depth = self.ast.call_stack.getNestingDepth()
-            self.ast.symbol_table.addSymbol(identifier, type_object, address, depth)
-        
+            self.ast.symbol_table.addSymbol(
+                identifier, type_object, address, depth)
+
         return func
 
     # Visit a parse tree produced by SmallCParser#type_specifier.
     def visitType_specifier(self, parsetree: SmallCParser.Type_specifierContext):
         is_const = parsetree.CONST() is not None
-        
+
         typetext = parsetree.getChild(int(is_const)).getText()
         if typetext == "bool":
             typename = BooleanType()
@@ -131,9 +132,9 @@ class ASTGenerator(SmallCVisitor):
             column = parsetree.start.column
             msg = "'" + typename + "' is not a recognzized type"
             MyErrorListener().semanticError(line, column, msg)
-        
+
         typename.is_const = is_const
-        
+
         return TypeSpecifier(self.ast, typename)
 
     # Visit a parse tree produced by SmallCParser#compound_stmt.
@@ -158,7 +159,7 @@ class ASTGenerator(SmallCVisitor):
         if not isFunctionBody:
             self.ast.call_stack.decrementDepth()
         self.ast.symbol_table.decrementScope()
-        
+
         return stmt
 
     # Visit a parse tree produced by SmallCParser#var_decl.
@@ -169,7 +170,7 @@ class ASTGenerator(SmallCVisitor):
         var_decl_list = []
         for decl in parsetree.var_decl_list().variable_id():
             var_decl_list.append(self.visit(decl))
-        
+
         try:
             return VariableDeclaration(self.ast, type_object, var_decl_list)
         except C2PException as e:
@@ -226,7 +227,7 @@ class ASTGenerator(SmallCVisitor):
             name = parsetree.getChild(1).getText()
         else:
             name = parsetree.getChild(0).getText()
-        
+
         try:
             return Identifier(self.ast, name, indirection, address_of, index)
         except C2PException as e:

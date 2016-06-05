@@ -1,5 +1,4 @@
 from compiler.ASTNode import ASTNode
-# from Type import Type
 from .ControlStructure import ControlStructure
 
 
@@ -40,8 +39,9 @@ class Function(ASTNode, ControlStructure):
     def generateCode(self, out):
         if self.isForwardDeclaration():
             return
-        
+
         self.writeInstruction("function_" + self.identifier + ":", out)
-        self.writeInstruction("ssp " + str(5 + len(self.parameters.parameters) + self.content.getVarsSize()), out)
-        
+        self.writeInstruction(
+            "ssp " + str(5 + len(self.parameters.parameters) + self.content.getVarsSize()), out)
+
         self.content.generateCode(out)

@@ -1,6 +1,7 @@
 from .Expression import Expression
 from compiler.MyErrorListener import C2PException
 
+
 class Identifier(Expression):
 
     def __init__(self, ast, name, indirection, address_of, array_index):
@@ -14,8 +15,9 @@ class Identifier(Expression):
             self.operand_type = symbol.type
             self.result_type = self.operand_type
         else:
-            raise C2PException("use of undeclared identifier '" + self.name + "'")
-        
+            raise C2PException(
+                "use of undeclared identifier '" + self.name + "'")
+
         if self.operand_type.isArray():
             self.array_index = array_index
         else:

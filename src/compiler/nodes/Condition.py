@@ -1,4 +1,3 @@
-#from compiler.types.Type import Type
 from .Expression import Expression
 
 

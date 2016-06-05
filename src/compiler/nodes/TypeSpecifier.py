@@ -1,5 +1,4 @@
 from compiler.ASTNode import ASTNode
-# from Type import Type
 
 
 class TypeSpecifier(ASTNode):

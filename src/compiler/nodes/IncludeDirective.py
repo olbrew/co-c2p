@@ -1,12 +1,13 @@
 from compiler.ASTNode import ASTNode
 from compiler.types.IntegerType import IntegerType
 
+
 class IncludeDirective(ASTNode):
 
     def __init__(self, ast, filename):
         super().__init__(ast)
         self.filename = filename
-        
+
         if self.filename == "stdio.h":
             address = ast.call_stack.getAddress()
             depth = ast.call_stack.getNestingDepth()

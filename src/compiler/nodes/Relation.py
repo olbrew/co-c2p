@@ -2,6 +2,7 @@ from .Expression import Expression
 from compiler.types.BooleanType import BooleanType
 from compiler.MyErrorListener import C2PException
 
+
 class Relation(Expression):
 
     def __init__(self, ast, equation1, equation2, operator):

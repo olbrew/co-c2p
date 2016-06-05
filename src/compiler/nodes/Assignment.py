@@ -1,4 +1,3 @@
-#from compiler.types.Type import Type
 from .Expression import Expression
 from compiler.MyErrorListener import C2PException
 
@@ -19,7 +18,8 @@ class Assignment(Expression):
         self.expression.operand_type = self.expression.result_type
 
         if self.expression.result_type.is_const:
-            raise C2PException("Can't assign to const variable '" + self.identifier + "'")
+            raise C2PException(
+                "Can't assign to const variable '" + self.identifier + "'")
 
     def getDisplayableText(self):
         return "assignment"
