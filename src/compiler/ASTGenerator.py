@@ -64,7 +64,7 @@ class ASTGenerator(SmallCVisitor):
         functions = []
         for func_ctx in function_contexts:
             functions.append(self.visit(func_ctx))
-
+        
         return Program(self.ast, include_directives, var_decls, functions)
 
     # Visit a parse tree produced by SmallCParser#include.
@@ -95,12 +95,13 @@ class ASTGenerator(SmallCVisitor):
         
         self.ast.call_stack.decrementDepth()
         
-        # TODO check consistency of function signature
-        #if type_object.getName() == "void":
-        #    print(statements.statements)
-        
-        func = Function(self.ast, type_object, identifier, parameter_list,
+        try:
+            func = Function(self.ast, type_object, identifier, parameter_list,
                         statements, parsetree.EXTERN() is not None)
+        except C2PException as e:
+            line = parsetree.start.line
+            column = parsetree.start.column
+            MyErrorListener().semanticError(line, column, e.msg)
 
         self.ast.symbol_table.decrementScope()
 
@@ -191,8 +192,6 @@ class ASTGenerator(SmallCVisitor):
             return self.visit(parsetree.while_stmt())
         elif parsetree.for_stmt() is not None:
             return self.visit(parsetree.for_stmt())
-        elif parsetree.expr() is not None:
-            return self.visit(parsetree.expr())
         elif parsetree.BREAK() is not None:
             return BreakStatement(self.ast)
         elif parsetree.CONTINUE() is not None:
@@ -200,6 +199,8 @@ class ASTGenerator(SmallCVisitor):
         elif parsetree.RETURN() is not None:
             expression = self.visit(parsetree.expr())
             return ReturnStatement(self.ast, expression)
+        elif parsetree.expr() is not None:
+            return self.visit(parsetree.expr())
         elif parsetree.WRITEINT() is not None:
             expression = self.visit(parsetree.expr())
             return WriteIntStatement(self.ast, expression)

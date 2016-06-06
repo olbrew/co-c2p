@@ -1,13 +1,14 @@
 from compiler.ASTNode import ASTNode
-# from Type import Type
 from .ControlStructure import ControlStructure
+from grammar.SmallCParser import SmallCParser
+from compiler.MyErrorListener import C2PException
+from compiler.types.VoidType import VoidType
 
 
 class Function(ASTNode, ControlStructure):
 
     def __init__(self, ast, return_type, identifier, parameters, content, extern):
-        super().__init__(ast)
-
+        super().__init__(ast, SmallCParser.FUNCTION)
         self.return_type = return_type
         self.identifier = identifier
         self.extern = extern
@@ -15,9 +16,10 @@ class Function(ASTNode, ControlStructure):
         self.addChild(parameters)
         self.content = content
 
-        if content is not None:
-            self.addChild(content)
-
+        if self.content is not None:
+            self.addChild(self.content)
+            self.validateReturnType()
+        
         self.depth = ast.call_stack.getNestingDepth()
 
     def isForwardDeclaration(self):
@@ -45,3 +47,17 @@ class Function(ASTNode, ControlStructure):
         self.writeInstruction("ssp " + str(5 + len(self.parameters.parameters) + self.content.getVarsSize()), out)
         
         self.content.generateCode(out)
+
+    '''
+        Checks consistency of the function's return type.
+        Expects that content is not None
+    '''
+    def validateReturnType(self):
+        for statement in self.content.statements:
+            if statement.type is SmallCParser.RETURNSTATEMENT:
+                if isinstance(self.return_type, VoidType):
+                    raise C2PException("return-statement with a value, in function '" + self.identifier + \
+                        "' returning 'void'")
+                if self.return_type.getName() != statement.expression.result_type.getName():
+                    raise C2PException("In return statement of functon '" + self.identifier + \
+                        "' invalid conversion from " + statement.expression.result_type.getName() + " to " + self.return_type.getName())
