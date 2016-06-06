@@ -6,4 +6,4 @@ printf "\n"
 
 # Build Grammar Lexers and Parsers with antlr4
 printf "Building \`smallC\` grammar lexers and parsers"
-java -jar lib/antlr-4.5.3-complete.jar -visitor -Dlanguage=Python3 src/grammar/SmallC.g4
+java -jar lib/antlr-4.5.3-complete.jar -visitor -Dlanguage=Python3 c2p/grammar/SmallC.g4
