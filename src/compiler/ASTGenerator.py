@@ -508,9 +508,9 @@ class ASTGenerator(SmallCVisitor):
                 value = float(real)
                 return Primary(self.ast, value)
             elif parsetree.CHARCONST() is not None:
-                # TODO: use chars correctly
                 value = parsetree.CHARCONST().getText()
-                return Primary(self.ast, value[0])
+                # We are interested in the first character after the quotation mark
+                return Primary(self.ast, value[1])
             elif parsetree.BOOLEAN() is not None:
                 value = parsetree.BOOLEAN().getText() is "True"
                 return Primary(self.ast, value)

@@ -62,3 +62,4 @@ class Function(ASTNode, ControlStructure):
                 if self.return_type.getName() != statement.expression.result_type.getName():
                     raise C2PException("In return statement of functon '" + self.identifier + \
                         "' invalid conversion from " + statement.expression.result_type.getName() + " to " + self.return_type.getName())
+                        

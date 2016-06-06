@@ -9,7 +9,7 @@ class Relation(Expression):
 
     def __init__(self, ast, equation1, equation2, operator):
         super().__init__(ast)
-        self.type = SmallCParser.Relation
+        self.type = SmallCParser.RELATION
         self.equation1 = equation1
         self.equation2 = equation2
         self.operator = operator
