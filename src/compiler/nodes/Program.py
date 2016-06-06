@@ -1,11 +1,12 @@
 from compiler.ASTNode import ASTNode
 from compiler.SymbolTable import SymbolTable
+from grammar.SmallCParser import SmallCParser
 
 
 class Program(ASTNode):
 
     def __init__(self, ast, includes, var_declarations, function_declarations):
-        super().__init__(ast)
+        super().__init__(ast, SmallCParser.PROGRAM)
 
         if ast.symbol_table is None:
             ast.symbol_table = SymbolTable()

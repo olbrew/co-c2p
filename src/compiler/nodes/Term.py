@@ -1,11 +1,13 @@
 from .Expression import Expression
 from compiler.MyErrorListener import C2PException
+from grammar.SmallCParser import SmallCParser
 
 
 class Term(Expression):
 
     def __init__(self, ast, expression_term, expression_factor, operator):
         super().__init__(ast)
+        self.type = SmallCParser.TERM
         self.term = expression_term
         self.factor = expression_factor
         self.operator = operator

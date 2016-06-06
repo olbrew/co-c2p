@@ -2,12 +2,14 @@ from .Statement import Statement
 from .Function import Function
 from .ControlStructure import ControlStructure
 from compiler.types.VoidType import VoidType
+from grammar.SmallCParser import SmallCParser
 
 
 class ReturnStatement(Statement):
 
     def __init__(self, ast, expression):
         super().__init__(ast)
+        self.type = SmallCParser.RETURNSTATEMENT
         self.expression = expression
         self.addChild(self.expression)
 

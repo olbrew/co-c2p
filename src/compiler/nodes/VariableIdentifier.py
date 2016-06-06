@@ -1,11 +1,11 @@
-#from .Expression import Expression
 from compiler.ASTNode import ASTNode
+from grammar.SmallCParser import SmallCParser
 
 
 class VariableIdentifier(ASTNode):
 
     def __init__(self, ast, identifier, expression, is_pointer, array_size):
-        super().__init__(ast)
+        super().__init__(ast, SmallCParser.VARIABLEIDENTIFIER)
 
         self.typename = None
         self.identifier = identifier

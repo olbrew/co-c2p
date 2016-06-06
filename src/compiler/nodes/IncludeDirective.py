@@ -1,10 +1,12 @@
 from compiler.ASTNode import ASTNode
 from compiler.types.IntegerType import IntegerType
+from grammar.SmallCParser import SmallCParser
+
 
 class IncludeDirective(ASTNode):
 
     def __init__(self, ast, filename):
-        super().__init__(ast)
+        super().__init__(ast, SmallCParser.INCLUDEDIRECTIVE)
         self.filename = filename
         
         if self.filename == "stdio.h":

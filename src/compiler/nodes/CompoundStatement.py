@@ -1,8 +1,8 @@
 from .Statement import Statement
 from .ControlStructure import ControlStructure
-# from .VariableDeclaration import VariableDeclaration
 from .Function import Function
 from compiler.types.VoidType import VoidType
+from grammar.SmallCParser import SmallCParser
 
 
 class CompoundStatement(Statement, ControlStructure):
@@ -11,6 +11,7 @@ class CompoundStatement(Statement, ControlStructure):
 
     def __init__(self, ast, var_decls, statements):
         super().__init__(ast)
+        self.type = SmallCParser.COMPOUNDSTATEMENT
 
         self.var_decls = var_decls
         self.statements = statements

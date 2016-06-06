@@ -1,10 +1,11 @@
 from compiler.ASTNode import ASTNode
+from grammar.SmallCParser import SmallCParser
 
 
 class ParameterDeclaration(ASTNode):
 
     def __init__(self, ast, typename, identifier=None):
-        super().__init__(ast)
+        super().__init__(ast, SmallCParser.PARAMETERDECLARATION)
 
         self.typename = typename
         self.identifier = identifier

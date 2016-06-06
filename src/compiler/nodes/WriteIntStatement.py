@@ -1,11 +1,11 @@
-# from .Statement import Statement
 from compiler.ASTNode import ASTNode
+from grammar.SmallCParser import SmallCParser
 
 
 class WriteIntStatement(ASTNode):
 
     def __init__(self, ast, expression):
-        super().__init__(ast)
+        super().__init__(ast, SmallCParser.WRITEINTSTATEMENT)
         self.expression = expression
         self.addChild(expression)
 

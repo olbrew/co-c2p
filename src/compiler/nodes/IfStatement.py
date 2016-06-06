@@ -1,4 +1,5 @@
 from .Statement import Statement
+from grammar.SmallCParser import SmallCParser
 
 
 class IfStatement(Statement):
@@ -6,6 +7,7 @@ class IfStatement(Statement):
 
     def __init__(self, ast, expression, if_statement):
         super().__init__(ast)
+        self.type = SmallCParser.IFSTATEMENT
         self.expression = expression
         self.if_statement = if_statement
         self.addChild(self.expression)

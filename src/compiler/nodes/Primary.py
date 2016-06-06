@@ -4,12 +4,14 @@ from compiler.types.FloatType import FloatType
 from compiler.types.BooleanType import BooleanType
 from compiler.types.CharacterType import CharacterType
 from compiler.MyErrorListener import C2PException
+from grammar.SmallCParser import SmallCParser
 
 
 class Primary(Expression):
 
     def __init__(self, ast, value):
         super().__init__(ast)
+        self.type = SmallCParser.PRIMARY
 
         if isinstance(value, int):
             self.value = value

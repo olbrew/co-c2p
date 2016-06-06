@@ -1,10 +1,12 @@
 from .IfStatement import IfStatement
+from grammar.SmallCParser import SmallCParser
 
 
 class IfElseStatement(IfStatement):
 
     def __init__(self, ast, expression, if_statement, else_statement):
         super().__init__(ast, expression, if_statement)
+        self.type = SmallCParser.IFELSESTATEMENT
         self.else_statement = else_statement
         self.addChild(self.else_statement)
 

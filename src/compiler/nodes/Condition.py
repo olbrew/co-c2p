@@ -1,5 +1,5 @@
-#from compiler.types.Type import Type
 from .Expression import Expression
+from grammar.SmallCParser import SmallCParser
 
 
 class Condition(Expression):
@@ -8,6 +8,7 @@ class Condition(Expression):
 
     def __init__(self, ast, expr_disjunction, expression, expr_condition):
         super().__init__(ast)
+        self.type = SmallCParser.CONDITION
         self.disjunction = expr_disjunction
         self.expression = expression
         self.condition = expr_condition

@@ -1,11 +1,13 @@
 from compiler.types.BooleanType import BooleanType
 from .Expression import Expression
+from grammar.SmallCParser import SmallCParser
 
 
 class Disjunction(Expression):
 
     def __init__(self, ast, expr_disjunction, expr_conjunction):
         super().__init__(ast)
+        self.type = SmallCParser.DISJUNCTION
         self.disjunction = expr_disjunction
         self.conjunction = expr_conjunction
         self.addChild(self.disjunction)

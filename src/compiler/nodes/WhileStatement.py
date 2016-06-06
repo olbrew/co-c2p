@@ -1,5 +1,6 @@
 from .Loop import Loop
 from .ControlStructure import ControlStructure
+from grammar.SmallCParser import SmallCParser
 
 
 class WhileStatement(Loop):
@@ -7,6 +8,7 @@ class WhileStatement(Loop):
 
     def __init__(self, ast, expression, statement):
         super().__init__(ast)
+        self.type = SmallCParser.WHILESTATEMENT
         self.expression = expression
         self.statement = statement
         self.addChild(expression)

@@ -1,11 +1,14 @@
 from .Expression import Expression
 from compiler.types.BooleanType import BooleanType
 from compiler.MyErrorListener import C2PException
+from grammar.SmallCParser import SmallCParser
+
 
 class Relation(Expression):
 
     def __init__(self, ast, equation1, equation2, operator):
         super().__init__(ast)
+        self.type = SmallCParser.Relation
         self.equation1 = equation1
         self.equation2 = equation2
         self.operator = operator

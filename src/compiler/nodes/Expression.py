@@ -1,10 +1,12 @@
 from .Statement import Statement
+from grammar.SmallCParser import SmallCParser
 
 
 class Expression(Statement):
 
     def __init__(self, ast):
         super().__init__(ast)
+        self.type = SmallCParser.EXPRESSION
         self.operand_type = None
         self.result_type = None
 

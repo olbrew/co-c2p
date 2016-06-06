@@ -4,9 +4,10 @@ from antlr4 import ParserRuleContext
 
 
 class ASTNode(ParserRuleContext, ABC):
-    def __init__(self, ast):
+    def __init__(self, ast, type=0):
         super().__init__()
         self.ast = ast
+        self.type = type
 
     def addChild(self, child):
         super().addChild(child)

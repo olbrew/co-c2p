@@ -1,12 +1,13 @@
-#from compiler.types.Type import Type
 from .Expression import Expression
 from compiler.MyErrorListener import C2PException
+from grammar.SmallCParser import SmallCParser
 
 
 class Assignment(Expression):
 
     def __init__(self, ast, identifier, expression, array_index):
         super().__init__(ast)
+        self.type = SmallCParser.ASSIGNMENT
         self.identifier = identifier
         self.expression = expression
         self.addChild(self.expression)

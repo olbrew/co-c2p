@@ -1,6 +1,46 @@
 grammar SmallC;
 
 /*
+ * We will need these tokens to determine type of AST nodes
+ */
+tokens {
+    ASSIGNMENT,
+    BREAKSTATEMENT,
+    COMPARISON,
+    COMPOUNDSTATEMENT,
+    CONDITION,
+    CONJUNCTION,
+    CONTINUESTATEMENT,
+    DISJUNCTION,
+    EQUATION,
+    EXPRESSION,
+    FACTOR,
+    FORSTATEMENT,
+    FUNCTION,
+    FUNCTIONCALL,
+    ID,
+    IFELSESTATEMENT,
+    IFSTATEMENT,
+    INCLUDEDIRECTIVE,
+    LOOP,
+    PARAMETERDECLARATION,
+    PARAMETERDECLARATIONLIST,
+    PARAMETERLIST,
+    PRIMARY,
+    PROGRAM,
+    RELATION,
+    RETURNSTATEMENT,
+    STATEMENT,
+    TERM,
+    TYPESPECIFIER,
+    VARIABLEDECLARATION,
+    VARIABLEDECLARATIONLIST,
+    VARIABLEIDENTIFIER,
+    WHILESTATEMENT,
+    WRITEINTSTATEMENT
+}
+
+/*
  * Parser Rules
  */
 smallc_program : include* (var_decl | function_definition)*;
@@ -10,14 +50,15 @@ function_definition : EXTERN? type_specifier identifier '(' param_decl_list? ')'
 identifier : (AMPERSAND | ASTERIKS)? IDENTIFIER (array_definition | array_indexing)?;
 
 array_definition : '[' INTEGER ']';
+
 array_indexing : '[' expr ']';
 
-//include : INCLUDE '<' FILENAME '>';
 include : INCLUDE '<' STDIO '>';
 
 type_specifier : CONST? (FLOAT | INT | CHAR | BOOL | VOID);
 
 param_decl_list : parameter_decl (',' parameter_decl )*;
+
 parameter_decl : type_specifier identifier?;
 
 param_list : expr (',' expr )*;
@@ -30,7 +71,7 @@ var_decl_list :  variable_id ( ',' variable_id)* ';';
 
 variable_id  : identifier ( '=' expr )?;
 
-stmt : compound_stmt | cond_stmt | while_stmt | for_stmt | expr ';' | BREAK ';' | CONTINUE ';' | RETURN expr ';' | READINT '(' identifier ')' ';' | WRITEINT '(' expr ')' ';' | assignment ';' | functioncall ';'; //
+stmt : compound_stmt | cond_stmt | while_stmt | for_stmt | BREAK ';' | CONTINUE ';' | RETURN expr ';' | expr ';' | READINT '(' identifier ')' ';' | WRITEINT '(' expr ')' ';' | assignment ';' | functioncall ';';
 
 cond_stmt :  IF '('  expr ')' stmt (ELSE stmt)?;
 
@@ -40,7 +81,7 @@ for_stmt : FOR '(' (var_decl | var_decl_list) expr? ';' expr? ')' stmt;
 
 expr : assignment | condition | functioncall;
 
-assignment : identifier '=' expr; //
+assignment : identifier '=' expr;
 
 functioncall : identifier '(' param_list? ')';
 
@@ -62,9 +103,11 @@ factor : EXCLAMATIONMARK factor | MINUS factor | primary;
 
 primary :  INTEGER | REAL | CHARCONST | BOOLEAN | identifier | '(' expr ')' | functioncall;
 
+
 /*
- * Lexer Rules
+ * Lexer Rules and helping fragments
  */
+
 // keywords
 BREAK : 'break';
 CONTINUE : 'continue';
@@ -102,7 +145,6 @@ REAL : NUMBER'.'NUMBER'f';
 CHARCONST : '"' (.)*? '"' | '\'' (.)*? '\'';
 BOOLEAN : 'true' | 'false';
 IDENTIFIER : (UNDERSCORE | CHARACTER) (UNDERSCORE | CHARACTER | DIGIT)*;
-//FILENAME : (UNDERSCORE | CHARACTER | DIGIT | DOT)+;
 STDIO: 'stdio.h';
 
 // special characters

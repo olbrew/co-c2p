@@ -1,10 +1,13 @@
 from .Expression import Expression
 from compiler.MyErrorListener import C2PException
+from grammar.SmallCParser import SmallCParser
+
 
 class Identifier(Expression):
 
     def __init__(self, ast, name, indirection, address_of, array_index):
         super().__init__(ast)
+        self.type = SmallCParser.ID
         symbol = ast.symbol_table.getSymbol(name)
 
         self.name = name

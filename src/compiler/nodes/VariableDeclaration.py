@@ -1,12 +1,13 @@
 from compiler.ASTNode import ASTNode
 from compiler.types.VoidType import VoidType
 from compiler.MyErrorListener import C2PException
+from grammar.SmallCParser import SmallCParser
 
 
 class VariableDeclaration(ASTNode):
 
     def __init__(self, ast, typename, variable_identifiers):
-        super().__init__(ast)
+        super().__init__(ast, SmallCParser.VARIABLEDECLARATION)
     
         if isinstance(typename, VoidType):
             raise C2PException("variable has incomplete type 'void'")

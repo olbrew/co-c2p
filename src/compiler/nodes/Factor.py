@@ -1,12 +1,14 @@
 from compiler.types.BooleanType import BooleanType
 from .Expression import Expression
 from compiler.MyErrorListener import C2PException
+from grammar.SmallCParser import SmallCParser
 
 
 class Factor(Expression):
 
     def __init__(self, ast, factor, operator):
         super().__init__(ast)
+        self.type = SmallCParser.FACTOR
         self.factor = factor
         self.operator = operator
         self.addChild(self.factor)

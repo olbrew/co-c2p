@@ -1,11 +1,11 @@
 from compiler.ASTNode import ASTNode
-# from Type import Type
+from grammar.SmallCParser import SmallCParser
 
 
 class TypeSpecifier(ASTNode):
 
     def __init__(self, ast, type_object):
-        super().__init__(ast)
+        super().__init__(ast, SmallCParser.TYPESPECIFIER)
         self.type_object = type_object
 
     def getDisplayableText(self):

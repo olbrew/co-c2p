@@ -1,11 +1,13 @@
 from .Statement import Statement
 from .ControlStructure import ControlStructure
+from grammar.SmallCParser import SmallCParser
 
 
 class ContinueStatement(Statement):
 
     def __init__(self, ast):
         super().__init__(ast)
+        self.type = SmallCParser.CONTINUESTATEMENT
 
     def getDisplayableText(self):
         return "continue"

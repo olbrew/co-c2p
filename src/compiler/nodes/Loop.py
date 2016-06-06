@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from .Statement import Statement
-# from .ControlStructure import ControlStructure
+from grammar.SmallCParser import SmallCParser
 
 
 # class Loop(ABC, ControlStructure, Statement):
@@ -10,6 +10,7 @@ class Loop(Statement):
 
     def __init__(self, ast):
         super().__init__(ast)
+        self.type = SmallCParser.LOOP
 
     @abstractmethod
     def getBreakLabel(self):

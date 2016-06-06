@@ -1,11 +1,13 @@
 from .Expression import Expression
 from compiler.MyErrorListener import C2PException
+from grammar.SmallCParser import SmallCParser
 
 
 class FunctionCall(Expression):
 
     def __init__(self, ast, identifier, parameters):
         super().__init__(ast)
+        self.type = SmallCParser.FUNCTIONCALL
         self.identifier = identifier
         
         found_identifier = False
