@@ -42,10 +42,11 @@ class Function(ASTNode, ControlStructure):
     def generateCode(self, out):
         if self.isForwardDeclaration():
             return
-        
+
         self.writeInstruction("function_" + self.identifier + ":", out)
-        self.writeInstruction("ssp " + str(5 + len(self.parameters.parameters) + self.content.getVarsSize()), out)
-        
+        self.writeInstruction(
+            "ssp " + str(5 + len(self.parameters.parameters) + self.content.getVarsSize()), out)
+
         self.content.generateCode(out)
 
     '''

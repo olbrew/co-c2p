@@ -16,4 +16,3 @@ class WriteIntStatement(ASTNode):
         self.expression.generateCode(out)
         self.writeInstruction("out i", out)
         self.writeInstruction("ldc c '\\n'", out)
-        self.writeInstruction("out c", out)

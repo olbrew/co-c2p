@@ -8,10 +8,10 @@ class VariableDeclaration(ASTNode):
 
     def __init__(self, ast, typename, variable_identifiers):
         super().__init__(ast, SmallCParser.VARIABLEDECLARATION)
-    
+
         if isinstance(typename, VoidType):
             raise C2PException("variable has incomplete type 'void'")
-        
+
         self.typename = typename
         self.variable_identifiers = variable_identifiers
 
