@@ -76,14 +76,14 @@ class ASTGenerator(SmallCVisitor):
         self.ast.call_stack.incrementDepth()
 
         type_spec = self.visit(parsetree.type_specifier())
-        type_object = type_spec.type_object
+        return_type = type_spec.type_object
 
         identifier = parsetree.identifier().IDENTIFIER().getText()
 
         if parsetree.param_decl_list() is None:
-            parameter_list = ParameterDeclarationList(self.ast, [])
+            parameters_decl_list = ParameterDeclarationList(self.ast, [])
         else:
-            parameter_list = self.visit(parsetree.param_decl_list())
+            parameters_decl_list = self.visit(parsetree.param_decl_list())
 
         if parsetree.compound_stmt() is None:
             # forward declaration
@@ -96,22 +96,21 @@ class ASTGenerator(SmallCVisitor):
         self.ast.call_stack.decrementDepth()
 
         try:
-            func = Function(self.ast, type_object, identifier, parameter_list,
+            func = Function(self.ast, return_type, identifier, parameters_decl_list,
                         statements, parsetree.EXTERN() is not None)
+            
+            address = self.ast.call_stack.getAddress()
+            depth = self.ast.call_stack.getNestingDepth()
+            self.ast.symbol_table.addFunction(
+                    identifier, return_type, func.parameters_decl_list.parameter_list, address, depth)
+            
+            return func
         except C2PException as e:
             line = parsetree.start.line
             column = parsetree.start.column
             MyErrorListener().semanticError(line, column, e.msg)
 
         self.ast.symbol_table.decrementScope()
-
-        if self.ast.symbol_table.getSymbol(identifier) is None:
-            address = self.ast.call_stack.getAddress()
-            depth = self.ast.call_stack.getNestingDepth()
-            self.ast.symbol_table.addSymbol(
-                identifier, type_object, address, depth)
-
-        return func
 
     # Visit a parse tree produced by SmallCParser#type_specifier.
     def visitType_specifier(self, parsetree: SmallCParser.Type_specifierContext):
@@ -219,6 +218,7 @@ class ASTGenerator(SmallCVisitor):
     def visitIdentifier(self, parsetree: SmallCParser.IdentifierContext):
         indirection = parsetree.ASTERIKS() is not None
         address_of = parsetree.AMPERSAND() is not None
+        
         if parsetree.array_definition() is None:
             index = 0
         else:
@@ -228,7 +228,7 @@ class ASTGenerator(SmallCVisitor):
             name = parsetree.getChild(1).getText()
         else:
             name = parsetree.getChild(0).getText()
-
+            
         try:
             return Identifier(self.ast, name, indirection, address_of, index)
         except C2PException as e:
@@ -512,7 +512,7 @@ class ASTGenerator(SmallCVisitor):
                 # We are interested in the first character after the quotation mark
                 return Primary(self.ast, value[1])
             elif parsetree.BOOLEAN() is not None:
-                value = parsetree.BOOLEAN().getText() is "True"
+                value = parsetree.BOOLEAN().getText() == "true"
                 return Primary(self.ast, value)
             elif parsetree.identifier() is not None:
                 return self.visit(parsetree.identifier())
