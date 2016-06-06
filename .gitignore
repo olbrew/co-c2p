@@ -4,8 +4,6 @@ src/grammar/SmallC*.tokens
 src/grammar/SmallC*.py
 __pycache__
 *.pyc
-*.p
 *.pickle
 ast.gv
 ast.gv.pdf
-
