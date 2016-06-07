@@ -10,7 +10,7 @@ class ParameterDeclaration(ASTNode):
         self.typespecifier = typespecifier
         self.identifier = identifier
 
-        if identifier is not None:
+        if self.identifier is not None:
             # Only add named variables to the symbol table
             address = ast.call_stack.getAddress()
             depth = ast.call_stack.getNestingDepth()

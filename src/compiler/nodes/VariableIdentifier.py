@@ -1,22 +1,24 @@
 from compiler.ASTNode import ASTNode
 from grammar.SmallCParser import SmallCParser
+from compiler.MyErrorListener import C2PException
 
 
 class VariableIdentifier(ASTNode):
 
-    def __init__(self, ast, identifier, expression, is_pointer, array_size):
+    def __init__(self, ast, identifier, expression, is_pointer, is_alias, array_size):
         super().__init__(ast, SmallCParser.VARIABLEIDENTIFIER)
 
         self.typename = None
         self.identifier = identifier
         self.expression = expression
         self.is_pointer = is_pointer
+        self.is_alies = is_alias
         self.array_size = array_size
         self.address = None
         self.depth = None
 
-        if expression is not None:
-            self.addChild(expression)
+        if self.expression is not None:
+            self.addChild(self.expression)
 
     def allocate(self):
         space = self.getSize()
@@ -27,8 +29,13 @@ class VariableIdentifier(ASTNode):
 
     def setType(self, typename):
         self.typename = typename
+        if self.typename.getName() != self.expression.result_type.getName():
+            raise C2PException("identifier '" + self.identifier + "' is assigned a value of type " + self.expression.result_type.getCSymbol() + ", while " + self.typename.getCSymbol() + " is expected")
         if self.is_pointer:
             self.typename.is_pointer = True
+            if not self.expression.result_type.is_pointer:
+                raise C2PException("identifier '" + self.identifier + "' is assigned a value of type " + self.expression.result_type.getCSymbol() + ", while " + self.typename.getCSymbol() + "* is expected")
+
 
         self.typename.array_size = self.array_size
         self.allocate()

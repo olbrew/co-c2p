@@ -268,7 +268,7 @@ class ASTGenerator(SmallCVisitor):
     # Visit a parse tree produced by SmallCParser#variable_id.
     def visitVariable_id(self, parsetree: SmallCParser.Variable_idContext):
         is_pointer = parsetree.identifier().ASTERIKS() is not None
-        is_reference = parsetree.identifier().AMPERSAND() is not None
+        is_alias = parsetree.identifier().AMPERSAND() is not None
 
         if parsetree.identifier().array_definition() is None:
             array_size = 0
@@ -276,7 +276,7 @@ class ASTGenerator(SmallCVisitor):
             array_size = int(parsetree.identifier(
             ).array_definition().INTEGER().getText())
 
-        if is_pointer or is_reference:
+        if is_pointer or is_alias:
             identifier = parsetree.identifier().getChild(1).getText()
         else:
             identifier = parsetree.identifier().getChild(0).getText()
@@ -286,7 +286,7 @@ class ASTGenerator(SmallCVisitor):
         else:
             expression = self.visit(parsetree.expr())
 
-        return VariableIdentifier(self.ast, identifier, expression, is_pointer, is_reference)
+        return VariableIdentifier(self.ast, identifier, expression, is_pointer, is_alias, array_size)
 
     # Visit a parse tree produced by SmallCParser#cond_stmt.
     def visitCond_stmt(self, parsetree: SmallCParser.Cond_stmtContext):
