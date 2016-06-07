@@ -29,12 +29,16 @@ class VariableIdentifier(ASTNode):
 
     def setType(self, typename):
         self.typename = typename
-        if self.typename.getName() != self.expression.result_type.getName():
-            raise C2PException("identifier '" + self.identifier + "' is assigned a value of type " + self.expression.result_type.getCSymbol() + ", while " + self.typename.getCSymbol() + " is expected")
+                
+        if self.expression is not None:
+            if self.typename.getName() != self.expression.result_type.getName():
+                raise C2PException("identifier '" + self.identifier + "' is assigned a value of type " + self.expression.result_type.getCSymbol() + ", while " + self.typename.getCSymbol() + " is expected")
+                
         if self.is_pointer:
             self.typename.is_pointer = True
-            if not self.expression.result_type.is_pointer:
-                raise C2PException("identifier '" + self.identifier + "' is assigned a value of type " + self.expression.result_type.getCSymbol() + ", while " + self.typename.getCSymbol() + "* is expected")
+            if self.expression is not None:
+                if not self.expression.result_type.is_pointer:
+                    raise C2PException("identifier '" + self.identifier + "' is assigned a value of type " + self.expression.result_type.getCSymbol() + ", while " + self.typename.getCSymbol() + "* is expected")
 
 
         self.typename.array_size = self.array_size
