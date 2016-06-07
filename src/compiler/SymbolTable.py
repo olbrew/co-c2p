@@ -36,7 +36,6 @@ class Function:
 class SymbolTable:
 
     def __init__(self):
-        self.keywords = []  # TODO: issue #16
         self.stack = [{}]  # symbols
         self.functions = [{}]
 
