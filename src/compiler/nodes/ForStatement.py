@@ -39,7 +39,7 @@ class ForStatement(Loop):
         self.writeInstruction("ujp for_" + self.label_id + "_end", out)
         self.writeInstruction("for_" + self.label_id + "_begin:", out)
         self.writeInstruction(
-            "ssp " + str(5 + self.var_decl.getDeclarationSize()), out)
+            "ssp " + str(5 + self.var_decl_list.getDeclarationSize()), out)
 
         if self.var_decl_list is not None:
             self.var_decl_list.generateCode(out)

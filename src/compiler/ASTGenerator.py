@@ -359,7 +359,8 @@ class ASTGenerator(SmallCVisitor):
 
     # Visit a parse tree produced by SmallCParser#assignment.
     def visitAssignment(self, parsetree: SmallCParser.AssignmentContext):
-        identifier = parsetree.identifier().IDENTIFIER().getText()
+        #identifier = parsetree.identifier().IDENTIFIER().getText()
+        identifier = self.visit(parsetree.identifier())
         expression = self.visit(parsetree.expr())
 
         try:

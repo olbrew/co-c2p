@@ -13,9 +13,9 @@ class VariableDeclaration(ASTNode):
             raise C2PException("variable has incomplete type 'void'")
 
         self.typename = typename
-        self.variable_identifiers = var_decl_list.variable_ids
+        self.variable_identifiers = var_decl_list
         
-        for var in self.variable_identifiers:
+        for var in self.variable_identifiers.variable_ids:
             if var.identifier not in environment.symbol_table.stack[-1]:
                 var.setType(typename)
                 self.addChild(var)
@@ -25,7 +25,7 @@ class VariableDeclaration(ASTNode):
     def getDeclarationSize(self):
         space = 0
 
-        for var_id in self.variable_identifiers:
+        for var_id in self.variable_identifiers.variable_ids:
             space += var_id.getSize()
 
         return space
@@ -34,5 +34,5 @@ class VariableDeclaration(ASTNode):
         return "var decl"
 
     def generateCode(self, out):
-        for var_id in self.variable_identifiers:
+        for var_id in self.variable_identifiers.variable_ids:
             var_id.generateCode(out)
