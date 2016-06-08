@@ -17,7 +17,12 @@ class ParameterDeclaration(ASTNode):
             environment.symbol_table.addSymbol(self.identifier, self.typespecifier, address, depth)
 
     def getDisplayableText(self):
-        return "parameter '" + str(self.identifier) + "'"
+        prefix = self.typespecifier.getCSymbol()
+        if self.typespecifier.is_const:
+            prefix = "const " + prefix
+        if self.typespecifier.is_pointer:
+            prefix += "*"
+        return prefix + " " + str(self.identifier)
 
     def generateCode(self, out):
         return

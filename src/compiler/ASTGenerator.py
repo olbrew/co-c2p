@@ -15,6 +15,7 @@ from compiler.nodes.ParameterDeclaration import ParameterDeclaration
 from compiler.nodes.ParameterList import ParameterList
 from compiler.nodes.VariableIdentifier import VariableIdentifier
 from compiler.nodes.VariableDeclaration import VariableDeclaration
+from compiler.nodes.VariableDeclarationList import VariableDeclarationList
 from compiler.nodes.IfElseStatement import IfElseStatement
 from compiler.nodes.IfStatement import IfStatement
 from compiler.nodes.WhileStatement import WhileStatement
@@ -178,7 +179,7 @@ class ASTGenerator(SmallCVisitor):
         type_object = type_specifier.type_object
 
         var_decl_list = self.visit(parsetree.var_decl_list())
-
+        
         try:
             return VariableDeclaration(self.environment, type_object, var_decl_list)
         except C2PException as e:
@@ -187,11 +188,12 @@ class ASTGenerator(SmallCVisitor):
             MyErrorListener().semanticError(line, column, e.msg)
 
     # Visit a parse tree produced by SmallCParser#var_decl_list.
-    # returns a list of variable_id's
     def visitVar_decl_list(self, parsetree: SmallCParser.Var_decl_listContext):
-        var_decl_list = []
+        var_list = []
         for var_id in parsetree.variable_id():
-            var_decl_list.append(self.visit(var_id))
+            var_list.append(self.visit(var_id))
+        
+        return VariableDeclarationList(self.environment, var_list)
 
     # Visit a parse tree produced by SmallCParser#stmt.
     def visitStmt(self, parsetree: SmallCParser.StmtContext):
@@ -427,7 +429,7 @@ class ASTGenerator(SmallCVisitor):
                 column = parsetree.start.column
                 MyErrorListener().semanticError(line, column, e.msg)
 
-        return self.visit(parsetree.relation())
+        return self.visit(parsetree.relation(0))
 
     # Visit a parse tree produced by SmallCParser#relation.
     def visitRelation(self, parsetree: SmallCParser.RelationContext):
@@ -445,7 +447,7 @@ class ASTGenerator(SmallCVisitor):
                 column = parsetree.start.column
                 MyErrorListener().semanticError(line, column, e.msg)
 
-        return self.visit(parsetree.equation())
+        return self.visit(parsetree.equation(0))
 
     # Visit a parse tree produced by SmallCParser#equation.
     def visitEquation(self, parsetree: SmallCParser.EquationContext):

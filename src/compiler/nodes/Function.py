@@ -7,13 +7,13 @@ from compiler.types.VoidType import VoidType
 
 class Function(ASTNode, ControlStructure):
 
-    def __init__(self, environment, return_type, identifier, parameters_decl_list, content, extern):
+    def __init__(self, environment, return_type, identifier, parameter_decl_list, content, extern):
         super().__init__(environment, SmallCParser.FUNCTION)
         self.return_type = return_type
         self.identifier = identifier
         self.extern = extern
-        self.parameters_decl_list = parameters_decl_list
-        self.addChild(parameters_decl_list)
+        self.parameter_decl_list = parameter_decl_list
+        self.addChild(parameter_decl_list)
         self.content = content
             
         if self.content is not None:
@@ -45,7 +45,7 @@ class Function(ASTNode, ControlStructure):
 
         self.writeInstruction("function_" + self.identifier + ":", out)
         self.writeInstruction(
-            "ssp " + str(5 + len(self.parameters_decl_list.parameter_list) + self.content.getVarsSize()), out)
+            "ssp " + str(5 + len(self.parameter_decl_list.parameter_list) + self.content.getVarsSize()), out)
 
         self.content.generateCode(out)
 

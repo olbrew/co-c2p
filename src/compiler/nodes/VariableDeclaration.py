@@ -6,15 +6,15 @@ from grammar.SmallCParser import SmallCParser
 
 class VariableDeclaration(ASTNode):
 
-    def __init__(self, environment, typename, variable_identifiers):
+    def __init__(self, environment, typename, var_decl_list):
         super().__init__(environment, SmallCParser.VARIABLEDECLARATION)
 
         if isinstance(typename, VoidType):
             raise C2PException("variable has incomplete type 'void'")
 
         self.typename = typename
-        self.variable_identifiers = variable_identifiers
-
+        self.variable_identifiers = var_decl_list.variable_ids
+        
         for var in self.variable_identifiers:
             if var.identifier not in environment.symbol_table.stack[-1]:
                 var.setType(typename)
@@ -29,7 +29,7 @@ class VariableDeclaration(ASTNode):
             space += var_id.getSize()
 
         return space
-
+    
     def getDisplayableText(self):
         return "var decl"
 

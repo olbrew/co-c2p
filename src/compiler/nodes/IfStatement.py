@@ -14,7 +14,7 @@ class IfStatement(Statement):
         self.addChild(self.if_statement)
 
     def getDisplayableText(self):
-        return "if"
+        return "if then"
 
     def generateCode(self, out):
         # First get the result of the condition on top of the stack

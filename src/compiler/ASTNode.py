@@ -5,9 +5,9 @@ from antlr4 import ParserRuleContext
 
 class ASTNode(ParserRuleContext, ABC):
 
-    def __init__(self, ast, type=0):
+    def __init__(self, environment, type=0):
         super().__init__()
-        self.ast = ast
+        self.environment = environment
         self.type = type
 
     def addChild(self, child):
@@ -21,7 +21,7 @@ class ASTNode(ParserRuleContext, ABC):
 
     def storeASTToDisk(self):
         with open('ast.pickle', 'wb') as outfile:
-            pickle.dump(self.ast, outfile, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(self.environment, outfile, pickle.HIGHEST_PROTOCOL)
 
     def loadASTFromDisk(self):
         with open('ast.pickle', 'rb') as outfile:
