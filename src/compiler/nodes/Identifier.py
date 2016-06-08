@@ -6,7 +6,7 @@ from grammar.SmallCParser import SmallCParser
 
 class Identifier(Expression):
 
-    def __init__(self, environment, name, indirection, address_of, array_index):
+    def __init__(self, environment, name, indirection, address_of, array_size):
         super().__init__(environment)
         self.type = SmallCParser.ID
         symbol = environment.symbol_table.getSymbol(name)
@@ -22,9 +22,9 @@ class Identifier(Expression):
                 "use of undeclared identifier '" + self.name + "'")
 
         if self.operand_type.isArray():
-            self.array_index = array_index
+            self.array_size = array_size
         else:
-            self.array_index = 0
+            self.array_size = 0
 
         self.address = symbol.address
         self.depth = symbol.getRelativeDepth(environment.call_stack)
@@ -50,4 +50,4 @@ class Identifier(Expression):
                 "lda " + str(self.depth) + " " + str(self.address), out)
         else:
             self.writeInstruction("lod" + p_type + " " + str(self.depth) +
-                                  " " + str(self.address + self.array_index), out)
+                                  " " + str(self.address + self.array_size), out)

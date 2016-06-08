@@ -30,7 +30,7 @@ class Primary(Expression):
             self.operand_type = IntegerType()
             self.result_type = BooleanType()
         elif isinstance(value, str):
-            self.value = value
+            self.value = "'" + value + "'"
             self.operand_type = CharacterType()
             self.result_type = self.operand_type
         else:

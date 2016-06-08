@@ -233,10 +233,11 @@ class ASTGenerator(SmallCVisitor):
         indirection = parsetree.ASTERIKS() is not None
         address_of = parsetree.AMPERSAND() is not None
         
-        if parsetree.array_definition() is None:
+        if parsetree.array_indexing() is None:
             array_size = 0
         else:
-            array_size = int(parsetree.array_definition().INTEGER().getText())
+            # TODO we assumed this is an integer
+            array_size = int(parsetree.array_indexing().expr().getText())
 
         if indirection or address_of:
             name = parsetree.getChild(1).getText()
@@ -284,11 +285,12 @@ class ASTGenerator(SmallCVisitor):
         is_pointer = parsetree.identifier().ASTERIKS() is not None
         is_alias = parsetree.identifier().AMPERSAND() is not None
         
-        if parsetree.identifier().array_definition() is None:
+        if parsetree.identifier().array_indexing() is None:
             array_size = 0
         else:
+            # TODO we assumed this is an integer
             array_size = int(parsetree.identifier(
-            ).array_definition().INTEGER().getText())
+            ).array_indexing().expr().getText())
 
         if is_pointer or is_alias:
             identifier = parsetree.identifier().getChild(1).getText()
