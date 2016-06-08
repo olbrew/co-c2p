@@ -29,15 +29,15 @@ class VariableIdentifier(ASTNode):
 
     def setType(self, typename):
         self.typename = typename
-                
-        if self.expression is not None:
+ 
+        if self.expression is not None:  
             if self.typename.getName() != self.expression.result_type.getName():
                 raise C2PException("identifier '" + self.identifier + "' is assigned a value of type " + self.expression.result_type.getCSymbol() + ", while " + self.typename.getCSymbol() + " is expected")
                 
         if self.is_pointer:
             self.typename.is_pointer = True
             if self.expression is not None:
-                if not self.expression.result_type.is_pointer:
+                if not self.expression.result_type.is_pointer and not self.expression.address_of:
                     raise C2PException("identifier '" + self.identifier + "' is assigned a value of type " + self.expression.result_type.getCSymbol() + ", while " + self.typename.getCSymbol() + "* is expected")
 
 
@@ -50,11 +50,8 @@ class VariableIdentifier(ASTNode):
         else:
             return 1
 
-    # TODO (shouldn't we add identifiers as children to ASTNodes?)
-    # right now this getDisplayableText is useless since Identifier is only saved as text attribute
-    # that's why AST will never show the variable names used in declaration statements
     def getDisplayableText(self):
-        return "var id"
+        return self.identifier
 
     def generateCode(self, out):
         p_type = "a" if self.is_pointer else self.typename.getPSymbol()
