@@ -4,8 +4,8 @@ from grammar.SmallCParser import SmallCParser
 
 class VariableDeclarationList(ASTNode):
 
-    def __init__(self, ast):
-        super().__init__(ast, SmallCParser.VARIABLEDECLARATIONLIST)
+    def __init__(self, environment):
+        super().__init__(environment, SmallCParser.VARIABLEDECLARATIONLIST)
 
     def getDisplayableText(self):
         return "var decl list"

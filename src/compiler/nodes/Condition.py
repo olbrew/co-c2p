@@ -6,8 +6,8 @@ class Condition(Expression):
 
     label_counter = 0
 
-    def __init__(self, ast, expr_disjunction, expression, expr_condition):
-        super().__init__(ast)
+    def __init__(self, environment, expr_disjunction, expression, expr_condition):
+        super().__init__(environment)
         self.type = SmallCParser.CONDITION
         self.disjunction = expr_disjunction
         self.expression = expression
@@ -21,7 +21,7 @@ class Condition(Expression):
         self.result_type = operand_type
 
     def getDisplayableText(self):
-        return "ternary condition"
+        return "? :"
 
     def generateCode(self, out):
         # first get the result of the condition on top of the stack

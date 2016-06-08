@@ -5,8 +5,8 @@ from grammar.SmallCParser import SmallCParser
 
 class Equation(Expression):
 
-    def __init__(self, ast, expression_equation, expression_term, operator):
-        super().__init__(ast)
+    def __init__(self, environment, expression_equation, expression_term, operator):
+        super().__init__(environment)
         self.type = SmallCParser.EQUATION
         self.equation = expression_equation
         self.term = expression_term

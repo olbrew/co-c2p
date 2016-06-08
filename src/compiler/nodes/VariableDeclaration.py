@@ -6,8 +6,8 @@ from grammar.SmallCParser import SmallCParser
 
 class VariableDeclaration(ASTNode):
 
-    def __init__(self, ast, typename, variable_identifiers):
-        super().__init__(ast, SmallCParser.VARIABLEDECLARATION)
+    def __init__(self, environment, typename, variable_identifiers):
+        super().__init__(environment, SmallCParser.VARIABLEDECLARATION)
 
         if isinstance(typename, VoidType):
             raise C2PException("variable has incomplete type 'void'")
@@ -16,7 +16,7 @@ class VariableDeclaration(ASTNode):
         self.variable_identifiers = variable_identifiers
 
         for var in self.variable_identifiers:
-            if var.identifier not in ast.symbol_table.stack[-1]:
+            if var.identifier not in environment.symbol_table.stack[-1]:
                 var.setType(typename)
                 self.addChild(var)
             else:

@@ -4,8 +4,8 @@ from grammar.SmallCParser import SmallCParser
 
 class Expression(Statement):
 
-    def __init__(self, ast):
-        super().__init__(ast)
+    def __init__(self, environment):
+        super().__init__(environment)
         self.type = SmallCParser.EXPRESSION
         self.operand_type = None
         self.result_type = None

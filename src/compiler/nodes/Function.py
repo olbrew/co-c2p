@@ -7,8 +7,8 @@ from compiler.types.VoidType import VoidType
 
 class Function(ASTNode, ControlStructure):
 
-    def __init__(self, ast, return_type, identifier, parameters_decl_list, content, extern):
-        super().__init__(ast, SmallCParser.FUNCTION)
+    def __init__(self, environment, return_type, identifier, parameters_decl_list, content, extern):
+        super().__init__(environment, SmallCParser.FUNCTION)
         self.return_type = return_type
         self.identifier = identifier
         self.extern = extern
@@ -20,7 +20,7 @@ class Function(ASTNode, ControlStructure):
             self.addChild(self.content)
             self.validateReturnType()
         
-        self.depth = ast.call_stack.getNestingDepth()
+        self.depth = environment.call_stack.getNestingDepth()
 
     def isForwardDeclaration(self):
         return self.content is None
@@ -62,4 +62,3 @@ class Function(ASTNode, ControlStructure):
                 if self.return_type.getName() != statement.expression.result_type.getName():
                     raise C2PException("In return statement of functon '" + self.identifier + \
                         "' invalid conversion from " + statement.expression.result_type.getName() + " to " + self.return_type.getName())
-                        

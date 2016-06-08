@@ -7,8 +7,8 @@ from grammar.SmallCParser import SmallCParser
 
 class Relation(Expression):
 
-    def __init__(self, ast, equation1, equation2, operator):
-        super().__init__(ast)
+    def __init__(self, environment, equation1, equation2, operator):
+        super().__init__(environment)
         self.type = SmallCParser.RELATION
         self.equation1 = equation1
         self.equation2 = equation2

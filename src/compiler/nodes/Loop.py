@@ -7,8 +7,8 @@ from grammar.SmallCParser import SmallCParser
 # so we leave out ABC to prevent (MRO) order TypeError
 class Loop(Statement):
 
-    def __init__(self, ast):
-        super().__init__(ast)
+    def __init__(self, environment):
+        super().__init__(environment)
         self.type = SmallCParser.LOOP
 
     @abstractmethod

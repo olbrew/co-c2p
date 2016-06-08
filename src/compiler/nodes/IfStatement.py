@@ -5,8 +5,8 @@ from grammar.SmallCParser import SmallCParser
 class IfStatement(Statement):
     label_counter = 0
 
-    def __init__(self, ast, expression, if_statement):
-        super().__init__(ast)
+    def __init__(self, environment, expression, if_statement):
+        super().__init__(environment)
         self.type = SmallCParser.IFSTATEMENT
         self.expression = expression
         self.if_statement = if_statement

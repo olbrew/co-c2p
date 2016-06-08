@@ -5,14 +5,14 @@ from compiler.MyErrorListener import C2PException
 
 class VariableIdentifier(ASTNode):
 
-    def __init__(self, ast, identifier, expression, is_pointer, is_alias, array_size):
-        super().__init__(ast, SmallCParser.VARIABLEIDENTIFIER)
+    def __init__(self, environment, identifier, expression, is_pointer, is_alias, array_size):
+        super().__init__(environment, SmallCParser.VARIABLEIDENTIFIER)
 
         self.typename = None
         self.identifier = identifier
         self.expression = expression
         self.is_pointer = is_pointer
-        self.is_alies = is_alias
+        self.is_alias = is_alias
         self.array_size = array_size
         self.address = None
         self.depth = None
@@ -22,9 +22,9 @@ class VariableIdentifier(ASTNode):
 
     def allocate(self):
         space = self.getSize()
-        self.address = self.ast.call_stack.getAddress(space)
-        self.depth = self.ast.call_stack.getNestingDepth()
-        self.ast.symbol_table.addSymbol(
+        self.address = self.environment.call_stack.getAddress(space)
+        self.depth = self.environment.call_stack.getNestingDepth()
+        self.environment.symbol_table.addSymbol(
             self.identifier, self.typename, self.address, self.depth)
 
     def setType(self, typename):
@@ -50,8 +50,11 @@ class VariableIdentifier(ASTNode):
         else:
             return 1
 
+    # TODO (shouldn't we add identifiers as children to ASTNodes?)
+    # right now this getDisplayableText is useless since Identifier is only saved as text attribute
+    # that's why AST will never show the variable names used in declaration statements
     def getDisplayableText(self):
-        return "var identifier"
+        return "var id"
 
     def generateCode(self, out):
         p_type = "a" if self.is_pointer else self.typename.getPSymbol()

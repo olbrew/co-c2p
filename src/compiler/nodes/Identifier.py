@@ -6,10 +6,10 @@ from grammar.SmallCParser import SmallCParser
 
 class Identifier(Expression):
 
-    def __init__(self, ast, name, indirection, address_of, array_index):
-        super().__init__(ast)
+    def __init__(self, environment, name, indirection, address_of, array_index):
+        super().__init__(environment)
         self.type = SmallCParser.ID
-        symbol = ast.symbol_table.getSymbol(name)
+        symbol = environment.symbol_table.getSymbol(name)
 
         self.name = name
         self.indirection = indirection
@@ -27,7 +27,7 @@ class Identifier(Expression):
             self.array_index = 0
 
         self.address = symbol.address
-        self.depth = symbol.getRelativeDepth(ast.call_stack)
+        self.depth = symbol.getRelativeDepth(environment.call_stack)
 
         if self.indirection and not self.operand_type.is_pointer:
             raise C2PException(

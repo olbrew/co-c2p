@@ -5,8 +5,8 @@ from grammar.SmallCParser import SmallCParser
 
 class Conjunction(Expression):
 
-    def __init__(self, ast, expr_conjunction, expr_comparison):
-        super().__init__(ast)
+    def __init__(self, environment, expr_conjunction, expr_comparison):
+        super().__init__(environment)
         self.type = SmallCParser.CONJUNCTION
         self.conjunction = expr_conjunction
         self.comparison = expr_comparison
@@ -16,7 +16,7 @@ class Conjunction(Expression):
         self.result_type = BooleanType()
 
     def getDisplayableText(self):
-        return "and"
+        return "&&"
 
     def generateCode(self, out):
         # first get the operands on top of the stack

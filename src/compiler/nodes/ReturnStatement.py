@@ -7,8 +7,8 @@ from grammar.SmallCParser import SmallCParser
 
 class ReturnStatement(Statement):
 
-    def __init__(self, ast, expression):
-        super().__init__(ast)
+    def __init__(self, environment, expression):
+        super().__init__(environment)
         self.type = SmallCParser.RETURNSTATEMENT
         self.expression = expression
         self.addChild(self.expression)
@@ -39,5 +39,5 @@ class ReturnStatement(Statement):
                       "' to '" + return_type.getName() + "'. Information could be lost.")
 
         self.writeInstruction("str " + return_type.getPSymbol() + str(
-            self.ast.call_stack.getNestingDepth() - function.depth) + " 0", out)
+            self.environment.call_stack.getNestingDepth() - function.depth) + " 0", out)
         self.writeInstruction("ujp " + controlStructure.getReturnLabel(), out)
