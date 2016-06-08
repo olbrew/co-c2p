@@ -88,8 +88,8 @@ class ASTGenerator(SmallCVisitor):
 
         identifier = parsetree.identifier()
         func_name = identifier.IDENTIFIER().getText()
-        
-        # TODO determine whether return type contains AMPERSAND | ASTERIKS
+        return_type.is_pointer = identifier.ASTERIKS() is not None
+        return_type.is_reference = identifier.AMPERSAND() is not None
         
         if parsetree.param_decl_list() is None:
             parameter_decl_list = ParameterDeclarationList(self.environment, [])

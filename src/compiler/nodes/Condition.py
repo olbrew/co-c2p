@@ -21,7 +21,8 @@ class Condition(Expression):
         self.result_type = operand_type
 
     def getDisplayableText(self):
-        return "? :"
+        # something goes wrong if we try to output "? :" instead
+        return "ternary operator"
 
     def generateCode(self, out):
         # first get the result of the condition on top of the stack
