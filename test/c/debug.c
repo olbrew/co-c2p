@@ -1,19 +1,15 @@
-#include <stdio.h>
+int factorial(int n) {
+    if (n == 1)
+        return n;
+    return n * factorial(n-1);
+}
 
-int* test(int* x, int b) {
-    return &b;
+int increment(int i) {
+    return i+1;
 }
 
 int main(int p)
 {
-    int w[5] = {1, 2, 3, 4};
-    const char z[5] = {'h', 'e', 'l', 'l', 'o'};
-    printf(z);
-    scanf(w);
-
-    int d = 1;
-    int* p = &d;
-    test(p, 1);
-    
-    return 0;
+    int a;
+    return increment(a);
 }
