@@ -67,7 +67,6 @@ class VariableIdentifier(ASTNode):
                     self.addChild(Primary(self.environment, self.value))
                 else:
                     for element in self.array_elements:
-                        print(element)
                         self.addChild(Primary(self.environment, element))
                     # initialize array of basic type
                     while(len(self.array_elements) != self.array_size):
