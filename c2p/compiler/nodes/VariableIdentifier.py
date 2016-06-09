@@ -40,7 +40,8 @@ class VariableIdentifier(ASTNode):
         self.typename.array_size = self.array_size
         
         if self.expression is not None:
-            self.value = self.expression.value
+            if isinstance(self.expression, Primary):
+                self.value = self.expression.value
             if self.typename.getName() != self.expression.result_type.getName():
                 raise C2PException("identifier '" + self.identifier + "' is assigned a value of type " + self.expression.result_type.getCSymbol() + ", while " + self.typename.getCSymbol() + " is expected")
                 

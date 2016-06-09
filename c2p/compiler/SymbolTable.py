@@ -1,6 +1,8 @@
 from compiler.MyErrorListener import C2PException
 from compiler.nodes.ParameterDeclaration import ParameterDeclaration
+from compiler.nodes.ParameterDeclarationList import ParameterDeclarationList
 from compiler.nodes.ParameterList import ParameterList
+from compiler.nodes.TypeSpecifier import TypeSpecifier
 from grammar.SmallCParser import SmallCParser
 
 
@@ -28,9 +30,15 @@ class Function:
 
     def __init__(self, return_type, arg_types, address, depth):
         self.return_type = return_type
-        self.arg_types = arg_types
+        self.arg_types = []
         self.address = address
         self.depth = depth
+        
+        for arg in arg_types.parameter_declarations:
+            if isinstance(arg.typespecifier, TypeSpecifier):
+                self.arg_types.append(arg.typespecifier.type_object)
+            else:
+                self.arg_types.append(arg.typespecifier)
 
     def getRelativeDepth(self, call_stack):
         stack_depth = call_stack.getNestingDepth()
@@ -48,11 +56,11 @@ class SymbolTable:
     def addSymbol(self, name, typename, address, depth, value=0):
         self.stack[len(self.stack) - 1][name] = Symbol(typename, address, depth, value)
 
-    def addFunction(self, name, return_type, parameter_list, address, depth):
+    def addFunction(self, name, return_type, parameter_decl_list, address, depth):
         try:
-            self.checkFunctionSignature(name, parameter_list, return_type)
+            self.checkFunctionSignature(name, parameter_decl_list, return_type)
         except C2PException:
-            self.functions[len(self.functions) - 1][name] = Function(return_type, parameter_list, address, depth)
+            self.functions[len(self.functions) - 1][name] = Function(return_type, parameter_decl_list, address, depth)
             return
             
         raise C2PException("redefinition of existing function '" + name + "'")
@@ -62,60 +70,56 @@ class SymbolTable:
             if name in dictionary:
                 return dictionary[name]
     
-    def checkFunctionSignature(self, name, parameter_list, return_type=None):
+    # parameters is either 
+    #   parameter_list in case of a function call (use .arguments)
+    #   parameter_declaration_list in case of a function definition (use .parameter_declarations)
+    def checkFunctionSignature(self, name, parameters, return_type=None):
         arg_types = []
-        if isinstance(parameter_list, ParameterList):
-            for arg in parameter_list.arguments:
+        # prepare `arg_types` with Type objects from parameter (declaration) list
+        if isinstance(parameters, ParameterList):
+            # function call
+            for arg in parameters.arguments:
                 arg_types.append(arg.result_type)
+        elif isinstance(parameters, ParameterDeclarationList):
+            # function definition
+            if parameters is not None:
+                for param_decl in parameters.parameter_declarations:
+                    if isinstance(param_decl, TypeSpecifier):
+                        arg_types.append(param_decl.type_object)
+                    else:
+                        arg_types.append(param_decl)
         else:
-            if parameter_list is not None:
-                for param_decl in parameter_list:
-                    arg_types.append(param_decl.typespecifier)
+            raise C2PException("Unexpected parameters type for function '" + name + "'")
         
+        # try to match function signature in our symbol table
         for scope in reversed(self.functions):
             if name in scope:
+                # we start by checking the return type of the function
                 if return_type is not None:
                     if return_type.getName() != scope[name].return_type.getName():
                         continue;
                 
-                # check whether arg_types match
+                # check whether amount of arguments is the same
                 if len(arg_types) != len(scope[name].arg_types):
                     continue
                 
+                
                 isTotalMatching = True
                 for i in range(len(arg_types)):
-                    # values passed by value
-                    if parameter_list.arguments[i].type != SmallCParser.PRIMARY:
-                        if scope[name].arg_types[i].typespecifier.is_pointer:
-                            isTotalMatching = False
-                            break
-                    else:
-                        # TODO split identifiers from rest
-                        # check pointer arguments
-                        symbol = self.getSymbol(parameter_list.arguments[i].name)
-                        if scope[name].arg_types[i].typespecifier.is_pointer:
-                            if symbol.type.is_pointer:
-                                if parameter_list.arguments[i].indirection:
-                                    isTotalMatching = False
-                                    break
-                            else:
-                                if not parameter_list.arguments[i].address_of:
-                                    isTotalMatching = False
-                                    break
-                        else:
-                            if symbol.type.is_pointer and not parameter_list.arguments[i].indirection:
-                                isTotalMatching = False
-                                break
-                            if not symbol.type.is_pointer and parameter_list.arguments[i].address_of:
-                                isTotalMatching = False
-                                break
-                        
-                    # check for actual type
-                    if arg_types[i].getName() == scope[name].arg_types[i].typespecifier.getName():
-                        continue
+                    # match actual Type of arguments
+                    if arg_types[i].getName() == scope[name].arg_types[i].getName():
+                        # check that both are either pointers or none of them are
+                        if not (arg_types[i].is_pointer ^ scope[name].arg_types[i].is_pointer):
+                            # this doesn't check possible indirection or references,
+                            # it is left out in this stage else it would over complicate things
+                            continue
+                        isTotalMatching = False
+                        break
                     else:
                         isTotalMatching = False
                         break
+                     
+                # as long as something went wrong, keep looking up in outer scope
                 if isTotalMatching:
                     return scope[name]
                 

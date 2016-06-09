@@ -45,7 +45,7 @@ class Function(ASTNode, ControlStructure):
 
         self.writeInstruction("function_" + self.identifier + ":", out)
         self.writeInstruction(
-            "ssp " + str(5 + len(self.parameter_decl_list.parameter_list) + self.content.getVarsSize()), out)
+            "ssp " + str(5 + len(self.parameter_decl_list.parameter_declarations) + self.content.getVarsSize()), out)
 
         self.content.generateCode(out)
 

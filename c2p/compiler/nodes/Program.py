@@ -16,8 +16,8 @@ class Program(ASTNode):
         self.function_declarations = function_declarations
         self.expressions = expressions
 
-        for incl in self.include:
-            self.addChild(incl)
+        if  self.include is not None:
+            self.addChild(self.include)
 
         for var_decl in self.var_declarations:
             self.addChild(var_decl)
@@ -36,8 +36,8 @@ class Program(ASTNode):
 
         self.writeInstruction("ujp program", out)
 
-        for incl in self.include:
-            incl.generateCode(out)
+        if  self.include is not None:
+            self.include.generateCode(out)
 
         for func_decl in self.function_declarations:
             func_decl.generateCode(out)

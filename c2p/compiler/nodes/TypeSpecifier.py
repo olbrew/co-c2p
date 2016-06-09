@@ -8,7 +8,6 @@ class TypeSpecifier(ASTNode):
         super().__init__(environment, SmallCParser.TYPESPECIFIER)
         self.type_object = type_object
 
-    # TODO (remove?) this is useless since typespecifier is never added as a child
     def getDisplayableText(self):
         return self.type_object.getName()
 

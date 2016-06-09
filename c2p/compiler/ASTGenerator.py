@@ -50,15 +50,15 @@ class ASTGenerator(SmallCVisitor):
 
     # Visit a parse tree produced by SmallCParser#smallc_program.
     def visitSmallc_program(self, parsetree: SmallCParser.Smallc_programContext):
-        include_contexts = parsetree.include()
+        include_context = parsetree.include()
         variable_decl_contexts = parsetree.var_decl()
         function_contexts = parsetree.function_definition()
         expression_contexts = parsetree.expr()
-
-        include_directives = []
-        if include_contexts is not None:
-            for inc_ctx in include_contexts:
-                include_directives.append(self.visit(inc_ctx))
+        
+        if include_context is not None:
+            includeDirective = self.visit(include_context)
+        else:
+            includeDirective = None
         
         var_decls = []
         for var_decl in variable_decl_contexts:
@@ -72,8 +72,8 @@ class ASTGenerator(SmallCVisitor):
         for expr_ctx in expression_contexts:
             expressions.append(self.visit(expr_ctx))
         
-        return Program(self.environment, include_directives, var_decls, functions, expressions)
-
+        return Program(self.environment, includeDirective, var_decls, functions, expressions)
+                        
     # Visit a parse tree produced by SmallCParser#include.
     def visitInclude(self, parsetree: SmallCParser.IncludeContext):
         return IncludeDirective(self.environment, parsetree.STDIO().getText())
@@ -99,7 +99,7 @@ class ASTGenerator(SmallCVisitor):
         address = self.environment.call_stack.getAddress()
         depth = self.environment.call_stack.getNestingDepth()
         self.environment.symbol_table.addFunction(
-                    func_name, return_type, parameter_decl_list.parameter_list, address, depth)
+                    func_name, return_type, parameter_decl_list, address, depth)
                     
         if parsetree.compound_stmt() is None:
             # forward declaration
