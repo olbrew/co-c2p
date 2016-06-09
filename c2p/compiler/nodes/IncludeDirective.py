@@ -13,10 +13,13 @@ class IncludeDirective(ASTNode):
         super().__init__(environment, SmallCParser.INCLUDEDIRECTIVE)
         self.filename = filename
 
+        # add `printf` and `scanf` functions to symbol table
         if self.filename == "stdio.h":
             # int printf(char *format, ...)
             # int scanf(const char *format, ...)
-            
+
+            # basic support implemented,
+            # accepts only one argument (format) which is an array of characters
             address = environment.call_stack.getAddress()
             depth = environment.call_stack.getNestingDepth()
                 
@@ -28,11 +31,11 @@ class IncludeDirective(ASTNode):
             parameter_decl = []
             parameter_decl.append(ParameterDeclaration(environment, typeSpecifier))
             parameter_decl_list = ParameterDeclarationList(environment, parameter_decl)
-            # TODO arguments (const and array)
             parameter_decl_list.parameter_declarations[0].typespecifier = typeSpecifier
 
+            environment.symbol_table.addFunction("scanf", IntegerType(), parameter_decl_list, address, depth)
+            # TODO reset typeSpecifier.type_object.is_const for printf
             environment.symbol_table.addFunction("printf", IntegerType(), parameter_decl_list, address, depth)
-            #environment.symbol_table.addFunction("scanf", IntegerType(), parameter_decl_list, address, depth)
 
     def getDisplayableText(self):
         return "include '" + self.filename + "'"
