@@ -1,11 +1,9 @@
 lib/antlr4-python3-runtime-4.5.3
 lib/Pmachine
-src/grammar/SmallC*.tokens
-src/grammar/SmallC*.py
+c2p/grammar/SmallC*.tokens
+c2p/grammar/SmallC*.py
 __pycache__
 *.pyc
-*.p
 *.pickle
 ast.gv
 ast.gv.pdf
-
