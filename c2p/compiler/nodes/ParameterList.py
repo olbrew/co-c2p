@@ -4,8 +4,8 @@ from grammar.SmallCParser import SmallCParser
 
 class ParameterList(ASTNode):
 
-    def __init__(self, ast, arguments):
-        super().__init__(ast, SmallCParser.PARAMETERLIST)
+    def __init__(self, environment, arguments):
+        super().__init__(environment, SmallCParser.PARAMETERLIST)
         self.arguments = arguments
         for expression in self.arguments:
             self.addChild(expression)

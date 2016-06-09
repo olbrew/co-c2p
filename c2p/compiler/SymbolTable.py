@@ -36,7 +36,6 @@ class Function:
 class SymbolTable:
 
     def __init__(self):
-        self.keywords = []  # TODO: issue #16
         self.stack = [{}]  # symbols
         self.functions = [{}]
 
@@ -59,6 +58,7 @@ class SymbolTable:
     
     def checkFunctionSignature(self, name, parameter_list, return_type=None):
         arg_types = []
+        # TODO check call function with primary arg
         if isinstance(parameter_list, ParameterList):
             for arg in parameter_list.arguments:
                 arg_types.append(arg.result_type)

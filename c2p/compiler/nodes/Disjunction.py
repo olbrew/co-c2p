@@ -5,8 +5,8 @@ from grammar.SmallCParser import SmallCParser
 
 class Disjunction(Expression):
 
-    def __init__(self, ast, expr_disjunction, expr_conjunction):
-        super().__init__(ast)
+    def __init__(self, environment, expr_disjunction, expr_conjunction):
+        super().__init__(environment)
         self.type = SmallCParser.DISJUNCTION
         self.disjunction = expr_disjunction
         self.conjunction = expr_conjunction
@@ -16,7 +16,7 @@ class Disjunction(Expression):
         self.result_type = BooleanType()
 
     def getDisplayableText(self):
-        return "or"
+        return " || "
 
     def generateCode(self, out):
         # first get the operands on top of the stack

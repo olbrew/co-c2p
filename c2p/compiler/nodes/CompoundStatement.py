@@ -9,8 +9,8 @@ class CompoundStatement(Statement, ControlStructure):
 
     label_counter = 0
 
-    def __init__(self, ast, var_decls, statements):
-        super().__init__(ast)
+    def __init__(self, environment, var_decls, statements):
+        super().__init__(environment)
         self.type = SmallCParser.COMPOUNDSTATEMENT
 
         self.var_decls = var_decls

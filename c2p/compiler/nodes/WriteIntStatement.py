@@ -4,8 +4,8 @@ from grammar.SmallCParser import SmallCParser
 
 class WriteIntStatement(ASTNode):
 
-    def __init__(self, ast, expression):
-        super().__init__(ast, SmallCParser.WRITEINTSTATEMENT)
+    def __init__(self, environment, expression):
+        super().__init__(environment, SmallCParser.WRITEINTSTATEMENT)
         self.expression = expression
         self.addChild(expression)
 

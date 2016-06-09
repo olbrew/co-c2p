@@ -5,14 +5,14 @@ from grammar.SmallCParser import SmallCParser
 class ForStatement(Loop):
     label_counter = 0
 
-    def __init__(self, ast, var_decl, expr_condition, expr_update, statement):
-        super().__init__(ast)
+    def __init__(self, environment, var_decl_list, expr_condition, expr_update, statement):
+        super().__init__(environment)
         self.type = SmallCParser.FORSTATEMENT
-        self.var_decl = var_decl
+        self.var_decl_list = var_decl_list
         self.condition = expr_condition
         self.update = expr_update
         self.statement = statement
-        self.addChild(self.var_decl)
+        self.addChild(self.var_decl_list)
         self.addChild(self.condition)
         self.addChild(self.update)
         self.addChild(self.statement)
@@ -39,10 +39,10 @@ class ForStatement(Loop):
         self.writeInstruction("ujp for_" + self.label_id + "_end", out)
         self.writeInstruction("for_" + self.label_id + "_begin:", out)
         self.writeInstruction(
-            "ssp " + str(5 + self.var_decl.getDeclarationSize()), out)
+            "ssp " + str(5 + self.var_decl_list.getDeclarationSize()), out)
 
-        if self.var_decl is not None:
-            self.var_decl.generateCode(out)
+        if self.var_decl_list is not None:
+            self.var_decl_list.generateCode(out)
         self.writeInstruction("for_" + self.label_id + "_inner_begin:", out)
 
         if self.condition is not None:

@@ -6,8 +6,8 @@ from grammar.SmallCParser import SmallCParser
 class WhileStatement(Loop):
     label_counter = 0
 
-    def __init__(self, ast, expression, statement):
-        super().__init__(ast)
+    def __init__(self, environment, expression, statement):
+        super().__init__(environment)
         self.type = SmallCParser.WHILESTATEMENT
         self.expression = expression
         self.statement = statement

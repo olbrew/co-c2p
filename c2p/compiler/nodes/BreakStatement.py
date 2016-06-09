@@ -5,8 +5,8 @@ from grammar.SmallCParser import SmallCParser
 
 class BreakStatement(Statement):
 
-    def __init__(self, ast):
-        super().__init__(ast)
+    def __init__(self, environment):
+        super().__init__(environment)
         self.type = SmallCParser.BREAKSTATEMENT
         
     def getDisplayableText(self):

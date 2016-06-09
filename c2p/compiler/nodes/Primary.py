@@ -9,8 +9,8 @@ from grammar.SmallCParser import SmallCParser
 
 class Primary(Expression):
 
-    def __init__(self, ast, value):
-        super().__init__(ast)
+    def __init__(self, environment, value):
+        super().__init__(environment)
         self.type = SmallCParser.PRIMARY
 
         if isinstance(value, int):
@@ -30,7 +30,7 @@ class Primary(Expression):
             self.operand_type = IntegerType()
             self.result_type = BooleanType()
         elif isinstance(value, str):
-            self.value = value
+            self.value = "'" + value + "'"
             self.operand_type = CharacterType()
             self.result_type = self.operand_type
         else:

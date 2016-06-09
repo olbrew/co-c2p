@@ -6,8 +6,8 @@ from grammar.SmallCParser import SmallCParser
 
 class Comparison(Expression):
 
-    def __init__(self, ast, expr_relation1, expr_relation2, operator):
-        super().__init__(ast)
+    def __init__(self, environment, expr_relation1, expr_relation2, operator):
+        super().__init__(environment)
         self.type = SmallCParser.COMPARISON
         self.relation1 = expr_relation1
         self.relation2 = expr_relation2

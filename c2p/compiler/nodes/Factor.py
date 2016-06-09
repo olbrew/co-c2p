@@ -6,8 +6,8 @@ from grammar.SmallCParser import SmallCParser
 
 class Factor(Expression):
 
-    def __init__(self, ast, factor, operator):
-        super().__init__(ast)
+    def __init__(self, environment, factor, operator):
+        super().__init__(environment)
         self.type = SmallCParser.FACTOR
         self.factor = factor
         self.operator = operator

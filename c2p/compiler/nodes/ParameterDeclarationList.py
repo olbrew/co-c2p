@@ -4,8 +4,8 @@ from grammar.SmallCParser import SmallCParser
 
 class ParameterDeclarationList(ASTNode):
 
-    def __init__(self, ast, params):
-        super().__init__(ast, SmallCParser.PARAMETERDECLARATIONLIST)
+    def __init__(self, environment, params):
+        super().__init__(environment, SmallCParser.PARAMETERDECLARATIONLIST)
 
         self.parameter_list = params
 
@@ -13,7 +13,7 @@ class ParameterDeclarationList(ASTNode):
             self.addChild(param)
 
     def getDisplayableText(self):
-        return "parameter list"
+        return "parameter declaration list"
 
     def generateCode(self, out):
         return

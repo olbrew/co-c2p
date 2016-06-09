@@ -4,14 +4,14 @@ from grammar.SmallCParser import SmallCParser
 
 class IfElseStatement(IfStatement):
 
-    def __init__(self, ast, expression, if_statement, else_statement):
-        super().__init__(ast, expression, if_statement)
+    def __init__(self, environment, expression, if_statement, else_statement):
+        super().__init__(environment, expression, if_statement)
         self.type = SmallCParser.IFELSESTATEMENT
         self.else_statement = else_statement
         self.addChild(self.else_statement)
 
     def getDisplayableText(self):
-        return "if else"
+        return "if then else"
 
     def generateCode(self, out):
         # First get the result of the condition on top of the stack
