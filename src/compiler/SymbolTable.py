@@ -64,7 +64,6 @@ class SymbolTable:
     
     def checkFunctionSignature(self, name, parameter_list, return_type=None):
         arg_types = []
-        # TODO check call function with primary arg
         if isinstance(parameter_list, ParameterList):
             for arg in parameter_list.arguments:
                 arg_types.append(arg.result_type)
