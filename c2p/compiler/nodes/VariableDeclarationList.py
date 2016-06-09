@@ -9,10 +9,10 @@ class VariableDeclarationList(ASTNode):
         self.variable_ids = variable_ids
         for var_id in self.variable_ids:
             self.addChild(var_id)
-        
+
     def getDisplayableText(self):
         return "var decl list"
-        
+
     def getDeclarationSize(self):
         space = 0
 

@@ -14,7 +14,8 @@ class ParameterDeclaration(ASTNode):
             # Only add named variables to the symbol table
             address = environment.call_stack.getAddress()
             depth = environment.call_stack.getNestingDepth()
-            environment.symbol_table.addSymbol(self.identifier, self.typespecifier, address, depth)
+            environment.symbol_table.addSymbol(
+                self.identifier, self.typespecifier, address, depth)
 
     def getDisplayableText(self):
         prefix = self.typespecifier.getCSymbol()

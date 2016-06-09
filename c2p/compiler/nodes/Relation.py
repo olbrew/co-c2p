@@ -4,7 +4,6 @@ from compiler.MyErrorListener import C2PException
 from grammar.SmallCParser import SmallCParser
 
 
-
 class Relation(Expression):
 
     def __init__(self, environment, equation1, equation2, operator):

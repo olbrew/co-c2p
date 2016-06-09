@@ -19,10 +19,10 @@ class VariableIdentifier(ASTNode):
         self.array_elements = array_elements
         self.address = None
         self.depth = None
-        
+
         if self.expression is not None:
             self.addChild(self.expression)
-            
+
     def allocate(self):
         space = self.getSize()
         self.address = self.environment.call_stack.getAddress(space)
@@ -38,20 +38,22 @@ class VariableIdentifier(ASTNode):
         self.typename = typename
         self.typename.is_pointer = self.is_pointer
         self.typename.array_size = self.array_size
-        
+
         if self.expression is not None:
             if isinstance(self.expression, Primary):
                 self.value = self.expression.value
             if self.typename.getName() != self.expression.result_type.getName():
-                raise C2PException("identifier '" + self.identifier + "' is assigned a value of type " + self.expression.result_type.getCSymbol() + ", while " + self.typename.getCSymbol() + " is expected")
-                
+                raise C2PException("identifier '" + self.identifier + "' is assigned a value of type " +
+                                   self.expression.result_type.getCSymbol() + ", while " + self.typename.getCSymbol() + " is expected")
+
             if self.is_pointer:
                 if not self.expression.result_type.is_pointer and not self.expression.address_of:
-                    raise C2PException("identifier '" + self.identifier + "' is assigned a value of type " + self.expression.result_type.getCSymbol() + ", while " + self.typename.getCSymbol() + "* is expected")
+                    raise C2PException("identifier '" + self.identifier + "' is assigned a value of type " +
+                                       self.expression.result_type.getCSymbol() + ", while " + self.typename.getCSymbol() + "* is expected")
         else:
             if self.is_pointer:
-                raise C2PException("variable '" + self.identifier + "' is of type " \
-                    + self.typename.getCSymbol() + "*, can't initialize pointer elements with default value.")
+                raise C2PException("variable '" + self.identifier + "' is of type "
+                                   + self.typename.getCSymbol() + "*, can't initialize pointer elements with default value.")
             else:
                 # determine default value for uninitialized variable
                 c_type = self.typename.getCSymbol()
@@ -71,16 +73,16 @@ class VariableIdentifier(ASTNode):
                     for element in self.array_elements:
                         self.addChild(Primary(self.environment, element))
                     if len(self.array_elements) > self.array_size:
-                        raise C2PException("Array '" + self.identifier + "' has size " + str(self.array_size) +\
-                                ". You cannot fill it with " + str(len(self.array_elements)) + " elements.")
+                        raise C2PException("Array '" + self.identifier + "' has size " + str(self.array_size) +
+                                           ". You cannot fill it with " + str(len(self.array_elements)) + " elements.")
                     if len(self.array_elements) < self.array_size:
-                        print("Warning: array '", self.identifier, "' has size ", self.array_size,\
-                        ". Remaining elements will be filled with default values.")
+                        print("Warning: array '", self.identifier, "' has size ", self.array_size,
+                              ". Remaining elements will be filled with default values.")
                     # initialize array of basic type
                     while(len(self.array_elements) != self.array_size):
                         self.array_elements.append(self.value)
                         self.addChild(Primary(self.environment, self.value))
-        
+
         self.allocate()
 
     def getSize(self):
@@ -100,7 +102,8 @@ class VariableIdentifier(ASTNode):
         if self.expression is not None:
             self.expression.generateCode(out)
         else:
-            # TODO check whether it's an array and generate necessary code for it
+            # TODO check whether it's an array and generate necessary code for
+            # it
             self.writeInstruction("ldc " + p_type + " 0", out)
 
         self.writeInstruction("str " + p_type + " " +

@@ -12,7 +12,8 @@ class FunctionCall(Expression):
         self.parameter_list = parameters
         self.addChild(self.parameter_list)
 
-        self.result_type = environment.symbol_table.checkFunctionSignature(self.identifier, self.parameter_list).return_type
+        self.result_type = environment.symbol_table.checkFunctionSignature(
+            self.identifier, self.parameter_list).return_type
 
     def getDisplayableText(self):
         return "functioncall '" + self.identifier + "'"

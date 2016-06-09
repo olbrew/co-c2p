@@ -19,23 +19,29 @@ class IncludeDirective(ASTNode):
             # int scanf(const char *format, ...)
 
             # basic support implemented,
-            # accepts only one argument (format) which is an array of characters
+            # accepts only one argument (format) which is an array of
+            # characters
             address = environment.call_stack.getAddress()
             depth = environment.call_stack.getNestingDepth()
-                
+
             typeObject = CharacterType()
             typeSpecifier = TypeSpecifier(environment, typeObject)
             typeSpecifier.type_object.is_const = True
             typeSpecifier.type_object.array_size = 1
-            
-            parameter_decl = []
-            parameter_decl.append(ParameterDeclaration(environment, typeSpecifier))
-            parameter_decl_list = ParameterDeclarationList(environment, parameter_decl)
-            parameter_decl_list.parameter_declarations[0].typespecifier = typeSpecifier
 
-            environment.symbol_table.addFunction("scanf", IntegerType(), parameter_decl_list, address, depth)
+            parameter_decl = []
+            parameter_decl.append(
+                ParameterDeclaration(environment, typeSpecifier))
+            parameter_decl_list = ParameterDeclarationList(
+                environment, parameter_decl)
+            parameter_decl_list.parameter_declarations[
+                0].typespecifier = typeSpecifier
+
+            environment.symbol_table.addFunction(
+                "scanf", IntegerType(), parameter_decl_list, address, depth)
             # TODO reset typeSpecifier.type_object.is_const for printf
-            environment.symbol_table.addFunction("printf", IntegerType(), parameter_decl_list, address, depth)
+            environment.symbol_table.addFunction(
+                "printf", IntegerType(), parameter_decl_list, address, depth)
 
     def getDisplayableText(self):
         return "include '" + self.filename + "'"

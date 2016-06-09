@@ -54,12 +54,12 @@ class ASTGenerator(SmallCVisitor):
         variable_decl_contexts = parsetree.var_decl()
         function_contexts = parsetree.function_definition()
         expression_contexts = parsetree.expr()
-        
+
         if include_context is not None:
             includeDirective = self.visit(include_context)
         else:
             includeDirective = None
-        
+
         var_decls = []
         for var_decl in variable_decl_contexts:
             var_decls.append(self.visit(var_decl))
@@ -67,13 +67,13 @@ class ASTGenerator(SmallCVisitor):
         functions = []
         for func_ctx in function_contexts:
             functions.append(self.visit(func_ctx))
-            
+
         expressions = []
         for expr_ctx in expression_contexts:
             expressions.append(self.visit(expr_ctx))
-        
+
         return Program(self.environment, includeDirective, var_decls, functions, expressions)
-                        
+
     # Visit a parse tree produced by SmallCParser#include.
     def visitInclude(self, parsetree: SmallCParser.IncludeContext):
         return IncludeDirective(self.environment, parsetree.STDIO().getText())
@@ -90,17 +90,18 @@ class ASTGenerator(SmallCVisitor):
         func_name = identifier.IDENTIFIER().getText()
         return_type.is_pointer = identifier.ASTERIKS() is not None
         return_type.is_reference = identifier.AMPERSAND() is not None
-        
+
         if parsetree.param_decl_list() is None:
-            parameter_decl_list = ParameterDeclarationList(self.environment, [])
+            parameter_decl_list = ParameterDeclarationList(
+                self.environment, [])
         else:
             parameter_decl_list = self.visit(parsetree.param_decl_list())
 
         address = self.environment.call_stack.getAddress()
         depth = self.environment.call_stack.getNestingDepth()
         self.environment.symbol_table.addFunction(
-                    func_name, return_type, parameter_decl_list, address, depth)
-                    
+            func_name, return_type, parameter_decl_list, address, depth)
+
         if parsetree.compound_stmt() is None:
             # forward declaration
             statements = None
@@ -113,8 +114,8 @@ class ASTGenerator(SmallCVisitor):
 
         try:
             func = Function(self.environment, return_type, func_name, parameter_decl_list,
-                        statements, parsetree.EXTERN() is not None)
-            
+                            statements, parsetree.EXTERN() is not None)
+
             return func
         except C2PException as e:
             line = parsetree.start.line
@@ -165,7 +166,8 @@ class ASTGenerator(SmallCVisitor):
         for stmt in parsetree.stmt():
             statements.append(self.visit(stmt))
 
-        compound_stmt = CompoundStatement(self.environment, var_decls, statements)
+        compound_stmt = CompoundStatement(
+            self.environment, var_decls, statements)
 
         if not isFunctionBody:
             self.environment.call_stack.decrementDepth()
@@ -179,7 +181,7 @@ class ASTGenerator(SmallCVisitor):
         type_object = type_specifier.type_object
 
         var_decl_list = self.visit(parsetree.var_decl_list())
-        
+
         try:
             return VariableDeclaration(self.environment, type_object, var_decl_list)
         except C2PException as e:
@@ -192,7 +194,7 @@ class ASTGenerator(SmallCVisitor):
         var_list = []
         for var_id in parsetree.variable_id():
             var_list.append(self.visit(var_id))
-        
+
         return VariableDeclarationList(self.environment, var_list)
 
     # Visit a parse tree produced by SmallCParser#stmt.
@@ -232,7 +234,7 @@ class ASTGenerator(SmallCVisitor):
     def visitIdentifier(self, parsetree: SmallCParser.IdentifierContext):
         indirection = parsetree.ASTERIKS() is not None
         address_of = parsetree.AMPERSAND() is not None
-        
+
         if parsetree.array_indexing() is None:
             array_size = 0
         else:
@@ -243,7 +245,7 @@ class ASTGenerator(SmallCVisitor):
             name = parsetree.getChild(1).getText()
         else:
             name = parsetree.getChild(0).getText()
-            
+
         try:
             return Identifier(self.environment, name, indirection, address_of, array_size)
         except C2PException as e:
@@ -284,21 +286,24 @@ class ASTGenerator(SmallCVisitor):
     def visitVariable_id(self, parsetree: SmallCParser.Variable_idContext):
         is_pointer = parsetree.identifier().ASTERIKS() is not None
         is_alias = parsetree.identifier().AMPERSAND() is not None
-        
+
         if parsetree.identifier().array_indexing() is None:
             array_size = 0
             array_elements = []
         else:
             # TODO we assumed this is an integer
-            array_size = int(parsetree.identifier().array_indexing().expr().getText())
+            array_size = int(parsetree.identifier(
+            ).array_indexing().expr().getText())
             if parsetree.identifier().array_init() is not None:
                 if parsetree.expr() is not None:
                     line = parsetree.start.line
                     column = parsetree.start.column
-                    msg = "Illegal initialization for array '" + parsetree.identifier().IDENTIFIER().getText() + "'"
+                    msg = "Illegal initialization for array '" + \
+                        parsetree.identifier().IDENTIFIER().getText() + "'"
                     MyErrorListener().semanticError(line, column, msg)
-                array_elements = self.visit(parsetree.identifier().array_init())
-            
+                array_elements = self.visit(
+                    parsetree.identifier().array_init())
+
         if is_pointer or is_alias:
             identifier = parsetree.identifier().getChild(1).getText()
         else:
@@ -334,7 +339,8 @@ class ASTGenerator(SmallCVisitor):
         self.environment.symbol_table.incrementScope()
         self.environment.call_stack.incrementDepth()
 
-        # TODO verify it works (it should either allow var_decl | var_decl_list as for_init_list)
+        # TODO verify it works (it should either allow var_decl | var_decl_list
+        # as for_init_list)
         if parsetree.var_decl() is not None:
             variable_declaration = self.visit(parsetree.var_decl())
             var_decl_list = variable_declaration.variable_identifiers
@@ -378,7 +384,7 @@ class ASTGenerator(SmallCVisitor):
                 column = parsetree.start.column
                 msg = "Cannot reinitialize array '" + identifier.name + "'"
                 MyErrorListener().semanticError(line, column, msg)
-            
+
         try:
             return Assignment(self.environment, identifier, expression)
         except C2PException as e:
@@ -532,7 +538,8 @@ class ASTGenerator(SmallCVisitor):
                 return Primary(self.environment, value)
             elif parsetree.CHARCONST() is not None:
                 value = parsetree.CHARCONST().getText()
-                # We are interested in the first character after the quotation mark
+                # We are interested in the first character after the quotation
+                # mark
                 return Primary(self.environment, value[1])
             elif parsetree.BOOLEAN() is not None:
                 value = parsetree.BOOLEAN().getText() == "true"
@@ -556,20 +563,19 @@ class ASTGenerator(SmallCVisitor):
     def visitArray_indexing(self, parsetree: SmallCParser.Array_indexingContext):
         return self.visitChildren(ctx)
 
-
     # Visit a parse tree produced by SmallCParser#array_init.
     def visitArray_init(self, parsetree: SmallCParser.Array_initContext):
         i = 2  # skip first two tokens
         array_elements = []
-        
+
         type_specifier = parsetree.parentCtx.parentCtx.parentCtx.parentCtx.type_specifier()
         if type_specifier.CONST() is not None:
             array_type = type_specifier.getChild(1).getText()
         else:
             array_type = type_specifier.getChild(0).getText()
-        
+
         children = parsetree.getChildCount()
-        
+
         while(i < children):
             child = parsetree.getChild(i)
             if child.INTEGER() is not None:
@@ -607,11 +613,13 @@ class ASTGenerator(SmallCVisitor):
                 if child.identifier().array_indexing() is not None:
                     line = parsetree.start.line
                     column = parsetree.start.column
-                    msg = "We do not support array indexing in array initializations at '" + identifier_name + "'"
+                    msg = "We do not support array indexing in array initializations at '" + \
+                        identifier_name + "'"
                     MyErrorListener().semanticError(line, column, msg)
-                
+
                 # look it up in symbol table
-                symbol = self.environment.symbol_table.getSymbol(identifier_name)
+                symbol = self.environment.symbol_table.getSymbol(
+                    identifier_name)
                 if symbol is None:
                     line = parsetree.start.line
                     column = parsetree.start.column
@@ -628,7 +636,7 @@ class ASTGenerator(SmallCVisitor):
                     else:
                         # get indexed element value
                         array_elements.append(symbol.value)
-        
-            i += 2  #  skip a comma
+
+            i += 2  # skip a comma
 
         return array_elements

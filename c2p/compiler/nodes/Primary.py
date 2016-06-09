@@ -12,7 +12,7 @@ class Primary(Expression):
     def __init__(self, environment, value):
         super().__init__(environment)
         self.type = SmallCParser.PRIMARY
-        
+
         if isinstance(value, int):
             self.value = value
             self.operand_type = IntegerType()
@@ -34,7 +34,8 @@ class Primary(Expression):
             self.operand_type = CharacterType()
             self.result_type = self.operand_type
         else:
-            raise C2PException("use of unrecognized primary value " + str(value))
+            raise C2PException(
+                "use of unrecognized primary value " + str(value))
 
     def getDisplayableText(self):
         return self.result_type.literalToPCode(self.value)

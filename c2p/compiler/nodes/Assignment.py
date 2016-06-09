@@ -34,7 +34,8 @@ class Assignment(Expression):
         self.cast(self.expression, out)
 
         # implicitly cast if necessary
-        # TODO verify whether this is correct and we don't have to generateCode for self.identifier
+        # TODO verify whether this is correct and we don't have to generateCode
+        # for self.identifier
         self.cast(self.expression, out)
 
         self.writeInstruction("str " + self.expression.result_type.getPSymbol() + " " +

@@ -15,11 +15,11 @@ class Function(ASTNode, ControlStructure):
         self.parameter_decl_list = parameter_decl_list
         self.addChild(parameter_decl_list)
         self.content = content
-            
+
         if self.content is not None:
             self.addChild(self.content)
             self.validateReturnType()
-        
+
         self.depth = environment.call_stack.getNestingDepth()
 
     def isForwardDeclaration(self):
@@ -53,32 +53,34 @@ class Function(ASTNode, ControlStructure):
         Checks consistency of the function's return type.
         Expects that content is not None
     '''
+
     def validateReturnType(self):
         for statement in self.content.statements:
             # find return statement
             if statement.type is SmallCParser.RETURNSTATEMENT:
                 # validate functions with void as return type
                 if isinstance(self.return_type, VoidType):
-                    raise C2PException("return-statement with a value, in function '" + self.identifier + \
-                        "' returning 'void'")
+                    raise C2PException("return-statement with a value, in function '" + self.identifier +
+                                       "' returning 'void'")
 
                 from_type = statement.expression.result_type.getCSymbol()
                 if statement.expression.result_type.is_pointer:
                     from_type += "*"
-                # TODO call function with a factorial expression prints an error with following elif
+                # TODO call function with a factorial expression prints an
+                # error with following elif
                 elif statement.expression.type is not SmallCParser.PRIMARY and statement.expression.address_of:
                     from_type += "&"
-                    
+
                 to_type = self.return_type.getCSymbol()
                 if self.return_type.is_pointer:
                     to_type += "*"
                 elif self.return_type.is_reference:
                     to_type += "&"
-                    
+
                 # validate expected return types (basic)
                 if self.return_type.getName() != statement.expression.result_type.getName():
-                    raise C2PException("In return statement of functon '" + self.identifier + \
-                        "' invalid conversion from " + from_type + " to " + to_type)
+                    raise C2PException("In return statement of functon '" + self.identifier +
+                                       "' invalid conversion from " + from_type + " to " + to_type)
                 else:
                     # validate pointers
                     if self.return_type.is_pointer:
@@ -86,7 +88,7 @@ class Function(ASTNode, ControlStructure):
                             return
                         if not statement.expression.result_type.is_pointer and statement.expression.address_of:
                             return
-                        raise C2PException("Function '" + self.identifier + "' should return " + \
-                            to_type + " instead of " + from_type)
+                        raise C2PException("Function '" + self.identifier + "' should return " +
+                                           to_type + " instead of " + from_type)
                     # TODO validate references
-                    #elif self.return_type.is_reference:
+                    # elif self.return_type.is_reference:
