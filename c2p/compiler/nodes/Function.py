@@ -65,6 +65,7 @@ class Function(ASTNode, ControlStructure):
                 from_type = statement.expression.result_type.getCSymbol()
                 if statement.expression.result_type.is_pointer:
                     from_type += "*"
+                # TODO call function with a factorial expression prints an error with following elif
                 elif statement.expression.type is not SmallCParser.PRIMARY and statement.expression.address_of:
                     from_type += "&"
                     

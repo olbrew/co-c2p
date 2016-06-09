@@ -96,6 +96,11 @@ class ASTGenerator(SmallCVisitor):
         else:
             parameter_decl_list = self.visit(parsetree.param_decl_list())
 
+        address = self.environment.call_stack.getAddress()
+        depth = self.environment.call_stack.getNestingDepth()
+        self.environment.symbol_table.addFunction(
+                    func_name, return_type, parameter_decl_list.parameter_list, address, depth)
+                    
         if parsetree.compound_stmt() is None:
             # forward declaration
             statements = None
@@ -109,11 +114,6 @@ class ASTGenerator(SmallCVisitor):
         try:
             func = Function(self.environment, return_type, func_name, parameter_decl_list,
                         statements, parsetree.EXTERN() is not None)
-            
-            address = self.environment.call_stack.getAddress()
-            depth = self.environment.call_stack.getNestingDepth()
-            self.environment.symbol_table.addFunction(
-                    func_name, return_type, func.parameter_decl_list.parameter_list, address, depth)
             
             return func
         except C2PException as e:
@@ -292,12 +292,13 @@ class ASTGenerator(SmallCVisitor):
             # TODO we assumed this is an integer
             array_size = int(parsetree.identifier().array_indexing().expr().getText())
             if parsetree.identifier().array_init() is not None:
-                array_elements = self.visit(parsetree.identifier().array_init())
-                # TODO validate type of elements in array_elements
                 if parsetree.expr() is not None:
-                    # TODO raise syntax error, identifier[INTEGER] = {...} = expr
-                    pass
-        
+                    line = parsetree.start.line
+                    column = parsetree.start.column
+                    msg = "Illegal initialization for array '" + parsetree.identifier().IDENTIFIER().getText() + "'"
+                    MyErrorListener().semanticError(line, column, msg)
+                array_elements = self.visit(parsetree.identifier().array_init())
+            
         if is_pointer or is_alias:
             identifier = parsetree.identifier().getChild(1).getText()
         else:
@@ -370,7 +371,14 @@ class ASTGenerator(SmallCVisitor):
         #identifier = parsetree.identifier().IDENTIFIER().getText()
         identifier = self.visit(parsetree.identifier())
         expression = self.visit(parsetree.expr())
-        # TODO (array) if identifier is already an array, then expr must be None
+
+        if identifier.array_size:
+            if parsetree.expr() is not None:
+                line = parsetree.start.line
+                column = parsetree.start.column
+                msg = "Cannot reinitialize array '" + identifier.name + "'"
+                MyErrorListener().semanticError(line, column, msg)
+            
         try:
             return Assignment(self.environment, identifier, expression)
         except C2PException as e:
@@ -381,7 +389,6 @@ class ASTGenerator(SmallCVisitor):
     # Visit a parse tree produced by SmallCParser#functioncall.
     def visitFunctioncall(self, parsetree: SmallCParser.FunctioncallContext):
         identifier = parsetree.identifier().IDENTIFIER().getText()
-        # TODO (array) identifier may not be an array
         if parsetree.param_list() is None:
             parameter_list = ParameterList(self.environment, [])
         else:
@@ -554,58 +561,74 @@ class ASTGenerator(SmallCVisitor):
     def visitArray_init(self, parsetree: SmallCParser.Array_initContext):
         i = 2  # skip first two tokens
         array_elements = []
+        
+        type_specifier = parsetree.parentCtx.parentCtx.parentCtx.parentCtx.type_specifier()
+        if type_specifier.CONST() is not None:
+            array_type = type_specifier.getChild(1).getText()
+        else:
+            array_type = type_specifier.getChild(0).getText()
+        
         children = parsetree.getChildCount()
         
         while(i < children):
             child = parsetree.getChild(i)
             if child.INTEGER() is not None:
                 array_elements.append(int(child.INTEGER().getText()))
+                if array_type != "int":
+                    line = parsetree.start.line
+                    column = parsetree.start.column
+                    msg = "Element of type 'int' does not match array type '" + array_type + "'"
+                    MyErrorListener().semanticError(line, column, msg)
             elif child.REAL() is not None:
                 array_elements.append(float(child.REAL().getText()[:-1]))
+                if array_type != "float":
+                    line = parsetree.start.line
+                    column = parsetree.start.column
+                    msg = "Element of type 'float' does not match array type '" + array_type + "'"
+                    MyErrorListener().semanticError(line, column, msg)
             elif child.CHARCONST() is not None:
                 array_elements.append(child.CHARCONST().getText()[1])
+                if array_type != "char":
+                    line = parsetree.start.line
+                    column = parsetree.start.column
+                    msg = "Element of type 'char' does not match array type '" + array_type + "'"
+                    MyErrorListener().semanticError(line, column, msg)
             elif child.BOOLEAN() is not None:
                 array_elements.append(bool(child.BOOLEAN().getText()))
+                if array_type != "bool":
+                    line = parsetree.start.line
+                    column = parsetree.start.column
+                    msg = "Element of type 'bool' does not match array type '" + array_type + "'"
+                    MyErrorListener().semanticError(line, column, msg)
             elif child.identifier() is not None:
+                # extract variable identifier
+                identifier_name = child.identifier().IDENTIFIER().getText()
+
                 if child.identifier().array_indexing() is not None:
-                    if child.identifier().array_init() is not None:
+                    line = parsetree.start.line
+                    column = parsetree.start.column
+                    msg = "We do not support array indexing in array initializations at '" + identifier_name + "'"
+                    MyErrorListener().semanticError(line, column, msg)
+                
+                # look it up in symbol table
+                symbol = self.environment.symbol_table.getSymbol(identifier_name)
+                if symbol is None:
+                    line = parsetree.start.line
+                    column = parsetree.start.column
+                    msg = "Use of undeclared variable identifier '" + identifier_name + "'"
+                    MyErrorListener().semanticError(line, column, msg)
+                else:
+                    if array_type != symbol.type.getCSymbol():
                         line = parsetree.start.line
                         column = parsetree.start.column
-                        msg = "cannot initialize an array within an array initialization at " + child.identifier().getText()
+                        msg = "Type of element '" + identifier_name + "': '" + \
+                            symbol.type.getCSymbol() + "' does not match array type '" + \
+                            array_type + "'"
                         MyErrorListener().semanticError(line, column, msg)
-                array_elements.append(child.identifier().getText())
-                # TODO identifier is seen as char, which is not what we want
-                
-            i += 2  # skip a comma
+                    else:
+                        # get indexed element value
+                        array_elements.append(symbol.value)
+        
+            i += 2  #  skip a comma
 
         return array_elements
-        
-        
-    '''
-    # Visit a parse tree produced by SmallCParser#array.
-    def visitArray(self, parsetree:SmallCParser.ArrayContext):
-        is_initialization = parsetree.type_specifier() is not None
-        
-        if is_initialization:
-            typeSpecifier = self.visit(parsetree.type_specifier())
-            identifier = self.visit(parsetree.identifier())
-        
-            arrayInit = self.visit(parsetree.array_init())
-            return Array(typeSpecifier, identifier, arrayInit)
-        else:
-            #indexing
-        
-    # Visit a parse tree produced by SmallCParser#array_init.
-    # returns Array_init node with amount of elements of the array and its elements
-    def visitArray_init(self, parsetree:SmallCParser.Array_initContext):
-        parsetree.getChildCount()
-        
-            # isinstance variable id / primary
-        
-        
-        return self.visitChildren(parsetree)
-
-    # Visit a parse tree produced by SmallCParser#array_indexing.
-    def visitArray_indexing(self, parsetree:SmallCParser.Array_indexingContext):
-        return self.visitChildren(parsetree)
-    '''

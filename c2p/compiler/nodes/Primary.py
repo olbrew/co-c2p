@@ -12,7 +12,7 @@ class Primary(Expression):
     def __init__(self, environment, value):
         super().__init__(environment)
         self.type = SmallCParser.PRIMARY
-
+        
         if isinstance(value, int):
             self.value = value
             self.operand_type = IntegerType()

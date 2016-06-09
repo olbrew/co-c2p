@@ -19,7 +19,7 @@ class VariableIdentifier(ASTNode):
         self.array_elements = array_elements
         self.address = None
         self.depth = None
-
+        
         if self.expression is not None:
             self.addChild(self.expression)
             
@@ -39,7 +39,8 @@ class VariableIdentifier(ASTNode):
         self.typename.is_pointer = self.is_pointer
         self.typename.array_size = self.array_size
         
-        if self.expression is not None:        
+        if self.expression is not None:
+            self.value = self.expression.value
             if self.typename.getName() != self.expression.result_type.getName():
                 raise C2PException("identifier '" + self.identifier + "' is assigned a value of type " + self.expression.result_type.getCSymbol() + ", while " + self.typename.getCSymbol() + " is expected")
                 
@@ -61,17 +62,23 @@ class VariableIdentifier(ASTNode):
                     self.value = '0'
                 elif c_type == "bool":
                     self.value = False
-                
+
                 if not self.typename.isArray():
                     # initialize variable of basic type
                     self.addChild(Primary(self.environment, self.value))
                 else:
                     for element in self.array_elements:
                         self.addChild(Primary(self.environment, element))
+                    if len(self.array_elements) > self.array_size:
+                        raise C2PException("Array '" + self.identifier + "' has size " + str(self.array_size) +\
+                                ". You cannot fill it with " + str(len(self.array_elements)) + " elements.")
+                    if len(self.array_elements) < self.array_size:
+                        print("Warning: array '", self.identifier, "' has size ", self.array_size,\
+                        ". Remaining elements will be filled with default values.")
                     # initialize array of basic type
                     while(len(self.array_elements) != self.array_size):
                         self.array_elements.append(self.value)
-                        self.addChild(Primary(self.environment, self.value))                
+                        self.addChild(Primary(self.environment, self.value))
         
         self.allocate()
 

@@ -47,12 +47,10 @@ smallc_program : include? (var_decl | function_definition | expr ';')*;
 
 function_definition : EXTERN? type_specifier identifier '(' param_decl_list? ')' (compound_stmt | ';');
 
-//identifier : (AMPERSAND | ASTERIKS)? IDENTIFIER (array_definition | array_indexing)?;
-//array_definition : '[' INTEGER ']';
-//array_indexing : '[' expr ']';
-
 identifier : (AMPERSAND | ASTERIKS)? IDENTIFIER (array_indexing (array_init)?)?;
+
 array_indexing : '[' expr ']';
+
 array_init : '=' '{' primary (',' primary)* '}';
 
 include : INCLUDE '<' STDIO '>';

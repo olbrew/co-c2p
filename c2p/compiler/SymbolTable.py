@@ -12,7 +12,7 @@ class Symbol:
     values (where identifiers are already resolved) of array type,
     otherwise a simple value matching its type
     '''
-    def __init__(self, typename, value, address, depth):
+    def __init__(self, typename, address, depth, value):
         self.type = typename
         self.address = address
         self.depth = depth
@@ -85,12 +85,12 @@ class SymbolTable:
                 isTotalMatching = True
                 for i in range(len(arg_types)):
                     # values passed by value
-                    if parameter_list.arguments[i].type == SmallCParser.PRIMARY:
-                        parameter_list.arguments[i].result_type.getName()
+                    if parameter_list.arguments[i].type != SmallCParser.PRIMARY:
                         if scope[name].arg_types[i].typespecifier.is_pointer:
                             isTotalMatching = False
                             break
                     else:
+                        # TODO split identifiers from rest
                         # check pointer arguments
                         symbol = self.getSymbol(parameter_list.arguments[i].name)
                         if scope[name].arg_types[i].typespecifier.is_pointer:
