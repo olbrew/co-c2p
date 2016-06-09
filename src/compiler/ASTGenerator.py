@@ -287,11 +287,17 @@ class ASTGenerator(SmallCVisitor):
         
         if parsetree.identifier().array_indexing() is None:
             array_size = 0
+            array_elements = []
         else:
             # TODO we assumed this is an integer
-            array_size = int(parsetree.identifier(
-            ).array_indexing().expr().getText())
-
+            array_size = int(parsetree.identifier().array_indexing().expr().getText())
+            if parsetree.identifier().array_init() is not None:
+                array_elements = self.visit(parsetree.identifier().array_init())
+                # TODO validate type of elements in array_elements
+                if parsetree.expr() is not None:
+                    # TODO raise syntax error, identifier[INTEGER] = {...} = expr
+                    pass
+        
         if is_pointer or is_alias:
             identifier = parsetree.identifier().getChild(1).getText()
         else:
@@ -302,7 +308,7 @@ class ASTGenerator(SmallCVisitor):
         else:
             expression = self.visit(parsetree.expr())
 
-        return VariableIdentifier(self.environment, identifier, expression, is_pointer, is_alias, array_size)
+        return VariableIdentifier(self.environment, identifier, expression, is_pointer, is_alias, array_size, array_elements)
 
     # Visit a parse tree produced by SmallCParser#cond_stmt.
     def visitCond_stmt(self, parsetree: SmallCParser.Cond_stmtContext):
@@ -364,7 +370,7 @@ class ASTGenerator(SmallCVisitor):
         #identifier = parsetree.identifier().IDENTIFIER().getText()
         identifier = self.visit(parsetree.identifier())
         expression = self.visit(parsetree.expr())
-
+        # TODO (array) if identifier is already an array, then expr must be None
         try:
             return Assignment(self.environment, identifier, expression)
         except C2PException as e:
@@ -375,7 +381,7 @@ class ASTGenerator(SmallCVisitor):
     # Visit a parse tree produced by SmallCParser#functioncall.
     def visitFunctioncall(self, parsetree: SmallCParser.FunctioncallContext):
         identifier = parsetree.identifier().IDENTIFIER().getText()
-
+        # TODO (array) identifier may not be an array
         if parsetree.param_list() is None:
             parameter_list = ParameterList(self.environment, [])
         else:
@@ -539,6 +545,42 @@ class ASTGenerator(SmallCVisitor):
         msg = "unrecognized primary"
         MyErrorListener().semanticError(line, column, msg)
 
+    # Visit a parse tree produced by SmallCParser#array_indexing.
+    def visitArray_indexing(self, parsetree: SmallCParser.Array_indexingContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SmallCParser#array_init.
+    def visitArray_init(self, parsetree: SmallCParser.Array_initContext):
+        i = 2  # skip first two tokens
+        array_elements = []
+        children = parsetree.getChildCount()
+        
+        while(i < children):
+            child = parsetree.getChild(i)
+            if child.INTEGER() is not None:
+                array_elements.append(int(child.INTEGER().getText()))
+            elif child.REAL() is not None:
+                array_elements.append(float(child.REAL().getText()[:-1]))
+            elif child.CHARCONST() is not None:
+                array_elements.append(child.CHARCONST().getText()[1])
+            elif child.BOOLEAN() is not None:
+                array_elements.append(bool(child.BOOLEAN().getText()))
+            elif child.identifier() is not None:
+                if child.identifier().array_indexing() is not None:
+                    if child.identifier().array_init() is not None:
+                        line = parsetree.start.line
+                        column = parsetree.start.column
+                        msg = "cannot initialize an array within an array initialization at " + child.identifier().getText()
+                        MyErrorListener().semanticError(line, column, msg)
+                array_elements.append(child.identifier().getText())
+                # TODO identifier is seen as char, which is not what we want
+                
+            i += 2  # skip a comma
+
+        return array_elements
+        
+        
     '''
     # Visit a parse tree produced by SmallCParser#array.
     def visitArray(self, parsetree:SmallCParser.ArrayContext):

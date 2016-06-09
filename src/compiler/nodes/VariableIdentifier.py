@@ -6,7 +6,7 @@ from compiler.nodes.Primary import Primary
 
 class VariableIdentifier(ASTNode):
 
-    def __init__(self, environment, identifier, expression, is_pointer, is_alias, array_size, array_elements=None):
+    def __init__(self, environment, identifier, expression, is_pointer, is_alias, array_size, array_elements):
         super().__init__(environment, SmallCParser.VARIABLEIDENTIFIER)
 
         self.typename = None
@@ -27,8 +27,12 @@ class VariableIdentifier(ASTNode):
         space = self.getSize()
         self.address = self.environment.call_stack.getAddress(space)
         self.depth = self.environment.call_stack.getNestingDepth()
-        self.environment.symbol_table.addSymbol(
-            self.identifier, self.typename, self.address, self.depth)
+        if self.typename.isArray():
+            self.environment.symbol_table.addSymbol(
+                self.identifier, self.typename, self.address, self.depth, self.array_elements)
+        else:
+            self.environment.symbol_table.addSymbol(
+                self.identifier, self.typename, self.address, self.depth, self.value)
 
     def setType(self, typename):
         self.typename = typename
@@ -46,19 +50,29 @@ class VariableIdentifier(ASTNode):
             if self.is_pointer:
                 raise C2PException("variable '" + self.identifier + "' is of type " \
                     + self.typename.getCSymbol() + "*, can't initialize pointer elements with default value.")
-            elif not self.typename.isArray():
+            else:
+                # determine default value for uninitialized variable
                 c_type = self.typename.getCSymbol()
                 if c_type == "int":
-                    value = 0
+                    self.value = 0
                 elif c_type == "float":
-                    value = 0.0
+                    self.value = 0.0
                 elif c_type == "char":
-                    value = '0'
+                    self.value = '0'
                 elif c_type == "bool":
-                    value = False
+                    self.value = False
                 
-                primary = Primary(self.environment, value)
-                self.addChild(primary)
+                if not self.typename.isArray():
+                    # initialize variable of basic type
+                    self.addChild(Primary(self.environment, self.value))
+                else:
+                    for element in self.array_elements:
+                        print(element)
+                        self.addChild(Primary(self.environment, element))
+                    # initialize array of basic type
+                    while(len(self.array_elements) != self.array_size):
+                        self.array_elements.append(self.value)
+                        self.addChild(Primary(self.environment, self.value))                
         
         self.allocate()
 
@@ -79,6 +93,7 @@ class VariableIdentifier(ASTNode):
         if self.expression is not None:
             self.expression.generateCode(out)
         else:
+            # TODO check whether it's an array and generate necessary code for it
             self.writeInstruction("ldc " + p_type + " 0", out)
 
         self.writeInstruction("str " + p_type + " " +

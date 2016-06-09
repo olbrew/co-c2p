@@ -53,7 +53,7 @@ function_definition : EXTERN? type_specifier identifier '(' param_decl_list? ')'
 
 identifier : (AMPERSAND | ASTERIKS)? IDENTIFIER (array_indexing (array_init)?)?;
 array_indexing : '[' expr ']';
-array_init : '=' '{' (primary | variable_id) (',' (primary | variable_id))* '}';
+array_init : '=' '{' primary (',' primary)* '}';
 
 include : INCLUDE '<' STDIO '>';
 

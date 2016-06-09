@@ -3,7 +3,6 @@ from compiler.MyErrorListener import C2PException
 from grammar.SmallCParser import SmallCParser
 
 
-
 class Identifier(Expression):
 
     def __init__(self, environment, name, indirection, address_of, array_size):

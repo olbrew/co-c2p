@@ -1,22 +1,28 @@
 from compiler.MyErrorListener import C2PException
 from compiler.nodes.ParameterDeclaration import ParameterDeclaration
 from compiler.nodes.ParameterList import ParameterList
+from grammar.SmallCParser import SmallCParser
 
 
 class Symbol:
-
-    def __init__(self, typename, address, depth):
+    '''
+        Through self.type we can determine whether this symbol 
+    is_const, is_pointer, isArray()
+        In case it's an array, self.value will contain a list of 
+    values (where identifiers are already resolved) of array type,
+    otherwise a simple value matching its type
+    '''
+    def __init__(self, typename, value, address, depth):
         self.type = typename
         self.address = address
-        #self.value = value
         self.depth = depth
+        self.value = value
 
     def getRelativeDepth(self, call_stack):
         stack_depth = call_stack.getNestingDepth()
         if stack_depth < self.depth:
             raise C2PException("scope of symbol is larger than stack's depth")
         return stack_depth - self.depth
-        
         
 class Function:
 
@@ -39,8 +45,8 @@ class SymbolTable:
         self.stack = [{}]  # symbols
         self.functions = [{}]
 
-    def addSymbol(self, name, typename, address, depth):
-        self.stack[len(self.stack) - 1][name] = Symbol(typename, address, depth)
+    def addSymbol(self, name, typename, address, depth, value=0):
+        self.stack[len(self.stack) - 1][name] = Symbol(typename, address, depth, value)
 
     def addFunction(self, name, return_type, parameter_list, address, depth):
         try:
@@ -79,24 +85,31 @@ class SymbolTable:
                 
                 isTotalMatching = True
                 for i in range(len(arg_types)):
-                    # check pointer attributes
-                    symbol = self.getSymbol(parameter_list.arguments[i].name)
-                    if scope[name].arg_types[i].typespecifier.is_pointer:
-                        if symbol.type.is_pointer:
-                            if parameter_list.arguments[i].indirection:
-                                isTotalMatching = False
-                                break
-                        else:
-                            if not parameter_list.arguments[i].address_of:
-                                isTotalMatching = False
-                                break
+                    # values passed by value
+                    if parameter_list.arguments[i].type == SmallCParser.PRIMARY:
+                        parameter_list.arguments[i].result_type.getName()
+                        if scope[name].arg_types[i].typespecifier.is_pointer:
+                            isTotalMatching = False
+                            break
                     else:
-                        if symbol.type.is_pointer and not parameter_list.arguments[i].indirection:
-                            isTotalMatching = False
-                            break
-                        if not symbol.type.is_pointer and parameter_list.arguments[i].address_of:
-                            isTotalMatching = False
-                            break
+                        # check pointer arguments
+                        symbol = self.getSymbol(parameter_list.arguments[i].name)
+                        if scope[name].arg_types[i].typespecifier.is_pointer:
+                            if symbol.type.is_pointer:
+                                if parameter_list.arguments[i].indirection:
+                                    isTotalMatching = False
+                                    break
+                            else:
+                                if not parameter_list.arguments[i].address_of:
+                                    isTotalMatching = False
+                                    break
+                        else:
+                            if symbol.type.is_pointer and not parameter_list.arguments[i].indirection:
+                                isTotalMatching = False
+                                break
+                            if not symbol.type.is_pointer and parameter_list.arguments[i].address_of:
+                                isTotalMatching = False
+                                break
                         
                     # check for actual type
                     if arg_types[i].getName() == scope[name].arg_types[i].typespecifier.getName():
