@@ -36,16 +36,17 @@ class Program(ASTNode):
 
         self.writeInstruction("ujp program", out)
 
+        '''
         if  self.include is not None:
             self.include.generateCode(out)
-
+        '''
         for func_decl in self.function_declarations:
             func_decl.generateCode(out)
-            
+        '''            
         for expr in self.expressions:
             expr.generateCode(out)
-            
-        self.writeInstruction("program", out)
+        '''    
+        self.writeInstruction("program:", out)
         self.writeInstruction("mst 0", out)
-        self.writeInstruction("cup 0 function_main", out)
+        self.writeInstruction("cup 0 function_main", out)  # TODO determine size of parameters
         self.writeInstruction("hlt", out)

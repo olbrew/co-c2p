@@ -58,11 +58,11 @@ class CompoundStatement(Statement, ControlStructure):
             for stmt in self.statements:
                 stmt.generateCode(out)
 
-                # Return label
+            # Return label
             self.writeInstruction("function_" + function_id + "_return:", out)
 
             if isinstance(function.return_type, VoidType):
-                        # Return without value
+                # Return without value
                 self.writeInstruction("retp", out)
             else:
                 self.writeInstruction("retf", out)

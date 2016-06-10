@@ -6,8 +6,9 @@ class CallStack:
 
     def getAddress(self, space=1):
         assert space >= 0
-        address = self.address_stack.pop()
-        self.address_stack.append(address + space)
+        address = self.address_stack[-1]
+        # TODO maybe this will be needed for recursion
+        #self.address_stack[-1] = address + space
         return address
 
     def getNestingDepth(self):

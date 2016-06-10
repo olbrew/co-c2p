@@ -19,25 +19,25 @@ class ReturnStatement(Statement):
     def generateCode(self, out):
         # Find the owning function
         node = self
-        controlStructure = None
+        controleStructure = None
         while not isinstance(node, Function):
             node = node.parent
-            if (controlStructure is None) and isinstance(node, ControlStructure):
-                controlStructure = node
+            if (controleStructure is None) and isinstance(node, ControlStructure):
+                controleStructure = node
         function = node
 
+        print(type(self.expression))
         self.expression.generateCode(out)
 
         expr_type = self.expression.result_type
         return_type = function.return_type
         if not isinstance(expr_type, VoidType):
-            # TODO warning for implicit cast
             if expr_type.getName() is not return_type.getName():
                 self.writeInstruction(
                     "conv " + expr_type.getPSymbol() + " " + return_type.getPSymbol(), out)
                 print("WARNING: implicit cast from '" + expr_type.getName() +
                       "' to '" + return_type.getName() + "'. Information could be lost.")
 
-        self.writeInstruction("str " + return_type.getPSymbol() + str(
+        self.writeInstruction("str " + return_type.getPSymbol() + " " + str(
             self.environment.call_stack.getNestingDepth() - function.depth) + " 0", out)
-        self.writeInstruction("ujp " + controlStructure.getReturnLabel(), out)
+        self.writeInstruction("ujp " + controleStructure.getReturnLabel(), out)

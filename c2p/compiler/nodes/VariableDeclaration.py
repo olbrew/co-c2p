@@ -20,7 +20,7 @@ class VariableDeclaration(ASTNode):
                 var.setType(typename)
                 self.addChild(var)
             else:
-                raise C2PException("redifinition of '" + var.identifier + "'")
+                raise C2PException("redefinition of '" + var.identifier + "'")
 
     def getDeclarationSize(self):
         space = 0
