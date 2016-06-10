@@ -32,11 +32,6 @@ class WhileStatement(Loop):
         return "while"
 
     def generateCode(self, out):
-        self.expression.generateCode(out)
-        self.writeInstruction("out i", out)
-        self.writeInstruction("ldc c '\\n'", out)
-        self.writeInstruction("out c", out)
-
         self.writeInstruction(
             "while_" + str(self.label_id) + "_begin:", out)
         self.expression.generateCode(out)

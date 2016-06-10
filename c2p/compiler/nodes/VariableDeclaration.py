@@ -34,5 +34,4 @@ class VariableDeclaration(ASTNode):
         return "var decl"
 
     def generateCode(self, out):
-        for var_id in self.variable_identifiers.variable_ids:
-            var_id.generateCode(out)
+        self.variable_identifiers.generateCode(out)
