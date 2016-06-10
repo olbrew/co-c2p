@@ -1,3 +1,5 @@
+@echo OFF
+
 :: Install antlr python bindings if they're not yet installed
 pip3 install antlr4-python3-runtime==4.5.3
 

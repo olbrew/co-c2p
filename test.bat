@@ -1,12 +1,19 @@
-ECHO "Testing \`test/good.c\`, this should work."
-python src/C2P.py tests/good.c output.p
+@echo OFF
 
-ECHO "Testing \`test/bad.c\` files, these should give errors"
-python src/C2P.py tests/bad1.c output.p
+ECHO "Testing good c files. These should work."
+for %%f in (tests\good\*.c) do (
+        ECHO "Testing " %%~nf "..."
+        python3 c2p/C2P.py %%~nf output.p
+        ECHO "SUCCES"
+)
+ECHO.
 
-python src/C2P.py tests/bad2.c output.p
-
-python src/C2P.py tests/bad3.c output.p
+printf "Testing bad c files. These should give errors."
+for %%f in (tests\bad\*.c) do (
+        ECHO "Testing " %%~nf "..."
+        python3 c2p/C2P.py %%~nf output.p
+        ECHO.
+)
 
 :: Keep the CLI open so the user can examine the output of this script
 PAUSE
