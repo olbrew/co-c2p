@@ -25,7 +25,8 @@ class VariableIdentifier(ASTNode):
             
     def allocate(self):
         space = self.getSize()
-        self.address = self.environment.call_stack.getAddress(space)
+        self.address = self.environment.call_stack.getAddress()
+        self.environment.call_stack.incrementAddress(space)
         self.depth = self.environment.call_stack.getNestingDepth()
         if self.typename.isArray():
             self.environment.symbol_table.addSymbol(
@@ -100,7 +101,6 @@ class VariableIdentifier(ASTNode):
         if self.expression is not None:
             self.expression.generateCode(out)
         else:
-            # TODO check whether it's an array and generate necessary code for it
             self.writeInstruction("ldc " + p_type + " 0", out)
 
         self.writeInstruction("str " + p_type + " " +

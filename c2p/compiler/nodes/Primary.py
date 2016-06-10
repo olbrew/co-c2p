@@ -26,7 +26,6 @@ class Primary(Expression):
                 self.value = 1
             else:
                 self.value = 0
-            # TODO make sure operand_type is of correct type
             self.operand_type = IntegerType()
             self.result_type = BooleanType()
         elif isinstance(value, str):

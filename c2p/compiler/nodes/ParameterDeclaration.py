@@ -1,5 +1,6 @@
 from compiler.ASTNode import ASTNode
 from grammar.SmallCParser import SmallCParser
+from compiler.nodes.TypeSpecifier import TypeSpecifier
 
 
 class ParameterDeclaration(ASTNode):
@@ -15,6 +16,13 @@ class ParameterDeclaration(ASTNode):
             address = environment.call_stack.getAddress()
             depth = environment.call_stack.getNestingDepth()
             environment.symbol_table.addSymbol(self.identifier, self.typespecifier, address, depth)
+            
+            
+            if isinstance(self.typespecifier, TypeSpecifier):
+                size = self.typespecifier.type_object.array_size
+            else:
+                size = 1                
+            environment.call_stack.incrementAddress(size)
 
     def getDisplayableText(self):
         prefix = self.typespecifier.getCSymbol()

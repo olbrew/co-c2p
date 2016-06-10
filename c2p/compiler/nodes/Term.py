@@ -41,7 +41,7 @@ class Term(Expression):
         elif self.operator == "%":
             # Duplicate the result of the term first, instead of recomputing it
             # This way we effectively cut the cost of the second computation
-            # TODO: try to find a way to duplicate the factor as well, instead of
+            # OPTIMALIZATION: try to find a way to duplicate the factor as well, instead of
             # computing it twice
             self.writeInstruction("dpl " + p_type, out)
             self.factor.generateCode(out)

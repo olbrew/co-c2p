@@ -42,10 +42,13 @@ class Function(ASTNode, ControlStructure):
     def generateCode(self, out):
         if self.isForwardDeclaration():
             return
-
+        
         self.writeInstruction("function_" + self.identifier + ":", out)
         self.writeInstruction(
-            "ssp " + str(5 + len(self.parameter_decl_list.parameter_declarations) + self.content.getVarsSize()), out)
+            "ssp " + str(6 + len(self.parameter_decl_list.parameter_declarations) + self.content.getVarsSize()), out)
+
+        for arg in self.parameter_decl_list.parameter_declarations:
+            arg.generateCode(out)
 
         self.content.generateCode(out)
 
@@ -65,10 +68,6 @@ class Function(ASTNode, ControlStructure):
                 from_type = statement.expression.result_type.getCSymbol()
                 if statement.expression.result_type.is_pointer:
                     from_type += "*"
-                # TODO call function with a factorial expression or an equation in return statement
-                # prints an error with following elif
-                #elif statement.expression.type is not SmallCParser.PRIMARY and statement.expression.address_of:
-                #    from_type += "&"
                     
                 to_type = self.return_type.getCSymbol()
                 if self.return_type.is_pointer:
