@@ -22,5 +22,5 @@ class VariableDeclarationList(ASTNode):
         return space
 
     def generateCode(self, out):
-        pass
-        # variable_ids are already generated via VariableDeclaration
+        for var_id in self.variable_ids:
+            var_id.generateCode(out)

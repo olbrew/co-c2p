@@ -311,10 +311,17 @@ class ASTGenerator(SmallCVisitor):
 
     # Visit a parse tree produced by SmallCParser#while_stmt.
     def visitWhile_stmt(self, parsetree: SmallCParser.While_stmtContext):
-        # TODO increment / decrement scope and depth like in visitFor_stmt
+        #self.environment.symbol_table.incrementScope()
+        #self.environment.call_stack.incrementDepth()
+        
         expression = self.visit(parsetree.expr())
         statement = self.visit(parsetree.stmt())
-        return WhileStatement(self.environment, expression, statement)
+        while_stmt = WhileStatement(self.environment, expression, statement)
+        
+        #self.environment.call_stack.decrementDepth()
+        #self.environment.symbol_table.decrementScope()
+
+        return while_stmt
 
     # Visit a parse tree produced by SmallCParser#for_stmt.
     def visitFor_stmt(self, parsetree: SmallCParser.For_stmtContext):
@@ -355,7 +362,6 @@ class ASTGenerator(SmallCVisitor):
 
     # Visit a parse tree produced by SmallCParser#assignment.
     def visitAssignment(self, parsetree: SmallCParser.AssignmentContext):
-        #identifier = parsetree.identifier().IDENTIFIER().getText()
         identifier = self.visit(parsetree.identifier())
         expression = self.visit(parsetree.expr())
 
