@@ -26,7 +26,6 @@ class ReturnStatement(Statement):
                 controleStructure = node
         function = node
 
-        print(type(self.expression))
         self.expression.generateCode(out)
 
         expr_type = self.expression.result_type
