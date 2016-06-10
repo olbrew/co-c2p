@@ -328,7 +328,6 @@ class ASTGenerator(SmallCVisitor):
         self.environment.symbol_table.incrementScope()
         self.environment.call_stack.incrementDepth()
 
-        # TODO verify it works (it should either allow var_decl | var_decl_list as for_init_list)
         if parsetree.var_decl() is not None:
             variable_declaration = self.visit(parsetree.var_decl())
             var_decl_list = variable_declaration.variable_identifiers

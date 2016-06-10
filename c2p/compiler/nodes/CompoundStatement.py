@@ -64,3 +64,9 @@ class CompoundStatement(Statement, ControlStructure):
                 self.writeInstruction("retp", out)
             else:
                 self.writeInstruction("retf", out)
+        else:
+            for var_decl in self.var_decls:
+                var_decl.generateCode(out)
+
+            for stmt in self.statements:
+                stmt.generateCode(out)

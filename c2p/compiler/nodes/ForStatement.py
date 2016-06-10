@@ -53,6 +53,7 @@ class ForStatement(Loop):
 
         if self.update is not None:
             self.update.generateCode(out)
+        self.statement.generateCode(out)
         self.writeInstruction("ujp for_" + self.label_id + "_inner_begin", out)
 
         self.writeInstruction("for_" + self.label_id + "_inner_end:", out)
