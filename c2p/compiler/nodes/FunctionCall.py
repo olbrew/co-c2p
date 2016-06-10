@@ -19,11 +19,9 @@ class FunctionCall(Expression):
         return "functioncall '" + self.identifier + "'"
 
     def generateCode(self, out):
-        arguments = self.parameter_list.arguments
         self.writeInstruction("mst 0", out)
 
-        for arg in arguments:
-            arg.generateCode(out)
+        self.parameter_list.generateCode(out)
 
         self.writeInstruction("cup " + str(len(arguments)) +
                               " function_" + self.identifier, out)

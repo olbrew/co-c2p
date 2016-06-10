@@ -30,7 +30,6 @@ class ForStatement(Loop):
         return "for_" + self.label_id + "_continue"
 
     def getReturnLabel(self):
-        # TODO Auto-generated method stub
         pass
 
     def generateCode(self, out):

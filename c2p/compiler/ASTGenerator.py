@@ -99,16 +99,16 @@ class ASTGenerator(SmallCVisitor):
 
         address = self.environment.call_stack.getAddress()
         depth = self.environment.call_stack.getNestingDepth()
+
         self.environment.symbol_table.addFunction(
-            func_name, return_type, parameter_decl_list, address, depth)
+            func_name, return_type, parameter_decl_list, address, depth - 1)
 
         if parsetree.compound_stmt() is None:
             # forward declaration
             statements = None
         else:
             # function definition
-            statements = self.visitCompound_stmt(
-                parsetree.compound_stmt(), True)
+            statements = self.visitCompound_stmt(parsetree.compound_stmt())
 
         self.environment.call_stack.decrementDepth()
 
@@ -150,14 +150,7 @@ class ASTGenerator(SmallCVisitor):
         return TypeSpecifier(self.environment, typename)
 
     # Visit a parse tree produced by SmallCParser#compound_stmt.
-    # def visitCompound_stmt(self, parsetree: SmallCParser.Compound_stmtContext):
-    #    return visitCompound_stmt(parsetree, False)
-
-    def visitCompound_stmt(self, parsetree: SmallCParser.Compound_stmtContext, isFunctionBody=False):
-        self.environment.symbol_table.incrementScope()
-        if not isFunctionBody:
-            self.environment.call_stack.incrementDepth()
-
+    def visitCompound_stmt(self, parsetree: SmallCParser.Compound_stmtContext):
         var_decls = []
         for var_decl in parsetree.var_decl():
             var_decls.append(self.visit(var_decl))
@@ -166,16 +159,9 @@ class ASTGenerator(SmallCVisitor):
         for stmt in parsetree.stmt():
             statements.append(self.visit(stmt))
 
-        compound_stmt = CompoundStatement(
-            self.environment, var_decls, statements)
+    return CompoundStatement(self.environment, var_decls, statements)
 
-        if not isFunctionBody:
-            self.environment.call_stack.decrementDepth()
-        self.environment.symbol_table.decrementScope()
-
-        return compound_stmt
-
-    # Visit a parse tree produced by SmallCParser#var_decl.
+# Visit a parse tree produced by SmallCParser#var_decl.
     def visitVar_decl(self, parsetree: SmallCParser.Var_declContext):
         type_specifier = self.visit(parsetree.type_specifier())
         type_object = type_specifier.type_object

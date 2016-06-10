@@ -14,5 +14,5 @@ class ParameterList(ASTNode):
         return "parameter list"
 
     def generateCode(self, out):
-        # TODO Auto-generated method stub
-        pass
+        for arg in self.arguments:
+            arg.generateCode(out)

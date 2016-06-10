@@ -35,17 +35,22 @@ class Program(ASTNode):
         self.writeInstruction("ssp 5", out)
 
         self.writeInstruction("ujp program", out)
-
+        
         if self.include is not None:
             self.include.generateCode(out)
-
+        
         for func_decl in self.function_declarations:
             func_decl.generateCode(out)
-
+        '''            
         for expr in self.expressions:
             expr.generateCode(out)
-
-        self.writeInstruction("program", out)
+        '''
+        
+        mainArgCount = 0
+        if "main" in self.environment.symbol_table.functions[0]:
+            mainArgCount = len(self.environment.symbol_table.functions[0]["main"].arg_types)
+            
+        self.writeInstruction("program:", out)
         self.writeInstruction("mst 0", out)
-        self.writeInstruction("cup 0 function_main", out)
+        self.writeInstruction("cup " + str(mainArgCount) + " function_main", out)
         self.writeInstruction("hlt", out)

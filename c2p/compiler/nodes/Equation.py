@@ -27,6 +27,10 @@ class Equation(Expression):
         # First get the operands on top of the stack
         self.equation.generateCode(out)
         self.cast(self.equation, out)
+        
+        # Then get the right side of the equation on top of the stack
+        self.term.generateCode(out)
+        self.cast(self.term, out)
 
         # Execute the relevant operation on the operands
         if self.operator == "+":

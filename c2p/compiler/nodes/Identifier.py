@@ -40,13 +40,12 @@ class Identifier(Expression):
         p_type = self.operand_type.getPSymbol()
 
         if self.indirection:
-            # TODO make sure the double space is not wrong
             self.writeInstruction(
-                "lod a " + " " + str(self.depth) + " " + str(self.address), out)
+                "lod a " + str(self.depth) + " " + str(self.address), out)
             self.writeInstruction("ind " + p_type, out)
         elif self.address_of:
             self.writeInstruction(
                 "lda " + str(self.depth) + " " + str(self.address), out)
         else:
-            self.writeInstruction("lod" + p_type + " " + str(self.depth) +
+            self.writeInstruction("lod " + p_type + " " + str(self.depth) +
                                   " " + str(self.address + self.array_size), out)
