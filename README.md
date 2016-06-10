@@ -49,6 +49,8 @@ continue            | Optional  | ""
 recursion           | Optional  | ""
 multi line comments | Optional  | ""
 
+We make use of our visitor (ASTGenerator) to traverse the parse tree in top down approach. Every rule context from our grammar is visited and saved in our AST which makes use of symbol table and call stack that allows us to verify many consistency errors such as type checking. Once the AST is fully constructed, we finally generate the actual p-code by traversing our AST
+
 ## Authors
 * Eduard Besjentsev
 * Olivier Brewaeys
