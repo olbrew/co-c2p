@@ -36,8 +36,7 @@ tokens {
     VARIABLEDECLARATION,
     VARIABLEDECLARATIONLIST,
     VARIABLEIDENTIFIER,
-    WHILESTATEMENT,
-    WRITEINTSTATEMENT
+    WHILESTATEMENT
 }
 
 /*
@@ -71,7 +70,7 @@ var_decl_list :  variable_id ( ',' variable_id)* ';';
 
 variable_id  : identifier ( '=' expr )?;
 
-stmt : compound_stmt | cond_stmt | while_stmt | for_stmt | BREAK ';' | CONTINUE ';' | RETURN expr ';' | expr ';' | READINT '(' identifier ')' ';' | WRITEINT '(' expr ')' ';' | assignment ';' | functioncall ';';
+stmt : compound_stmt | cond_stmt | while_stmt | for_stmt | BREAK ';' | CONTINUE ';' | RETURN expr ';' | expr ';' | assignment ';' | functioncall ';';
 
 cond_stmt :  IF '('  expr ')' stmt (ELSE stmt)?;
 
@@ -118,10 +117,6 @@ WHILE : 'while';
 FOR : 'for';
 INCLUDE: '#include';
 EXTERN: 'extern';
-
-// idioms
-READINT : 'readint';
-WRITEINT : 'writeint';
 
 // modifier keywords
 CONST : 'const';

@@ -9,7 +9,6 @@ class Identifier(Expression):
         super().__init__(environment)
         self.type = SmallCParser.ID
         symbol = environment.symbol_table.getSymbol(name)
-
         self.name = name
         self.indirection = indirection
         self.address_of = address_of

@@ -9,7 +9,6 @@ from compiler.nodes.CompoundStatement import CompoundStatement
 from compiler.nodes.BreakStatement import BreakStatement
 from compiler.nodes.ContinueStatement import ContinueStatement
 from compiler.nodes.ReturnStatement import ReturnStatement
-from compiler.nodes.WriteIntStatement import WriteIntStatement
 from compiler.nodes.Identifier import Identifier
 from compiler.nodes.ParameterDeclaration import ParameterDeclaration
 from compiler.nodes.ParameterList import ParameterList
@@ -202,10 +201,6 @@ class ASTGenerator(SmallCVisitor):
             return ReturnStatement(self.environment, expression)
         elif parsetree.expr() is not None:
             return self.visit(parsetree.expr())
-        # TODO: check for parsetree.READINT(), see grammar
-        elif parsetree.WRITEINT() is not None:
-            expression = self.visit(parsetree.expr())
-            return WriteIntStatement(self.environment, expression)
         elif parsetree.assignment() is not None:
             return self.visit(parsetree.assignment())
         elif parsetree.functioncall() is not None:
@@ -224,14 +219,13 @@ class ASTGenerator(SmallCVisitor):
         if parsetree.array_indexing() is None:
             array_size = 0
         else:
-            # TODO we assumed this is an integer
-            array_size = int(parsetree.array_indexing().expr().getText())
+            # NOTE we assumed this is an integer
+            array_size = int(parsetree.array_indexing().expr())
 
         if indirection or address_of:
             name = parsetree.getChild(1).getText()
         else:
             name = parsetree.getChild(0).getText()
-
         try:
             return Identifier(self.environment, name, indirection, address_of, array_size)
         except C2PException as e:
@@ -277,7 +271,7 @@ class ASTGenerator(SmallCVisitor):
             array_size = 0
             array_elements = []
         else:
-            # TODO we assumed this is an integer
+            # NOTE we assumed this is an integer
             array_size = int(parsetree.identifier(
             ).array_indexing().expr().getText())
             if parsetree.identifier().array_init() is not None:
@@ -289,7 +283,7 @@ class ASTGenerator(SmallCVisitor):
                     MyErrorListener().semanticError(line, column, msg)
                 array_elements = self.visit(
                     parsetree.identifier().array_init())
-
+                    
         if is_pointer or is_alias:
             identifier = parsetree.identifier().getChild(1).getText()
         else:

@@ -26,7 +26,7 @@ class IncludeDirective(ASTNode):
 
             typeObject = CharacterType()
             typeSpecifier = TypeSpecifier(environment, typeObject)
-            typeSpecifier.type_object.is_const = True
+            typeSpecifier.type_object.is_const = False
             typeSpecifier.type_object.array_size = 1
 
             parameter_decl = []
@@ -38,21 +38,24 @@ class IncludeDirective(ASTNode):
                 0].typespecifier = typeSpecifier
 
             environment.symbol_table.addFunction(
-                "scanf", IntegerType(), parameter_decl_list, address, depth)
-            # TODO reset typeSpecifier.type_object.is_const for printf
-            environment.symbol_table.addFunction(
                 "printf", IntegerType(), parameter_decl_list, address, depth)
+            # NOTE set typeSpecifier.type_object.is_const to True for scanf
+            #environment.symbol_table.addFunction(
+            #    "scanf", IntegerType(), parameter_decl_list, address, depth)
 
     def getDisplayableText(self):
         return "include '" + self.filename + "'"
 
     def generateCode(self, out):
-        # TODO
-        '''
-        for include in self.included_program.includes:
-            include.generateCode(out)
-
-        for func_decl in self.included_program.function_declarations:
-            func_decl.generateCode(out)
-        '''
-        pass
+        # generate p-code for printf function printing 1 character
+        self.writeInstruction("function_printf:", out)
+        self.writeInstruction("ssp " + str(5 + 1), out)
+        self.writeInstruction("lod c 0 5", out)
+        self.writeInstruction("out c", out)
+        
+        self.writeInstruction("ldc i 1", out)
+        self.writeInstruction("str i 0 0", out)  # return amount of printed characters
+        
+        self.writeInstruction("ujp function_printf_return", out)
+        self.writeInstruction("function_printf_return:", out)
+        self.writeInstruction("retf", out)

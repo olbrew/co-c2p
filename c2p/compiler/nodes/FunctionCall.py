@@ -23,5 +23,5 @@ class FunctionCall(Expression):
 
         self.parameter_list.generateCode(out)
 
-        self.writeInstruction("cup " + str(len(arguments)) +
+        self.writeInstruction("cup " + str(len(self.parameter_list.arguments)) +
                               " function_" + self.identifier, out)

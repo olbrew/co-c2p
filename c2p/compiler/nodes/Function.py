@@ -89,5 +89,5 @@ class Function(ASTNode, ControlStructure):
                             return
                         raise C2PException("Function '" + self.identifier + "' should return " +
                                            to_type + " instead of " + from_type)
-                    # TODO validate references
+                    # NOTE validate references
                     # elif self.return_type.is_reference:
