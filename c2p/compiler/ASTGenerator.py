@@ -159,7 +159,7 @@ class ASTGenerator(SmallCVisitor):
         for stmt in parsetree.stmt():
             statements.append(self.visit(stmt))
 
-    return CompoundStatement(self.environment, var_decls, statements)
+        return CompoundStatement(self.environment, var_decls, statements)
 
 # Visit a parse tree produced by SmallCParser#var_decl.
     def visitVar_decl(self, parsetree: SmallCParser.Var_declContext):
