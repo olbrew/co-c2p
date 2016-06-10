@@ -26,20 +26,28 @@ here.
 
 ### Implemented features
 
-Feature             | Mandatory| Status
-------------------- | ---------|--------------------------------------------------
-char type           | Mandatory| Fully implemented, errors recognized, ST saves it
-float type          | Mandatory| ""
-int type            | Mandatory| ""
-pointer type        | Mandatory| ""
-stdio import        | Mandatory| Only allowed include, necessary for `printf` or `scanf`
-printf function     | Mandatory| Accepts char[] as well as direct strings.
-scanf function      | Mandatory| TODO?
-... WIP
-
-TODO: general explanation about ast completely working and code generation
-almost completely :P
-
+Feature             | Man / Opt | Status
+--------------------|-----------|---------------------------------------------------
+char type           | Mandatory | Self explanatory
+float type          | Mandatory | ""
+int type            | Mandatory | ""
+pointer type        | Mandatory | ""
+stdio import        | Mandatory | Only allowed include, necessary for `printf` or `scanf`
+printf function     | Mandatory | Accepts char[] as well as direct strings.
+scanf function      | Mandatory | Syntactic support, no code generation yet
+if else             | Mandatory | Self explanatory
+return              | Mandatory | ""
+while               | Mandatory | ""
+local, global vars  | Mandatory | Different scopes can have reinits of same var names
+single line comments| Mandatory | Self explanatory
+functions           | Mandatory | implemented with robust error checking for return and argument type matches
+static arrays       | Mandatory | 1D arrays are supported
+for                 | Optional  | Self explanatory
+const               | Optional  | ""
+break               | Optional  | ""
+continue            | Optional  | ""
+recursion           | Optional  | ""
+multi line comments | Optional  | ""
 
 ## Authors
 * Eduard Besjentsev
