@@ -136,7 +136,7 @@ fragment SIGN : PLUS | MINUS;
 
 // elements
 INTEGER : NUMBER;
-REAL : NUMBER'.'NUMBER'f';
+REAL : NUMBER'.'NUMBER;
 CHARCONST : '"' (.)*? '"' | '\'' (.)*? '\'';
 BOOLEAN : 'true' | 'false';
 IDENTIFIER : (UNDERSCORE | CHARACTER) (UNDERSCORE | CHARACTER | DIGIT)*;
