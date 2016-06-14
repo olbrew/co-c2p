@@ -518,7 +518,7 @@ class ASTGenerator(SmallCVisitor):
                 return Primary(self.environment, value)
             elif parsetree.REAL() is not None:
                 real = parsetree.REAL().getText()
-                value = float(real[:-1])  # skip ending 'f' literal
+                value = float(real)
                 return Primary(self.environment, value)
             elif parsetree.CHARCONST() is not None:
                 value = parsetree.CHARCONST().getText()

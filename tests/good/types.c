@@ -1,11 +1,7 @@
-int main()
+float main()
 {
-    int i = 1;
-    int* pi = &i;
-
-    float f = 2.5f;
-    float* pf = &f;
-
-    char c = 'c';
-    char* pc = &c;
+    float f = 2.5;
+    //float* pf = &f;
+    
+    return f+1;
 }
